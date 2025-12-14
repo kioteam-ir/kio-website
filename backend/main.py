@@ -1,28 +1,35 @@
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, Depends, FastAPI
+from contextlib import asynccontextmanager
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from apps.urls import front_urls, admin_urls
-from apps.db import Database
+from apps.db import Account, get_session, init_db
 from apps.models import User
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    yield
 
+app = FastAPI(lifespan=lifespan)
 
 class AccountsView:
     router = APIRouter(prefix="/accounts", tags=["accounts"])
-    orm = Database(User)
+    orm = Account(User)
 
     @router.get("/")
-    async def list_accounts():
-        lists = await AccountsView.orm.select_all()
-        return {"msg": lists}
+    async def list_accounts(session: AsyncSession = Depends(get_session)):
+        users = session.exec(select(User))
+        return {"result": users.all()}
     
     @router.post("/")
     async def create_account(user: User):
-        create = await AccountsView.orm.add_data(user)
-        return user
+        create = await AccountsView.orm.create_user(user)
+        return create
 
     @router.get("/{account_id}")
     def get_account(account_id: int):
+
         return {"msg": f"details of {account_id}"}
 
 
