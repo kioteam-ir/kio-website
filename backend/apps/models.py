@@ -1,10 +1,24 @@
-from sqlmodel import Field, SQLModel
+from pydantic import BaseModel, field_validator
 
+class UserCreate(BaseModel):
+    id: int | None 
+    email: str 
+    password: str 
+    phone_number: str | None
+    first_name: str 
+    last_name: str
 
-class User(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    email: str  = Field(unique=True)
-    password: str = Field(min_length=8)
-    phone_number: str = Field(unique=True)
-    first_name: str = Field(nullable=True)
-    last_name: str = Field(nullable=True)
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, value: str):
+        if len(value) < 8:
+            raise ValueError("Password must be at least 8 characters long")
+        if value.isdigit() or value.islower():
+            raise ValueError("Password must contain at least one lowercase letter and upper")
+        num = 0
+        for char in value:
+            if char.isdigit():
+                num += 1
+        if num == 0:
+            raise ValueError("Password must contain at least one number")
+        return value

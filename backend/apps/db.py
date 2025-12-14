@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, select
+from sqlmodel import SQLModel, Field
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
@@ -23,25 +23,15 @@ async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
 
+async def drop_data():
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.drop_all)
 
-class BaseDatabase:
-    def __init__(self, model: SQLModel):
-        self.model = model
 
-
-class Account(BaseDatabase):
-
-    def __init__(self, model):
-        super().__init__(model)
-
-    # async def create_user(self, instance: SQLModel):
-    #     async with Session(self.engine) as session:
-    #         session.add(instance)
-    #         session.commit()
-
-    # async def select_all(self):
-        # async with Session(self.engine) as session:
-        #     statement = select(self.model)
-        #     results = session.exec(statement)
-        #     return results.all()
-        
+class User(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    email: str  = Field(unique=True)
+    password: str = Field(min_length=8)
+    phone_number: str | None = Field(default=None, unique=True, nullable=True)
+    first_name: str = Field(nullable=True)
+    last_name: str = Field(nullable=True)

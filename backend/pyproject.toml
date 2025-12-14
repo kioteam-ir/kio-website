@@ -8,4 +8,5 @@ dependencies = [
     "aiosqlite>=0.21.0",
     "fastapi>=0.122.0",
     "sqlmodel>=0.0.27",
+    "uvicorn>=0.38.0",
 ]
