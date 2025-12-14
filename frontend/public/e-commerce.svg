@@ -1,0 +1,11 @@
+<!--?xml version="1.0" encoding="utf-8"?-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="E-commerce logo">
+  <title>E-commerce</title>
+  <rect width="64" height="64" rx="10" fill="#0b66ff"></rect>
+  <g transform="translate(8,14)" fill="#ffffff">
+    <path d="M6 6h34l-4 18H12z" opacity="0.95"></path>
+    <circle cx="16" cy="36" r="4"></circle>
+    <circle cx="34" cy="36" r="4"></circle>
+    <path d="M6 6 L10 2 L18 2" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"></path>
+  </g>
+</svg>
