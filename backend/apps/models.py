@@ -25,3 +25,8 @@ class UserCreate(BaseModel):
         if num == 0:
             raise ValueError("Password must contain at least one number")
         return value
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
