@@ -21,11 +21,7 @@ class AccountsView:
     router = APIRouter(prefix="/api/accounts", tags=["accounts"])
 
     @router.post("/login")
-    async def login(
-        login_data: LoginRequest,
-        session: AsyncSession = Depends(get_session)
-    ):
-        
+    async def login(login_data: LoginRequest,session: AsyncSession = Depends(get_session)):
         stmt = select(User).where(User.email == login_data.email)
         user = (await session.exec(stmt)).first()
 
