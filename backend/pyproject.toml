@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "aiosqlite>=0.21.0",
     "fastapi>=0.122.0",
+    "hashlib",
     "pydantic[email]>=2.12.5",
     "sqlmodel>=0.0.27",
     "uvicorn>=0.38.0",

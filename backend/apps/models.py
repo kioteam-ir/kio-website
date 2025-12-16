@@ -2,12 +2,14 @@ from pydantic import BaseModel, field_validator, EmailStr
 
 
 class UserCreate(BaseModel):
-    id: int | None 
     email: EmailStr
     password: str 
     phone_number: str | None
     first_name: str 
     last_name: str
+    is_admin: bool = False
+    is_active: bool = True
+    salt: str | None = None
 
     @field_validator("password")
     @classmethod

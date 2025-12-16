@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, FastAPI, status, HTTPException
 from contextlib import asynccontextmanager
+import secrets
+
 from sqlmodel import select, or_
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from apps.db import drop_data, get_session, init_db
 from apps.db import User
-
 from apps.models import UserCreate
+from utils.accounts import get_password_hash
 
 
 @asynccontextmanager
@@ -34,6 +36,9 @@ class AccountsView:
             stmt = select(User).where(User.email == user.email)
         result = await session.exec(stmt)
         existing_user = result.first()
+        password = get_password_hash(user.password)
+        user.password = password["hash"]
+        user.salt = password["salt"]
         if existing_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
