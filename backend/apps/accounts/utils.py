@@ -10,11 +10,12 @@ from fastapi.security import OAuth2PasswordBearer
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from apps.db import User, get_session
+from .models import User
+from config.database import get_session
 
 from concurrent.futures import ThreadPoolExecutor
 
-import settings
+import config.settings as settings
 
 ITERATIONS = settings.ITERATIONS
 

@@ -1,4 +1,5 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel
+
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
@@ -27,14 +28,3 @@ async def drop_data():
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.drop_all)
 
-
-class User(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    email: str  = Field(unique=True)
-    password: str = Field(min_length=8)
-    salt: str = Field()
-    phone_number: str | None = Field(default=None, unique=True, nullable=True)
-    first_name: str = Field(nullable=True)
-    last_name: str = Field(nullable=True)
-    is_active : bool = Field(default=True)
-    is_admin : bool = Field(default=False)
