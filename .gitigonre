@@ -3,6 +3,8 @@ __pycache__/
 __pycache__
 **/__pycache__/
 
+*.pyc
+
 *.py[cod]
 *$py.class
 
@@ -101,3 +103,9 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
+
+
+*.db
+*.sqlite3
+
+local_*
