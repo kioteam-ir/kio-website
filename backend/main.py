@@ -59,7 +59,7 @@ async def refresh_token(refresh_token: str, session: AsyncSession = Depends(get_
         raise HTTPException(status_code=404, detail="User not found")
 
     access_token = await create_access_token(user, session)
-    new_refresh_token = create_refresh_token(user.id)
+    new_refresh_token = await create_refresh_token(user.id)
 
     return {
         "access_token": access_token,
