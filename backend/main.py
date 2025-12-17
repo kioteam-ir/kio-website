@@ -2,12 +2,14 @@ from typing import List
 from fastapi import Depends, FastAPI, HTTPException
 from contextlib import asynccontextmanager
 
+from jose import JWTError, jwt
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from apps.accounts.models import User
 from apps.accounts.schemas import LoginRequest
 from apps.accounts.utils import create_access_token, create_refresh_token, verify_password
+from config import settings
 from config.database import get_session, init_db
 
 from apps.accounts.routes import FrontAccountsView, AdminAccountsView
@@ -21,7 +23,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-@app.post("/login")
+@app.post("/token")
 async def login(login_data: LoginRequest,session: AsyncSession = Depends(get_session)):
     stmt = select(User).where(User.email == login_data.email)
     user = (await session.exec(stmt)).first()
@@ -37,6 +39,31 @@ async def login(login_data: LoginRequest,session: AsyncSession = Depends(get_ses
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+
+@app.post("/refresh")
+async def refresh_token(refresh_token: str, session: AsyncSession = Depends(get_session)):
+    try:
+        payload = jwt.decode(refresh_token, settings.SECRET_KEY, settings.ALGORITHM)
+        if payload.get("type") != "refresh":
+            raise HTTPException(status_code=401, detail="Invalid token type")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+    user_id = int(payload["sub"])
+    stmt = select(User).where(User.id == user_id)
+    user = (await session.exec(stmt)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    access_token = await create_access_token(user, session)
+    new_refresh_token = create_refresh_token(user.id)
+
+    return {
+        "access_token": access_token,
+        "refresh_token": new_refresh_token,
         "token_type": "bearer"
     }
 
