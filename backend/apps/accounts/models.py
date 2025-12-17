@@ -1,4 +1,25 @@
-from sqlmodel import SQLModel, Field
+from typing import List
+from sqlmodel import Relationship, SQLModel, Field
+
+
+
+class UserRole(SQLModel, table=True):
+    user_id: int = Field(
+        default=None, foreign_key="user.id", primary_key=True
+    )
+    role_id: int = Field(
+        default=None, foreign_key="role.id", primary_key=True
+    )
+
+
+class RolePermission(SQLModel, table=True):
+    role_id: int = Field(
+        default=None, foreign_key="role.id", primary_key=True
+    )
+    permission_id: int = Field(
+        default=None, foreign_key="permission.id", primary_key=True
+    )
+
 
 class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -10,3 +31,31 @@ class User(SQLModel, table=True):
     last_name: str = Field(nullable=True)
     is_active : bool = Field(default=True)
     is_admin : bool = Field(default=False)
+    roles: List["Role"] = Relationship(
+        back_populates="users",
+        link_model=UserRole
+    )
+
+
+class Role(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str = Field(unique=True, index=True)
+
+    users: List[User] = Relationship(
+        back_populates="roles",
+        link_model=UserRole
+    )
+
+    permissions: List["Permission"] = Relationship(
+        back_populates="roles",
+        link_model=RolePermission
+    )
+
+class Permission(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str = Field(unique=True, index=True)
+
+    roles: List[Role] = Relationship(
+        back_populates="permissions",
+        link_model=RolePermission
+    )

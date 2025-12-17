@@ -1,5 +1,5 @@
 from .models import User
-from .schemas import LoginRequest, UserCreate
+from .schemas import LoginRequest, UserCreate, UserRead
 
 from .utils import create_access_token, create_refresh_token, get_current_user, hash_password_async, verify_password
 
@@ -8,7 +8,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from fastapi import APIRouter, Depends, status, HTTPException
 
-from config.database import get_session, init_db
+from config.database import get_session
 
 class AccountsView:
     router = APIRouter(prefix="/api/accounts", tags=["accounts"])
@@ -38,7 +38,7 @@ class AccountsView:
         await session.close()
         return {"result": users.all()}
     
-    @router.post("/")
+    @router.post("/", response_model=UserRead)
     async def create_account(user: UserCreate, session: AsyncSession = Depends(get_session)):
         if user.phone_number is not None:
             stmt = select(User).where(or_(User.email == user.email, User.phone_number == user.phone_number))
@@ -55,9 +55,9 @@ class AccountsView:
         
         password = await hash_password_async(user.password)
         user.password = password["hash"]
-        user.salt = password["salt"]
 
         db_user = User(**user.model_dump())
+        db_user.salt = password["salt"]
         session.add(db_user)
         await session.commit()
         return db_user

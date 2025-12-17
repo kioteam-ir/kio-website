@@ -9,7 +9,6 @@ class UserCreate(BaseModel):
     last_name: str
     is_admin: bool = False
     is_active: bool = True
-    salt: str | None = None
 
     @field_validator("password")
     @classmethod
@@ -30,3 +29,10 @@ class UserCreate(BaseModel):
 class LoginRequest(BaseModel):
     email: str
     password: str
+
+
+class UserRead(BaseModel):
+    email: str
+    phone_number: str
+    first_name: str
+    last_name: str

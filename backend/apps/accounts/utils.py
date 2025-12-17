@@ -34,9 +34,9 @@ def hash_password_sync(password: str):
         "hash": base64.b64encode(hash_bytes).decode(),
     }
 
-async def hash_password_async(password: str, salt: bytes) -> bytes:
+async def hash_password_async(password: str) -> bytes:
     loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(execute, hash_password_sync, password, salt)
+    return await loop.run_in_executor(execute, hash_password_sync, password)
 
 
 def verify_password(password: str, salt_b64: str, hash_b64: str) -> bool:
