@@ -2,6 +2,7 @@ import asyncio
 import base64
 from hashlib import pbkdf2_hmac
 import secrets
+from typing import Optional
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 
@@ -10,12 +11,12 @@ from fastapi.security import OAuth2PasswordBearer
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from .models import User
+from .models import User, get_user_permissions_from_db
 from config.database import get_session
+import config.settings as settings
 
 from concurrent.futures import ThreadPoolExecutor
 
-import config.settings as settings
 
 ITERATIONS = settings.ITERATIONS
 
@@ -76,13 +77,26 @@ async def get_current_user(
 
     return user
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
-    to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
 
-def create_refresh_token(user_id: int):
+async def create_access_token(user: User, session: AsyncSession = Depends(get_session), expires_minutes: Optional[int] = None) -> str:
+    permissions = await get_user_permissions_from_db(user, session)
+    payload = {
+        "sub": str(user.id),
+        "email": user.email,
+        "permissions": permissions,
+        "is_admin": user.is_admin,
+        "type": "access",
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=expires_minutes or settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    }
+
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)
+
+
+async def create_refresh_token(user_id: int):
     expire = datetime.now(timezone.utc) + timedelta(days=settings.REFRESH_EXPIRE_DAYS)
-    return jwt.encode({"sub": str(user_id), "exp": expire}, SECRET_KEY, algorithm="HS256")
+    payload = {
+        "sub": str(user_id),
+        "exp": expire,
+        "type": "refresh"
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm="HS256")

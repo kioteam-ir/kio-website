@@ -25,6 +25,16 @@ class UserCreate(BaseModel):
             raise ValueError("Password must contain at least one number")
         return value
 
+    @field_validator("phone_number")
+    @classmethod
+    def validate_phone_number(cls, value: str):
+        if value is None:
+            return value
+        
+        if value.startswith("09") and len(value) == 11:
+            return value
+        raise ValueError("Phone number format incorrect")
+
 
 class LoginRequest(BaseModel):
     email: str
@@ -33,6 +43,6 @@ class LoginRequest(BaseModel):
 
 class UserRead(BaseModel):
     email: str
-    phone_number: str
+    phone_number: str | None
     first_name: str
     last_name: str

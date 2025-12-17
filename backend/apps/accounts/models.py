@@ -1,6 +1,6 @@
 from typing import List
 from sqlmodel import Relationship, SQLModel, Field
-
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 
 class UserRole(SQLModel, table=True):
@@ -59,3 +59,9 @@ class Permission(SQLModel, table=True):
         back_populates="permissions",
         link_model=RolePermission
     )
+
+
+async def get_user_permissions_from_db(user: User, session: AsyncSession) -> List[str]:
+    await session.refresh(user)
+    permissions = [perm.name for role in user.roles for perm in role.permissions]
+    return permissions

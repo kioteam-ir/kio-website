@@ -1,9 +1,16 @@
-from fastapi import FastAPI
+from typing import List
+from fastapi import Depends, FastAPI, HTTPException
 from contextlib import asynccontextmanager
 
-from config.database import init_db
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from apps.accounts.routes import AccountsView
+from apps.accounts.models import User
+from apps.accounts.schemas import LoginRequest
+from apps.accounts.utils import create_access_token, create_refresh_token, verify_password
+from config.database import get_session, init_db
+
+from apps.accounts.routes import FrontAccountsView, AdminAccountsView
 
 
 @asynccontextmanager
@@ -14,5 +21,27 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-accounts_view = AccountsView()
-app.include_router(accounts_view.router)
+@app.post("/login")
+async def login(login_data: LoginRequest,session: AsyncSession = Depends(get_session)):
+    stmt = select(User).where(User.email == login_data.email)
+    user = (await session.exec(stmt)).first()
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    if not verify_password(login_data.password, user.salt, user.password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    access_token = await create_access_token(user)
+    refresh_token = await create_refresh_token(user.id)
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+
+front_accounts_view = FrontAccountsView()
+admin_accounts_view = AdminAccountsView()
+app.include_router(admin_accounts_view.router)
+app.include_router(front_accounts_view.router)
