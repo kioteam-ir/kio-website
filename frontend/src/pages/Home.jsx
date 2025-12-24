@@ -1,4 +1,4 @@
-import Header from '../components/Header';
+import { Header } from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import MethodologySection from '../components/MethodologySection';
 import ServicesSection from '../components/ServicesSection';
@@ -8,14 +8,16 @@ import Footer from '../components/Footer';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <Header />
-      <HeroSection />
-      <MethodologySection />
-      <ServicesSection />
-      <GrowthSection />
-      <ContactForm />
-      <Footer />
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="">
+        <Header />
+        <HeroSection />
+        <MethodologySection />
+        <ServicesSection />
+        <GrowthSection />
+        <ContactForm />
+        <Footer />
+      </div>
     </div>
   );
 }
