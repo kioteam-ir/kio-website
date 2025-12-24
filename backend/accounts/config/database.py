@@ -27,4 +27,3 @@ async def init_db():
 async def drop_data():
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.drop_all)
-

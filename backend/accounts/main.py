@@ -5,13 +5,13 @@ from jose import JWTError, jwt
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from apps.accounts.models import User
-from apps.accounts.schemas import LoginRequest, UserCreate
-from apps.accounts.utils import create_access_token, create_refresh_token, verify_password
-from apps.accounts.routes import FrontAccountsView, AdminAccountsView
+from .models import User
+from .schemas import LoginRequest, UserCreate
+from .utils import create_access_token, create_refresh_token, verify_password
+from .routes import FrontAccountsView, AdminAccountsView
 
 from config import settings
-from config.database import get_session, init_db
+from gateway.database import get_session, init_db
 
 from crudadmin import CRUDAdmin
 
@@ -41,7 +41,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-@app.post("/token")
+@app.post("/login")
 async def login(login_data: LoginRequest,session: AsyncSession = Depends(get_session)):
     stmt = select(User).where(User.email == login_data.email)
     user = (await session.exec(stmt)).first()
