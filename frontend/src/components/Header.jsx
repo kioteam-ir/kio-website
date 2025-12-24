@@ -77,13 +77,13 @@ export function Header() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
                 className="w-full">
-                Login
+                  <Link to="/login">Login</Link>
               </NavbarButton>
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
                 className="w-full">
-                Signup
+                  <Link to="/signup">Signup</Link>
               </NavbarButton>
             </div>
           </MobileNavMenu>
