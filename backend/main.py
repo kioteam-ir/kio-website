@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import Depends, FastAPI, HTTPException
 from contextlib import asynccontextmanager
 
@@ -7,17 +6,36 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from apps.accounts.models import User
-from apps.accounts.schemas import LoginRequest
+from apps.accounts.schemas import LoginRequest, UserCreate
 from apps.accounts.utils import create_access_token, create_refresh_token, verify_password
+from apps.accounts.routes import FrontAccountsView, AdminAccountsView
+
 from config import settings
 from config.database import get_session, init_db
 
-from apps.accounts.routes import FrontAccountsView, AdminAccountsView
+from crudadmin import CRUDAdmin
 
+admin = CRUDAdmin(
+    session=get_session,
+    mount_path="/api/admin",
+    SECRET_KEY=settings.SECRET_KEY,
+    initial_admin={
+        "username": "yasin",
+        "password": "ya.1384.1214"
+    }
+)
+
+admin.add_view(
+    model=User,
+    create_schema=UserCreate,
+    update_schema=UserCreate,
+    allowed_actions={"view", "create", "update", "delete"}
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    await admin.initialize()
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -72,3 +90,4 @@ front_accounts_view = FrontAccountsView()
 admin_accounts_view = AdminAccountsView()
 app.include_router(admin_accounts_view.router)
 app.include_router(front_accounts_view.router)
+app.mount("/api/admin", admin.app)

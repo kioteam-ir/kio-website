@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "aiosqlite>=0.21.0",
+    "crudadmin>=0.4.3",
     "fastapi>=0.122.0",
     "pydantic[email]>=2.12.5",
     "python-jose>=3.5.0",
