@@ -11,9 +11,10 @@ from .utils import create_access_token, create_refresh_token, verify_password
 from .routes import FrontAccountsView, AdminAccountsView
 
 from config import settings
-from gateway.database import get_session, init_db
+from config.database import get_session, init_db
 
 from crudadmin import CRUDAdmin
+
 
 admin = CRUDAdmin(
     session=get_session,
