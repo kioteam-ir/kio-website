@@ -2,6 +2,8 @@ import React from 'react'
 
 export default function MethodologySection() {
   return (
-    <div>MethodologySection</div>
+    <div className='2xl:max-w-7xl xl:max-w-6xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl max-w-lg mx-auto mt-20 sm:px-0 px-2'>
+      MethodologySection
+    </div>
   )
 }
