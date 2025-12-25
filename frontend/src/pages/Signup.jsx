@@ -50,7 +50,8 @@ export function Signup() {
             Sign up &rarr;
             <BottomGradient />
           </button>
-          <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+          <div className="mb-4 mt-3 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+          <Link to="/" className="text-sm flex items-center justify-center font-bold text-blue-400">Home Page!</Link>
         </form>
       </div>
     </div>
