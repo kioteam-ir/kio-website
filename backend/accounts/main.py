@@ -5,10 +5,10 @@ from jose import JWTError, jwt
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from .models import User
-from .schemas import LoginRequest, UserCreate
-from .utils import create_access_token, create_refresh_token, verify_password
-from .routes import FrontAccountsView, AdminAccountsView
+from models import User
+from schemas import LoginRequest, UserCreate
+from utils import create_access_token, create_refresh_token, verify_password
+from routes import FrontAccountsView, AdminAccountsView
 
 from config import settings
 from config.database import get_session, init_db

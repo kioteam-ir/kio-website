@@ -11,7 +11,7 @@ from fastapi.security import OAuth2PasswordBearer
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from .models import User, get_user_permissions_from_db
+from models import User, get_user_permissions_from_db
 from config.database import get_session
 import config.settings as settings
 

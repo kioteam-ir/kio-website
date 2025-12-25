@@ -1,10 +1,21 @@
-FROM python:3.12-alpine
+FROM python:3.12-slim
+
+# system dependencies مورد نیاز برای pip packages
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libffi-dev \
+    libssl-dev \
+    sqlite3 \
+    libsqlite3-dev \
+    ffmpeg \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# نصب dependencies مشترک
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements-base.txt
+# upgrade pip
+RUN pip install --upgrade pip
 
-# expose default port
-EXPOSE 8000
+# copy و نصب requirements
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements-base.txt

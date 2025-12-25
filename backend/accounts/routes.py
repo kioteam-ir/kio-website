@@ -1,7 +1,7 @@
-from .models import User
-from .schemas import UserCreate, UserRead
+from models import User
+from schemas import UserCreate, UserRead
 
-from .utils import get_current_user, hash_password_async
+from utils import get_current_user, hash_password_async
 
 from sqlmodel import select, or_
 from sqlmodel.ext.asyncio.session import AsyncSession
