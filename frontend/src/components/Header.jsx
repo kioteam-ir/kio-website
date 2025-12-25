@@ -18,7 +18,7 @@ export function Header() {
   const navItems = [
     {
       name: "Home",
-      link: "home",
+      link: "Home",
     },
     {
       name: "About",
@@ -44,11 +44,11 @@ export function Header() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-            <NavbarButton variant="secondary">
-              <Link to="/login">Login</Link>
+            <NavbarButton to="/login" variant="secondary">
+              Login
             </NavbarButton>
-            <NavbarButton variant="primary">
-              <Link to="/signup">Signup</Link>
+            <NavbarButton to="/signup" variant="primary">
+              Signup
             </NavbarButton>
           </div>
         </NavBody>
@@ -64,26 +64,30 @@ export function Header() {
 
           <MobileNavMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
             {navItems.map((item, idx) => (
-              <a
-                key={`mobile-link-${idx}`}
-                href={item.link}
+              <Link
+                key={idx}
+                to={`/${item.link}`}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="relative text-neutral-600 dark:text-neutral-300">
                 <span className="block">{item.name}</span>
-              </a>
+              </Link>
             ))}
             <div className="flex w-full flex-col gap-4">
               <NavbarButton
+                to="/login"
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
-                className="w-full">
-                  <Link to="/login">Login</Link>
+                className="w-full"
+              >
+                Login
               </NavbarButton>
               <NavbarButton
+                to="/signup"
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
-                className="w-full">
-                  <Link to="/signup">Signup</Link>
+                className="w-full"
+              >
+                Signup
               </NavbarButton>
             </div>
           </MobileNavMenu>
