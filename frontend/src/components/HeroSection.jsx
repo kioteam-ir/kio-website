@@ -19,6 +19,7 @@ export default function HeroSection() {
           </div>
           <Highlight className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl text-cyan-500 mt-5">web3 world!</Highlight>
         </div>
+        
       </div>
     </div>
   )
