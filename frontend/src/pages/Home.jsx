@@ -1,6 +1,6 @@
 import { Header } from '../components/Header';
 import HeroSection from '../components/HeroSection';
-import MethodologySection from '../components/MethodologySection';
+import { MethodologySection } from '../components/MethodologySection';
 import ServicesSection from '../components/ServicesSection';
 import GrowthSection from '../components/GrowthSection';
 import ContactForm from '../components/ContactForm';

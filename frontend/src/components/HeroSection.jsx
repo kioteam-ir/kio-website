@@ -3,8 +3,7 @@ import { Highlight } from './ui/hero-highlight'
 
 export default function HeroSection() {
   return (
-    <div className='mb-24 2xl:max-w-7xl xl:max-w-6xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl max-w-lg mx-auto mt-7 md:mt-20 sm:px-0 px-2'>
-
+    <div className='mb-10 2xl:max-w-7xl xl:max-w-6xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl max-w-lg mx-auto mt-7 md:mt-20 sm:px-0 px-2'>
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-baseline lg:justify-between w-full xl:w-5/6 mx-auto">
         {/* Right section */}
         <div className="">
