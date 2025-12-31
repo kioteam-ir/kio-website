@@ -6,7 +6,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from models import Project
 from schemas import AddProjects
-from routes import ProjectsFrontAPIView
+from routes import ProjectsAdminAPIView, ProjectsFrontAPIView
 
 from config import settings
 from config.database import get_session, init_db
@@ -21,4 +21,6 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 project_front = ProjectsFrontAPIView()
+project_admin = ProjectsAdminAPIView()
 app.include_router(project_front.router)
+app.include_router(project_admin.router)
