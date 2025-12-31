@@ -12,7 +12,7 @@ from config.database import get_session
 
 
 class FrontAccountsView:
-    router = APIRouter(prefix="/api/front/accounts", tags=["admin-accounts"])
+    router = APIRouter(prefix="/api/front/accounts", tags=["front-accounts"])
 
     @router.post("/", response_model=UserRead)
     async def create_account(user: UserCreate, session: AsyncSession = Depends(get_session)):
