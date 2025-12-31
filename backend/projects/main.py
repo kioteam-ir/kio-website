@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from models import User
+from models import Project
 from schemas import AddProjects
 from routes import ProjectsFrontAPIView
 
