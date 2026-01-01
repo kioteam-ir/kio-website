@@ -29,8 +29,15 @@ class ProjectsAdminAPIView():
         await session.commit()
         return query
     
-    @router.get("/list")
+    @router.get("/list/")
     async def prohects_list(session = Depends(get_session)):
         query = await session.exec(select(Project))
-        session.close()
+        await session.close()
         return {"result": query.all()}
+    
+    @router.get("/{project_id}/")
+    async def prohects_retrieve(project_id: int, session = Depends(get_session)):
+        query = await session.get(Project, project_id)
+        await session.close()
+        return query
+    
