@@ -1,12 +1,3 @@
-// import React from 'react'
-
-// export default function ContactForm() {
-//   return (
-//     <div className='2xl:max-w-7xl xl:max-w-6xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl max-w-lg mx-auto sm:px-0 px-2'>ContactForm</div>
-//   )
-// }
-
-
 "use client";
 
 import React from "react";
@@ -28,7 +19,7 @@ export default function ContactForm() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
           <div className="flex justify-center lg:justify-end">
-            <img src="/person-playing-3d-video-games-device.jpg" alt="" className="w-full h-full rounded-2xl bg-gray-900" />
+            <img src="/person-playing-3d-video-games-device.png" alt="" className="w-full h-full rounded-2xl bg-gray-900" />
           </div>
 
 
@@ -49,6 +40,18 @@ export default function ContactForm() {
 
 
               <div>
+                <label htmlFor="projectName" className="block text-sm font-medium text-neutral-300 mb-2">
+                  Project Type
+                </label>
+                <input
+                  id="projectType"
+                  type="text"
+                  className="w-full px-5 py-2 bg-gray-900 border border-cyan-500/30 rounded-xl text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all"
+                  placeholder="e.g. E-commerce , Shopping , News"
+                />
+              </div>
+              
+              {/* <div>
                 <label htmlFor="projectType" className="block text-sm font-medium text-neutral-300 mb-2">
                   Project Type
                 </label>
@@ -62,9 +65,9 @@ export default function ContactForm() {
                   <option value="dashboard">Dashboard / Admin Panel</option>
                   <option value="other">Other</option>
                 </select>
-              </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <label htmlFor="assignee" className="block text-sm font-medium text-neutral-300 mb-2">
                   Preferred Developer (Optional)
                 </label>
@@ -77,7 +80,7 @@ export default function ContactForm() {
                   <option value="friend">Your Partner (Backend Specialist)</option>
                   <option value="both">Both of us</option>
                 </select>
-              </div>
+              </div> */}
 
               <div>
                 <label htmlFor="description" className="block text-sm font-medium text-neutral-300 mb-2">

@@ -6,6 +6,7 @@ import GrowthSection from '../components/GrowthSection';
 import ContactForm from '../components/ContactForm';
 import Footer from '../components/Footer';
 import Resumes from '../components/Resumes';
+import Consulting from '../components/Consulting';
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
         <ServicesSection />
         <GrowthSection />
         <Resumes />
+        <Consulting />
         <ContactForm />
         <Footer />
       </div>
