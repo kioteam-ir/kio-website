@@ -3,9 +3,9 @@ from pydantic import BaseModel, field_validator, EmailStr
 
 class UserCreate(BaseModel):
     email: EmailStr
-    password: str 
+    password: str
     phone_number: str | None
-    first_name: str 
+    first_name: str
     last_name: str
     is_admin: bool = False
     is_active: bool = True
@@ -16,7 +16,9 @@ class UserCreate(BaseModel):
         if len(value) < 8:
             raise ValueError("Password must be at least 8 characters long")
         if value.isdigit() or value.islower():
-            raise ValueError("Password must contain at least one lowercase letter and upper")
+            raise ValueError(
+                "Password must contain at least one lowercase letter and upper"
+            )
         num = 0
         for char in value:
             if char.isdigit():
@@ -30,7 +32,7 @@ class UserCreate(BaseModel):
     def validate_phone_number(cls, value: str):
         if value is None:
             return value
-        
+
         if value.startswith("09") and len(value) == 11:
             return value
         raise ValueError("Phone number format incorrect")

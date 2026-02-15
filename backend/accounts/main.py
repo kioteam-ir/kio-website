@@ -21,18 +21,16 @@ admin = CRUDAdmin(
     session=get_session,
     mount_path="/api/admin",
     SECRET_KEY=settings.SECRET_KEY,
-    initial_admin={
-        "username": getenv(),
-        "password": "ya.1384.1214"
-    }
+    initial_admin={"username": "yasin", "password": "ya.1384.1214"},
 )
 
 admin.add_view(
     model=User,
     create_schema=UserCreate,
     update_schema=UserCreate,
-    allowed_actions={"view", "create", "update", "delete"}
+    allowed_actions={"view", "create", "update", "delete"},
 )
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -40,11 +38,12 @@ async def lifespan(app: FastAPI):
     await admin.initialize()
     yield
 
+
 app = FastAPI(lifespan=lifespan)
 
 
 @app.post("/login")
-async def login(login_data: LoginRequest,session: AsyncSession = Depends(get_session)):
+async def login(login_data: LoginRequest, session: AsyncSession = Depends(get_session)):
     stmt = select(User).where(User.email == login_data.email)
     user = (await session.exec(stmt)).first()
 
@@ -59,12 +58,14 @@ async def login(login_data: LoginRequest,session: AsyncSession = Depends(get_ses
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
-        "token_type": "bearer"
+        "token_type": "bearer",
     }
 
 
 @app.post("/refresh")
-async def refresh_token(refresh_token: str, session: AsyncSession = Depends(get_session)):
+async def refresh_token(
+    refresh_token: str, session: AsyncSession = Depends(get_session)
+):
     try:
         payload = jwt.decode(refresh_token, settings.SECRET_KEY, settings.ALGORITHM)
         if payload.get("type") != "refresh":
@@ -84,7 +85,7 @@ async def refresh_token(refresh_token: str, session: AsyncSession = Depends(get_
     return {
         "access_token": access_token,
         "refresh_token": new_refresh_token,
-        "token_type": "bearer"
+        "token_type": "bearer",
     }
 
 
