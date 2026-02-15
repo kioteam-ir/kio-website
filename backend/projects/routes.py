@@ -40,4 +40,3 @@ class ProjectsAdminAPIView():
         query = await session.get(Project, project_id)
         await session.close()
         return query
-    

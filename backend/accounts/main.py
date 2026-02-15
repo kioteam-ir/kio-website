@@ -14,6 +14,7 @@ from config import settings
 from config.database import get_session, init_db
 
 from crudadmin import CRUDAdmin
+from os import getenv
 
 
 admin = CRUDAdmin(
@@ -21,7 +22,7 @@ admin = CRUDAdmin(
     mount_path="/api/admin",
     SECRET_KEY=settings.SECRET_KEY,
     initial_admin={
-        "username": "yasin",
+        "username": getenv(),
         "password": "ya.1384.1214"
     }
 )
