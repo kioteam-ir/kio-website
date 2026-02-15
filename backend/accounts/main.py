@@ -15,13 +15,16 @@ from config.database import get_session, init_db
 
 from crudadmin import CRUDAdmin
 from os import getenv
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 admin = CRUDAdmin(
     session=get_session,
     mount_path="/api/admin",
     SECRET_KEY=settings.SECRET_KEY,
-    initial_admin={"username": "yasin", "password": "ya.1384.1214"},
+    initial_admin={"username": getenv("CRUDADMIN_USERNAME"), "password": getenv("CRUDADMIN_PASSWORD")},
 )
 
 admin.add_view(
