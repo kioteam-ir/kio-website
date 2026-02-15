@@ -4,6 +4,7 @@ from local_settings import *
 
 from pathlib import Path
 
+
 class Settings(BaseSettings):
     ACCESS_TOKEN_DEFAULT_EXPIRE_MINUTES: int = 360
     USERS_SERVICE_URL: str = "http://user:8000"
