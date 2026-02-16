@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from jose import JWTError, jwt
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.orm import DeclarativeBase
 
 from models import User
 from schemas import LoginRequest, UserCreate
@@ -16,7 +17,10 @@ from config.database import get_session, init_db
 from crudadmin import CRUDAdmin
 from os import getenv
 from dotenv import load_dotenv
+from typing import Type, cast
 
+
+ModelType = Type[DeclarativeBase]
 
 load_dotenv()
 
@@ -28,7 +32,7 @@ admin = CRUDAdmin(
 )
 
 admin.add_view(
-    model=User,
+    model=cast(ModelType, User),
     create_schema=UserCreate,
     update_schema=UserCreate,
     allowed_actions={"view", "create", "update", "delete"},
@@ -55,7 +59,10 @@ async def login(login_data: LoginRequest, session: AsyncSession = Depends(get_se
 
     if not verify_password(login_data.password, user.salt, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-
+    
+    if user.id is None:
+        raise HTTPException(505, "Runtime Error")
+    
     access_token = await create_access_token(user)
     refresh_token = await create_refresh_token(user.id)
     return {
@@ -82,15 +89,16 @@ async def refresh_token(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
+    if user.id is None:
+        raise HTTPException(505, "Runtime Error")
+    
     access_token = await create_access_token(user, session)
     new_refresh_token = await create_refresh_token(user.id)
-
     return {
         "access_token": access_token,
         "refresh_token": new_refresh_token,
         "token_type": "bearer",
     }
-
 
 front_accounts_view = FrontAccountsView()
 admin_accounts_view = AdminAccountsView()

@@ -2,7 +2,7 @@ import asyncio
 import base64
 from hashlib import pbkdf2_hmac
 import secrets
-from typing import Optional
+from typing import Dict, Optional
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 
@@ -32,7 +32,7 @@ def hash_password_sync(password: str):
     }
 
 
-async def hash_password_async(password: str) -> bytes:
+async def hash_password_async(password: str) -> Dict[str, str]:
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(execute, hash_password_sync, password)
 
@@ -55,10 +55,13 @@ ALGORITHM = settings.ALGORITHM
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
     session: AsyncSession = Depends(get_session),
-):
+    ):
+    
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: int = payload.get("sub")
+        user_id_raw = payload.get("sub")
+        assert user_id_raw is not None, "JWT missing sub"
+        user_id: int = user_id_raw
         if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid token")
     except JWTError:

@@ -1,3 +1,4 @@
+from typing import cast
 from models import User
 from schemas import UserCreate, UserRead
 
@@ -14,6 +15,7 @@ from config.database import get_session
 class FrontAccountsView:
     router = APIRouter(prefix="/api/front/accounts", tags=["front-accounts"])
 
+    @staticmethod
     @router.post("/", response_model=UserRead)
     async def create_account(
         user: UserCreate, session: AsyncSession = Depends(get_session)
@@ -42,24 +44,23 @@ class FrontAccountsView:
         await session.commit()
         return db_user
 
+    @staticmethod
     @router.get("/{account_id}")
     async def get_account(
         user_id: int,
         session: AsyncSession = Depends(get_session),
         check_user: User = Depends(get_current_user),
-    ):
-        stmt = select(User).where(
-            (User.id == user_id) & ((User.id == check_user.id) | (check_user.is_admin))
-        )
-        if not stmt:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You don't have access to this data",
-            )
+        ):
 
         user = await session.get(User, user_id)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
+
+        if not user.id == check_user.id or check_user.is_admin:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You don't have access to this data",
+            )
 
         return user
 
@@ -67,26 +68,23 @@ class FrontAccountsView:
 class AdminAccountsView:
     router = APIRouter(prefix="/api/admin/accounts", tags=["admin-accounts"])
 
+    @staticmethod
     @router.get("/")
     async def list_accounts(session: AsyncSession = Depends(get_session)):
         users = await session.exec(select(User))
         await session.close()
         return {"result": users.all()}
 
+    @staticmethod
     @router.get("/{account_id}")
     async def get_account(
         user_id: int,
         session: AsyncSession = Depends(get_session),
         check_user: User = Depends(get_current_user),
-    ):
+        ):
         stmt = select(User).where(
-            (User.id == user_id) & ((User.id == check_user.id) | (check_user.is_admin))
+            (User.id == user_id) & (check_user.is_admin)
         )
-        if not stmt:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You don't have access to this data",
-            )
 
         user = await session.get(User, user_id)
         if not user:
