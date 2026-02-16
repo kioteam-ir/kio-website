@@ -1,22 +1,16 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from sqlmodel import select
-from sqlmodel.ext.asyncio.session import AsyncSession
 
-from models import Project
-from schemas import AddProjects
 from routes import ProjectsAdminAPIView, ProjectsFrontAPIView
 
-from config import settings
-from config.database import get_session, init_db
+from config.database import init_db
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     yield
-
 
 app = FastAPI(lifespan=lifespan)
 

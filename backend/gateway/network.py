@@ -4,12 +4,7 @@ import async_timeout
 from conf import settings
 
 
-async def make_request(
-    url: str,
-    method: str,
-    data: dict = None,
-    headers: dict = None
-):
+async def make_request(url: str, method: str, data: dict = None, headers: dict = None):
     """
     Args:
         url: is the url for one of the in-network services
