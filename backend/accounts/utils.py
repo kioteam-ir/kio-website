@@ -3,11 +3,9 @@ import base64
 from hashlib import pbkdf2_hmac
 import secrets
 from typing import Dict, Optional
-from jose import jwt, JWTError
+from fastapi import Depends
+from jose import jwt
 from datetime import datetime, timedelta, timezone
-
-from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -19,9 +17,10 @@ from concurrent.futures import ThreadPoolExecutor
 
 
 ITERATIONS = settings.ITERATIONS
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
 
 execute = ThreadPoolExecutor()
-
 
 def hash_password_sync(password: str):
     salt = secrets.token_bytes(16)
@@ -46,34 +45,6 @@ def verify_password(password: str, salt_b64: str, hash_b64: str) -> bool:
     return secrets.compare_digest(new_hash, stored_hash)
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-
-SECRET_KEY = settings.SECRET_KEY
-ALGORITHM = settings.ALGORITHM
-
-
-async def get_current_user(
-    token: str = Depends(oauth2_scheme),
-    session: AsyncSession = Depends(get_session),
-    ):
-    
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id_raw = payload.get("sub")
-        assert user_id_raw is not None, "JWT missing sub"
-        user_id: int = user_id_raw
-        if user_id is None:
-            raise HTTPException(status_code=401, detail="Invalid token")
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    user = await session.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=401, detail="User not found")
-
-    return user
-
-
 async def create_access_token(
     user: User,
     session: AsyncSession = Depends(get_session),
@@ -90,7 +61,7 @@ async def create_access_token(
         + timedelta(minutes=expires_minutes or settings.ACCESS_TOKEN_EXPIRE_MINUTES),
     }
 
-    return jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
 async def create_refresh_token(user_id: int):
