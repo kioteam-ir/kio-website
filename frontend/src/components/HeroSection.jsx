@@ -13,13 +13,13 @@ export default function HeroSection() {
         {/* Left section */}
         <div className="space-y-5 font-bold">
           <div>
-            <h3 className='text-4xl md:text-3xl lg:text-5xl text-cyan-500'>Design studio</h3>
-            <h3 className='text-4xl md:text-3xl lg:text-4xl'>for the</h3>
+            <Highlight className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl text-cyan-500">Your brand's</Highlight>
+            <h3 className='text-4xl md:text-3xl lg:text-5xl text-cyan-500 mt-3'> future starts here.</h3>
           </div>
-          <Highlight className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl text-cyan-500 mt-5">web3 world!</Highlight>
         </div>
         
       </div>
     </div>
   )
 }
+
