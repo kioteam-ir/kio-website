@@ -63,11 +63,6 @@ export const NavBody = ({ children, className, visible }) => {
   );
 };
 
-
-
-
-
-
 // ---------------- NavItems ----------------
 export const NavItems = ({ items, className, onItemClick }) => {
   const [hovered, setHovered] = useState(null);
@@ -166,7 +161,7 @@ export const NavbarLogo = () => (
     to="/"
     className="relative z-20 mr-4 flex items-center px-2 py-1 text-sm font-normal text-black"
   >
-    <img src="/logo.png" alt="logo" width={55} height={55} />
+    <img src="/logo.png" alt="logo" width={77} height={77} />
     <span className="font-medium text-xl text-black dark:text-white">Kio</span>
   </Link>
 );
