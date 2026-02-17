@@ -8,7 +8,7 @@ from typing import AsyncGenerator
 
 from dotenv import load_dotenv
 
-load_dotenv(r"D:\python\project\kio_team\backend\.env.dev")
+load_dotenv()
 
 db_name = os.getenv("DB_NAME")
 db_password = os.getenv("DB_PASSWORD")
