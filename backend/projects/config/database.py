@@ -6,22 +6,11 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from typing import AsyncGenerator
 
-from dotenv import load_dotenv
+from .configs import PsqlConfig
 
-load_dotenv()
+config = PsqlConfig.model_validate({})
 
-db_name = os.getenv("DB_NAME")
-db_password = os.getenv("DB_PASSWORD")
-db_user = os.getenv("DB_USER")
-db_host = os.getenv("DB_HOST")
-db_port = os.getenv("DB_PORT")
-print(db_name, db_host)
-
-DATABASE_URL = (
-    f"postgresql+asyncpg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
-)
-
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(config.get_config(), echo=True)
 
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
