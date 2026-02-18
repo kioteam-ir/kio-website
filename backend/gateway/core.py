@@ -1,10 +1,9 @@
 import aiohttp
 import functools
 
-
 from importlib import import_module
 from fastapi import Request, Response, HTTPException, status
-from typing import List
+from typing import Any, List
 
 from exceptions import AuthTokenMissing, AuthTokenExpired, AuthTokenCorrupted
 from network import make_request
@@ -17,11 +16,11 @@ def route(
     payload_key: str,
     service_url: str,
     authentication_required: bool = False,
-    post_processing_func: str = None,
+    post_processing_func: str | None = None,
     authentication_token_decoder: str = "auth.decode_access_token",
     service_authorization_checker: str = "auth.is_admin_user",
     service_header_generator: str = "auth.generate_request_header",
-    response_model: str = None,
+    response_model: Any = None,
     response_list: bool = False,
 ):
     """
@@ -72,17 +71,11 @@ def route(
                     token_payload = token_decoder(authorization)
                 except (AuthTokenMissing, AuthTokenExpired, AuthTokenCorrupted) as e:
                     exc = str(e)
-                except Exception as e:
-                    # in case a new decoder is used by dependency injection and
-                    # there might be an unexpected error
-                    exc = str(e)
-                finally:
-                    if exc:
-                        raise HTTPException(
-                            status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail=exc,
-                            headers={"WWW-Authenticate": "Bearer"},
-                        )
+                    raise HTTPException(
+                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        detail=exc,
+                        headers={"WWW-Authenticate": "Bearer"},
+                    )
 
                 # authorization
                 if service_authorization_checker:
@@ -119,13 +112,13 @@ def route(
                     data=payload,
                     headers=service_headers,
                 )
-            except aiohttp.client_exceptions.ClientConnectorError:
+            except aiohttp.client_exceptions.ClientConnectorError: #type: ignore
                 raise HTTPException(
                     status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                     detail="Service is unavailable.",
                     headers={"WWW-Authenticate": "Bearer"},
                 )
-            except aiohttp.client_exceptions.ContentTypeError:
+            except aiohttp.client_exceptions.ContentTypeError: #type: ignore
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail="Service error.",
@@ -143,7 +136,7 @@ def route(
     return wrapper
 
 
-def import_function(method_path):
+def import_function(method_path) -> Any:
     module, method = method_path.rsplit(".", 1)
     mod = import_module(module)
     return getattr(mod, method, lambda *args, **kwargs: None)

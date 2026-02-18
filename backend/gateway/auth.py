@@ -2,6 +2,7 @@ import asyncio
 import base64
 from hashlib import pbkdf2_hmac
 import secrets
+from typing import Dict
 
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
@@ -28,7 +29,7 @@ def hash_password_sync(password: str):
     }
 
 
-async def hash_password_async(password: str) -> bytes:
+async def hash_password_async(password: str) -> Dict[str, str]:
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(execute, hash_password_sync, password)
 
@@ -44,53 +45,6 @@ def verify_password(password: str, salt_b64: str, hash_b64: str) -> bool:
 
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
-
-async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
-    if settings.DEBUG:
-        try:
-            payload = jwt.get_unverified_claims(token)
-        except JWTError:
-            # if token is not valid JWT
-            payload = {}
-
-        user_id = payload.get("sub", "1")         # Default to "1" for development
-        email = payload.get("email", "debug@user.local")
-        permissions = payload.get("permissions", ["all"])
-        is_admin = payload.get("is_admin", True)
-
-    else:
-        try:
-            payload = jwt.decode(
-                token,
-                settings.SECRET_KEY,
-                algorithms=[settings.ALGORITHM]
-            )
-        except JWTError as e:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not validate credentials",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-
-        user_id: str = payload.get("sub")
-        if not user_id:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid token: subject missing"
-            )
-
-        email = payload.get("email")
-        permissions = payload.get("permissions", [])
-        is_admin = payload.get("is_admin", False)
-
-    return {
-        "id": user_id,
-        "email": email,
-        "permissions": permissions,
-        "is_admin": is_admin,
-    }
 
 
 async def create_access_token(user: dict, expires_minutes: int | None = None) -> str:

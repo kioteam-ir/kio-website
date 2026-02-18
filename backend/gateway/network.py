@@ -4,7 +4,7 @@ import async_timeout
 from conf import settings
 
 
-async def make_request(url: str, method: str, data: dict = None, headers: dict = None):
+async def make_request(url: str, method: str, data: dict | None = None, headers: dict | None = None):
     """
     Args:
         url: is the url for one of the in-network services
@@ -27,7 +27,7 @@ async def make_request(url: str, method: str, data: dict = None, headers: dict =
     if not data:
         data = {}
 
-    with async_timeout.timeout(settings.GATEWAY_TIMEOUT):
+    async with async_timeout.timeout(settings.GATEWAY_TIMEOUT):
         async with aiohttp.ClientSession() as session:
             request = getattr(session, method)
             async with request(url, json=data, headers=headers) as response:
