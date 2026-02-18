@@ -1,8 +1,11 @@
 from typing import List
+from fastapi import Depends
 from sqlmodel import Relationship, SQLModel, Field
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
+
+from config.database import get_session
 
 class UserRole(SQLModel, table=True):
     user_id: int = Field(default=None, foreign_key="user.id", primary_key=True)
@@ -49,19 +52,19 @@ class Permission(SQLModel, table=True):
     )
 
 
-async def get_user_permissions_from_db(user_id: int, session: AsyncSession) -> list[str]:
+async def get_user_permissions_from_db(user: User, session: AsyncSession) -> list[str]:
     stmt = (
         select(User)
-        .where(User.id == user_id) # type: ignore
+        .where(User.id == user.id) # type: ignore
         .options(
             selectinload(User.roles),  # type: ignore
             selectinload(User.roles).selectinload(Role.permissions)  # type: ignore
         )
     )
-    result = await session.execute(stmt)
-    user = result.scalar_one_or_none()
-    if not user:
+    result = await session.exec(stmt)  # type: ignore
+    user_obj = result.scalars().one_or_none()
+    if not user_obj:
         return []
 
-    permissions = [perm.name for role in user.roles for perm in role.permissions]
+    permissions = [perm.name for role in user_obj.roles for perm in role.permissions]
     return permissions
