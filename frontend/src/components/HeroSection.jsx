@@ -17,7 +17,6 @@ export default function HeroSection() {
             <h3 className='text-4xl md:text-3xl lg:text-5xl text-cyan-500 mt-3'> future starts here.</h3>
           </div>
         </div>
-        
       </div>
     </div>
   )

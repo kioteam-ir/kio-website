@@ -159,10 +159,10 @@ export const MobileNavToggle = ({ isOpen, onClick }) =>
 export const NavbarLogo = () => (
   <Link
     to="/"
-    className="relative z-20 mr-4 flex items-center px-2 py-1 text-sm font-normal text-black"
+    className="relative z-20 mr-4 flex items-center px-2 text-sm font-normal text-black"
   >
-    <img src="/logo.png" alt="logo" width={77} height={77} />
-    <span className="font-medium text-xl text-black dark:text-white">Kio</span>
+    <img src="/logo.png" alt="logo" width={100} height={100} />
+    {/* <span className="font-medium text-xl text-black dark:text-white">Kio</span> */}
   </Link>
 );
 
