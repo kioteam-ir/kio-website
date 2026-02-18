@@ -47,9 +47,9 @@ def verify_password(password: str, salt_b64: str, hash_b64: str) -> bool:
 
 async def create_access_token(
     user: User,
-    session: AsyncSession = Depends(get_session),
+    session: AsyncSession,
     expires_minutes: Optional[int] = None,
-) -> str:
+    ) -> str:
     permissions = await get_user_permissions_from_db(user, session)
     payload = {
         "sub": str(user.id),

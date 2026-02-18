@@ -29,7 +29,6 @@ async def login(login_data: LoginRequest, request: Request, response: Response):
     payload_key="user",
     service_url=settings.USERS_SERVICE_URL,
     authentication_required=True,
-    post_processing_func=None,
     authentication_token_decoder="auth.decode_access_token",
     service_authorization_checker="auth.is_admin_user",
     service_header_generator="auth.generate_request_header",

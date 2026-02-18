@@ -63,7 +63,7 @@ async def login(login_data: LoginRequest, session: AsyncSession = Depends(get_se
     if user.id is None:
         raise HTTPException(505, "Runtime Error")
     
-    access_token = await create_access_token(user)
+    access_token = await create_access_token(user, session)
     refresh_token = await create_refresh_token(user.id)
     return {
         "access_token": access_token,
