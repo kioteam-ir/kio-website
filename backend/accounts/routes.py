@@ -1,14 +1,14 @@
-from models import User
-from schemas import UserCreate, UserRead
+from .models import User
+from .schemas import UserCreate, UserRead
 
-from utils import hash_password_async
-from dependency import get_current_user, require_admin
+from .utils import hash_password_async
+from .dependency import get_current_user, require_admin
 from sqlmodel import select, or_
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from fastapi import APIRouter, Depends, status, HTTPException
 
-from config.database import get_session
+from .config.database import get_session
 
 
 class FrontAccountsView:

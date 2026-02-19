@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:17.5-alpine3.22
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: kio 
+    ports:
+      - "5433:5432"
+    volumes:
+      - kio_pgdata:/var/lib/postgresql/data
+
+  gateway:
+    build: .
+    ports:
+      - "8000:8000"
+    command: python -m uvicorn gateway.main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      - accounts
+      - projects
+
+  accounts:
+    build: .
+    ports:
+      - "8001:8000"
+    command: python -m uvicorn accounts.main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      - postgres
+
+  projects:
+    build: .
+    ports:
+      - "8002:8000"
+    command: python -m uvicorn projects.main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      - postgres
+
+volumes:
+  kio_pgdata:

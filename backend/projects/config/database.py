@@ -1,4 +1,3 @@
-import os
 from sqlmodel import SQLModel
 
 from sqlmodel.ext.asyncio.session import AsyncSession

@@ -1,9 +1,9 @@
 from fastapi import FastAPI, status, Request, Response
 
-from conf import settings
-from core import route
+from .conf import settings
+from .core import route
 
-from schemas.accounts import LoginRequest, UserCreate
+from .schemas.accounts import LoginRequest, UserCreate
 
 app = FastAPI()
 

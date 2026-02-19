@@ -3,16 +3,13 @@ import base64
 from hashlib import pbkdf2_hmac
 import secrets
 from typing import Dict, Optional
-from fastapi import Depends
 from jose import jwt
 from datetime import datetime, timedelta, timezone
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from models import User, get_user_permissions_from_db
-from config.database import get_session
-import config.settings as settings
-
+from config import settings as settings
 from concurrent.futures import ThreadPoolExecutor
 
 

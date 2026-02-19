@@ -5,7 +5,6 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from config.database import get_session
 
 class UserRole(SQLModel, table=True):
     user_id: int = Field(default=None, foreign_key="user.id", primary_key=True)

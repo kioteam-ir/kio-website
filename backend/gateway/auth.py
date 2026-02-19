@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
-from conf import settings
+from .conf import settings
 
 from concurrent.futures import ThreadPoolExecutor
 

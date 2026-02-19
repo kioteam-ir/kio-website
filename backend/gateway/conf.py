@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 
-from local_settings import *
+from .local_settings import *
 
 from pathlib import Path
 
