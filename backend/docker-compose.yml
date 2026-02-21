@@ -1,41 +1,86 @@
+
 version: "3.9"
 
 services:
   postgres:
     image: postgres:17.5-alpine3.22
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: kio 
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5433:5432"
     volumes:
       - kio_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kio_net
 
   gateway:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     command: python -m uvicorn gateway.main:app --host 0.0.0.0 --port 8000
     depends_on:
-      - accounts
-      - projects
+      accounts:
+        condition: service_healthy
+      projects:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    networks:
+      - kio_net
 
   accounts:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8001:8000"
     command: python -m uvicorn accounts.main:app --host 0.0.0.0 --port 8000
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    networks:
+      - kio_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
   projects:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8002:8000"
     command: python -m uvicorn projects.main:app --host 0.0.0.0 --port 8000
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    networks:
+      - kio_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
 volumes:
   kio_pgdata:
+
+networks:
+  kio_net:
+    driver: bridge
