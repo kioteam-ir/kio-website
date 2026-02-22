@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from typing import AsyncGenerator
 
-from .configs import PsqlConfig
+from config.configs import PsqlConfig
 
 config = PsqlConfig.model_validate({})
 

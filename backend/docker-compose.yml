@@ -1,82 +1,93 @@
-
 version: "3.9"
 
 services:
+
   postgres:
     image: postgres:17.5-alpine3.22
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+
+    env_file:
+      - ".env.dev"
+
     ports:
       - "5433:5432"
+
     volumes:
       - kio_pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+
     networks:
       - kio_net
 
-  gateway:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    command: python -m uvicorn gateway.main:app --host 0.0.0.0 --port 8000
-    depends_on:
-      accounts:
-        condition: service_healthy
-      projects:
-        condition: service_healthy
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-    networks:
-      - kio_net
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 20
+
 
   accounts:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./accounts/Dockerfile
+    
+    env_file:
+      - ".env.dev"
+
     ports:
       - "8001:8000"
-    command: python -m uvicorn accounts.main:app --host 0.0.0.0 --port 8000
+
     depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - postgres
+
     networks:
       - kio_net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/docs" ]
-      interval: 15s
-      timeout: 5s
-      retries: 5
+
+    # healthcheck:
+    #   test: ["CMD", "wget", "--spider", "http://127.0.0.1:8000/docs"]
+    #   interval: 15s
+    #   timeout: 5s
+    #   retries: 5
+
 
   projects:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./projects/Dockerfile
+
+    env_file:
+      - ".env.dev"
+
     ports:
       - "8002:8000"
-    command: python -m uvicorn projects.main:app --host 0.0.0.0 --port 8000
+
     depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - postgres
+
     networks:
       - kio_net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/docs" ]
-      interval: 15s
-      timeout: 5s
-      retries: 5
+
+    # healthcheck:
+    #   test: ["CMD", "wget", "--spider", "http://127.0.0.1:8000/docs"]
+    #   interval: 15s
+    #   timeout: 5s
+    #   retries: 5
+
+
+  gateway:
+    build:
+      context: .
+      dockerfile: ./gateway/Dockerfile
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - accounts
+      - projects
+
+    networks:
+      - kio_net
+
 
 volumes:
   kio_pgdata:

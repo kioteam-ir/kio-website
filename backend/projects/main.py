@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 
-from .routes import ProjectsAdminAPIView, ProjectsFrontAPIView
+from routes import ProjectsAdminAPIView, ProjectsFrontAPIView
 
-from .config.database import init_db
+from config.database import init_db
 
 
 @asynccontextmanager

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import select
 
-from .config.database import get_session
-from .models import Project
-from .schemas import AddProjects
+from config.database import get_session
+from models import Project
+from schemas import AddProjects
 
 
 class ProjectsFrontAPIView:

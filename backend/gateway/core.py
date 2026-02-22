@@ -5,8 +5,8 @@ from importlib import import_module
 from fastapi import Request, Response, HTTPException, status
 from typing import Any, List
 
-from .exceptions import AuthTokenMissing, AuthTokenExpired, AuthTokenCorrupted
-from .network import make_request
+from exceptions import AuthTokenMissing, AuthTokenExpired, AuthTokenCorrupted
+from network import make_request
 
 
 def route(
