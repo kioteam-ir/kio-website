@@ -6,16 +6,18 @@ from fastapi import Request, Response, HTTPException, status
 from typing import Any, List
 
 from exceptions import AuthTokenMissing, AuthTokenExpired, AuthTokenCorrupted
+import settings
 from network import make_request
 
 
 def route(
+    methods: List | None,
     request_method,
     path: str,
     status_code: int,
     payload_key: str,
     service_url: str,
-    authentication_required: bool = False,
+    authentication_required: bool = True,
     post_processing_func: str | None = None,
     authentication_token_decoder: str = "auth.decode_access_token",
     service_authorization_checker: str = "auth.is_admin_user",
@@ -47,15 +49,27 @@ def route(
 
     # request_method: app.post || app.get or so on
     # app_any: app.post('/api/login', status_code=200, response_model=int)
+    if settings.DEBUG:
+        authentication_required = False
+
     if response_model:
         response_model = import_function(response_model)
         if response_list:
             response_model = List[response_model]
+    kwargs = {
+        "path": path,
+        "status_code": status_code,
+    }
 
-    app_any = request_method(
-        path, status_code=status_code, response_model=response_model
-    )
+    # فقط اگر request_method api_route باشد methods را اضافه کن
+    if methods is not None:
+        kwargs["methods"] = methods
 
+    if response_model is not None:
+        kwargs["response_model"] = response_model
+
+    app_any = request_method(**kwargs)
+    
     def wrapper(f):
         @app_any
         @functools.wraps(f)
