@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, status
 from contextlib import asynccontextmanager
 
 from jose import JWTError, jwt
@@ -15,34 +15,31 @@ from config import settings
 from config.database import get_session, init_db
 
 from crudadmin import CRUDAdmin
-from os import getenv
-from dotenv import load_dotenv
 from typing import Type, cast
 
 
 ModelType = Type[DeclarativeBase]
 
-load_dotenv()
 
-admin = CRUDAdmin(
-    session=get_session,
-    mount_path="/api/admin",
-    SECRET_KEY=settings.SECRET_KEY,
-    initial_admin={"username": getenv("CRUDADMIN_USERNAME"), "password": getenv("CRUDADMIN_PASSWORD")},
-)
+# admin = CRUDAdmin(
+#     session=get_session,
+#     mount_path="/api/admin",
+#     SECRET_KEY=settings.SECRET_KEY,
+#     initial_admin={"username": getenv("CRUDADMIN_USERNAME"), "password": getenv("CRUDADMIN_PASSWORD")},
+# )
 
-admin.add_view(
-    model=cast(ModelType, User),
-    create_schema=UserCreate,
-    update_schema=UserCreate,
-    allowed_actions={"view", "create", "update", "delete"},
-)
+# admin.add_view(
+#     model=cast(ModelType, User),
+#     create_schema=UserCreate,
+#     update_schema=UserCreate,
+#     allowed_actions={"view", "create", "update", "delete"},
+# )
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
-    await admin.initialize()
+    # await admin.initialize()
     yield
 
 
@@ -100,8 +97,30 @@ async def refresh_token(
         "token_type": "bearer",
     }
 
+
+@app.post("/verify")
+async def verify_jwt_token(token: str):
+    try:
+        if token.startswith("Bearer "):
+            token = token.split(" ", 1)[1]
+
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=settings.ALGORITHM
+        )
+
+        return payload
+
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token"
+        )
+    
+
 front_accounts_view = FrontAccountsView()
 admin_accounts_view = AdminAccountsView()
 app.include_router(admin_accounts_view.router)
 app.include_router(front_accounts_view.router)
-app.mount("/api/admin", admin.app)
+# app.mount("/api/admin", admin.app)

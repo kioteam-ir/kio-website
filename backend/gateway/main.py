@@ -26,6 +26,17 @@ app = FastAPI()
 async def login(login_data: LoginRequest, request: Request, response: Response):
     pass
 
+@route(
+    request_method=app.post,
+    path="/api/verify",
+    status_code=status.HTTP_201_CREATED,
+    payload_key="login_data",
+    service_url=settings.ACCOUNTS_SERVICE_URL,
+)
+async def verify(request: Request, response: Response):
+    pass
+
+
 
 @route(
     methods=None,

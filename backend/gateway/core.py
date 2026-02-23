@@ -6,17 +6,46 @@ from fastapi import Request, Response, HTTPException, status
 from typing import Any, List
 
 from exceptions import AuthTokenMissing, AuthTokenExpired, AuthTokenCorrupted
-import settings
 from network import make_request
+from conf import settings
+
+
+async def verify_token_remote(token: str):
+    try:
+        if token.startswith("Bearer "):
+            token = token
+
+        resp_data, status_code = await make_request(
+            url=f"{settings.ACCOUNTS_SERVICE_URL}/verify",
+            method="post",
+            data={},
+            headers={
+                "Authorization": token
+            },
+        )
+
+        if status_code != 200:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized"
+            )
+
+        return resp_data
+
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Auth service unavailable"
+        )
 
 
 def route(
-    methods: List | None,
     request_method,
     path: str,
     status_code: int,
     payload_key: str,
     service_url: str,
+    methods: List | None = None,
     authentication_required: bool = True,
     post_processing_func: str | None = None,
     authentication_token_decoder: str = "auth.decode_access_token",
@@ -69,7 +98,7 @@ def route(
         kwargs["response_model"] = response_model
 
     app_any = request_method(**kwargs)
-    
+
     def wrapper(f):
         @app_any
         @functools.wraps(f)
@@ -79,35 +108,33 @@ def route(
             if authentication_required:
                 # authentication
                 authorization = request.headers.get("authorization")
-                token_decoder = import_function(authentication_token_decoder)
-                exc = None
-                try:
-                    token_payload = token_decoder(authorization)
-                except (AuthTokenMissing, AuthTokenExpired, AuthTokenCorrupted) as e:
-                    exc = str(e)
+                if not authorization:
                     raise HTTPException(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail=exc,
-                        headers={"WWW-Authenticate": "Bearer"},
+                        detail="Authorization header missing"
                     )
+                user_payload = await verify_token_remote(authorization)
 
+                request.state.user = user_payload
+
+                service_headers["authorization"] = authorization
                 # authorization
-                if service_authorization_checker:
-                    authorization_checker = import_function(
-                        service_authorization_checker
-                    )
-                    is_user_eligible = authorization_checker(token_payload)
-                    if not is_user_eligible:
-                        raise HTTPException(
-                            status_code=status.HTTP_403_FORBIDDEN,
-                            detail="You are not allowed to access this scope.",
-                            headers={"WWW-Authenticate": "Bearer"},
-                        )
+                # if service_authorization_checker:
+                #     authorization_checker = import_function(
+                #         service_authorization_checker
+                #     )
+                #     is_user_eligible = authorization_checker(token_payload)
+                #     if not is_user_eligible:
+                #         raise HTTPException(
+                #             status_code=status.HTTP_403_FORBIDDEN,
+                #             detail="You are not allowed to access this scope.",
+                #             headers={"WWW-Authenticate": "Bearer"},
+                #         )
 
                 # service headers
-                if service_header_generator:
-                    header_generator = import_function(service_header_generator)
-                    service_headers = header_generator(token_payload)
+                # if service_header_generator:
+                #     header_generator = import_function(service_header_generator)
+                #     service_headers = header_generator(token_payload)
 
             scope = request.scope
 
