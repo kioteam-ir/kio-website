@@ -39,5 +39,7 @@ class Settings(BaseSettings):
     REFRESH_EXPIRE_DAYS: int = REFRESH_EXPIRE_DAYS
     ITERATIONS: int = ITERATIONS
     DEBUG: bool = bool(os.getenv("DEBUG"))
+    CRUDADMIN_USERNAME: str = str(os.getenv("CRUDADMIN_USERNAME"))
+    CRUDADMIN_PASSWORD: str = str(os.getenv("CRUDADMIN_PASSWORD"))
 
 settings = Settings()

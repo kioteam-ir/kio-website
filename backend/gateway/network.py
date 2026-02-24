@@ -29,7 +29,17 @@ async def make_request(url: str, method: str, data: dict | None = None, headers:
 
     async with async_timeout.timeout(settings.GATEWAY_TIMEOUT):
         async with aiohttp.ClientSession() as session:
+
             request = getattr(session, method)
+
             async with request(url, json=data, headers=headers) as response:
-                data = await response.json()
-                return (data, response.status)
+
+                content_type = response.headers.get("Content-Type", "")
+                
+                # اگر JSON بود parse کن
+                if "application/json" in content_type:
+                    resp_data = await response.json()
+                else:
+                    resp_data = await response.text()
+
+                return resp_data, response.status

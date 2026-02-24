@@ -147,19 +147,14 @@ def route(
                     data=payload,
                     headers=service_headers,
                 )
-            except aiohttp.client_exceptions.ClientConnectorError: #type: ignore
-                raise HTTPException(
-                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                    detail="Service is unavailable.",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-            except aiohttp.client_exceptions.ContentTypeError: #type: ignore
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Service error.",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
 
+                raise HTTPException(
+                    status_code=500,
+                    detail=str(e)
+                )
             response.status_code = status_code_from_service
 
             if all([status_code_from_service == status_code, post_processing_func]):
