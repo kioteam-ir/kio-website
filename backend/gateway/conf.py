@@ -1,9 +1,14 @@
+import os
+
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 
 from local_settings import *
 
 from pathlib import Path
 
+
+load_dotenv(".env.dev")
 
 class Settings(BaseSettings):
     ACCESS_TOKEN_DEFAULT_EXPIRE_MINUTES: int = 360
@@ -20,7 +25,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = ACCESS_TOKEN_EXPIRE_MINUTES
     REFRESH_EXPIRE_DAYS: int = REFRESH_EXPIRE_DAYS
     ITERATIONS: int = ITERATIONS
-    DEBUG: bool = LOCAL_DEBUG
+    DEBUG: bool = bool(os.getenv("DEBUG"))
 
 
 settings = Settings()

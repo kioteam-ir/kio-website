@@ -7,7 +7,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from models import User
 from config.database import get_session
-from config import settings as settings
+from config.configs import settings as settings
 
 
 SECRET_KEY = settings.SECRET_KEY

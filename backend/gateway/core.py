@@ -132,9 +132,10 @@ def route(
                 #     service_headers = header_generator(token_payload)
 
             scope = request.scope
+
             method = scope["method"].lower()
-            full_path = request.path_params.get("full_path", "")
-            url = f"{service_url}/{full_path}"
+            path = scope["path"]
+            url = f"{service_url}{path}"
 
             payload_obj = kwargs.get(payload_key)
             payload = payload_obj.dict() if payload_obj else {}

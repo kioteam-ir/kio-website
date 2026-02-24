@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from models import User, get_user_permissions_from_db
-from config import settings as settings
+from config.configs import settings as settings
 from concurrent.futures import ThreadPoolExecutor
 
 
