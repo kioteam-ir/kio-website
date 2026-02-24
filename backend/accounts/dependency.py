@@ -28,7 +28,7 @@ async def get_current_user(
         user_id: int = user_id_raw
         if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid token")
-    except JWTError:
+    except:
         raise HTTPException(status_code=401, detail="Invalid token")
 
     user = await session.get(User, user_id)

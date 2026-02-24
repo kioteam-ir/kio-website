@@ -49,9 +49,7 @@ app = FastAPI(lifespan=lifespan)
 @app.post("/api/login")
 async def login(login_data: LoginRequest, session: AsyncSession = Depends(get_session)):
     stmt = select(User).where(User.email == login_data.email)
-    print(stmt)
     user = (await session.exec(stmt)).first()
-    print(user)
     if not user:
         raise HTTPException(status_code=401, detail="not user")
 
