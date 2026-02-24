@@ -46,16 +46,17 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-@app.post("/login")
+@app.post("/api/login")
 async def login(login_data: LoginRequest, session: AsyncSession = Depends(get_session)):
     stmt = select(User).where(User.email == login_data.email)
+    print(stmt)
     user = (await session.exec(stmt)).first()
-
+    print(user)
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="not user")
 
     if not verify_password(login_data.password, user.salt, user.password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="Invalid password")
     
     if user.id is None:
         raise HTTPException(505, "Runtime Error")
@@ -69,7 +70,7 @@ async def login(login_data: LoginRequest, session: AsyncSession = Depends(get_se
     }
 
 
-@app.post("/refresh")
+@app.post("/api/refresh")
 async def refresh_token(
     refresh_token: str, session: AsyncSession = Depends(get_session)
 ):
@@ -98,8 +99,9 @@ async def refresh_token(
     }
 
 
-@app.post("/verify")
+@app.post("/api/verify")
 async def verify_jwt_token(token: str):
+    print("verify called")
     try:
         if token.startswith("Bearer "):
             token = token.split(" ", 1)[1]

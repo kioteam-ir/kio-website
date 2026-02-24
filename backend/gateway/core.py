@@ -48,9 +48,6 @@ def route(
     methods: List | None = None,
     authentication_required: bool = True,
     post_processing_func: str | None = None,
-    authentication_token_decoder: str = "auth.decode_access_token",
-    service_authorization_checker: str = "auth.is_admin_user",
-    service_header_generator: str = "auth.generate_request_header",
     response_model: Any = None,
     response_list: bool = False,
 ):
@@ -90,7 +87,6 @@ def route(
         "status_code": status_code,
     }
 
-    # فقط اگر request_method api_route باشد methods را اضافه کن
     if methods is not None:
         kwargs["methods"] = methods
 
@@ -106,7 +102,6 @@ def route(
             service_headers = {}
 
             if authentication_required:
-                # authentication
                 authorization = request.headers.get("authorization")
                 if not authorization:
                     raise HTTPException(
@@ -137,14 +132,12 @@ def route(
                 #     service_headers = header_generator(token_payload)
 
             scope = request.scope
-
             method = scope["method"].lower()
-            path = scope["path"]
+            full_path = request.path_params.get("full_path", "")
+            url = f"{service_url}/{full_path}"
 
             payload_obj = kwargs.get(payload_key)
             payload = payload_obj.dict() if payload_obj else {}
-
-            url = f"{service_url}{path}"
 
             try:
                 resp_data, status_code_from_service = await make_request(

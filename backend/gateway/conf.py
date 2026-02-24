@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = ACCESS_TOKEN_EXPIRE_MINUTES
     REFRESH_EXPIRE_DAYS: int = REFRESH_EXPIRE_DAYS
     ITERATIONS: int = ITERATIONS
-    DEBUG: bool = False
+    DEBUG: bool = LOCAL_DEBUG
 
 
 settings = Settings()
