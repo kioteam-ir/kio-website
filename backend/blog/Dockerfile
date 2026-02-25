@@ -1,7 +1,10 @@
-FROM myproject-base:latest
+FROM kio-base
 
 WORKDIR /app
+ENV PYTHONPATH=/app
 
-COPY ./blog/ .
+COPY .env.dev /app/
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+COPY blog/ .
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

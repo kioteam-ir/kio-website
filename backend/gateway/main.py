@@ -98,3 +98,17 @@ async def proxy_front_projects(request: Request, response: Response):
 )
 async def crudadmin(request: Request, response: Response):
     pass
+
+
+@route(
+    request_method=app.api_route,
+    path="/api/front/blog/{full_path:path}",
+    methods=["GET", "POST", "PUT", "DELETE"],
+    status_code=status.HTTP_201_CREATED,
+    payload_key="blog_data",
+    service_url=settings.PROJECTS_SERVICE_URL,
+    authentication_required=True,
+    response_model=None,
+)
+async def proxy_front_blog(request: Request, response: Response):
+    pass
