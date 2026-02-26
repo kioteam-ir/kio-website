@@ -1,15 +1,8 @@
-import os
+from pathlib import Path
+from typing import ClassVar
 
-from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pathlib import Path
-from .local_settings import *
 
-from pathlib import Path
-
-
-BASE_DIR = Path(__file__).resolve().parents[2] 
-load_dotenv(BASE_DIR / ".env.dev")
 
 class PsqlConfig(BaseSettings):
     DB_USER: str
@@ -19,7 +12,7 @@ class PsqlConfig(BaseSettings):
     DB_NAME: str
 
     model_config = SettingsConfigDict(
-        env_file=BASE_DIR / ".env.dev",
+        env_file=".env",
         extra="ignore"
     )
     
@@ -28,18 +21,27 @@ class PsqlConfig(BaseSettings):
 
 
 class Settings(BaseSettings):
-
+    ACCESS_TOKEN_DEFAULT_EXPIRE_MINUTES: int = 360
+    ACCOUNTS_SERVICE_URL: str = "http://accounts:8000"
+    BLOG_SERVICE_URL: str = "http://blog:8000"
+    PROJECTS_SERVICE_URL: str = "http://projects:8000"
+    GATEWAY_TIMEOUT: int = 59
     BASE_DIR: Path = Path(__file__).resolve().parent.parent
     TEMPLATES_DIR: Path = BASE_DIR / "templates"
     STATIC_DIR: Path = BASE_DIR / "static"
     MEDIA_DIR: Path = BASE_DIR / "media"
-    SECRET_KEY: str = SECRET_KEY
-    ALGORITHM: str = ALGORITHM
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = ACCESS_TOKEN_EXPIRE_MINUTES
-    REFRESH_EXPIRE_DAYS: int = REFRESH_EXPIRE_DAYS
-    ITERATIONS: int = ITERATIONS
-    DEBUG: bool = bool(os.getenv("DEBUG"))
-    CRUDADMIN_USERNAME: str = str(os.getenv("CRUDADMIN_USERNAME"))
-    CRUDADMIN_PASSWORD: str = str(os.getenv("CRUDADMIN_PASSWORD"))
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    REFRESH_EXPIRE_DAYS: int
+    ITERATIONS: int
+    DEBUG: bool
+    CRUDADMIN_PASSWORD: str
+    CRUDADMIN_USERNAME: str
 
-settings = Settings()
+    model_config = SettingsConfigDict(
+        env_file=".env.global",
+        extra="ignore"
+    )
+    
+settings = Settings() #type: ignore

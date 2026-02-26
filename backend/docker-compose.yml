@@ -2,22 +2,14 @@ version: "3.9"
 
 services:
 
-  postgres:
+  accounts-db:
     image: postgres:17.5-alpine3.22
-    restart: unless-stopped
-
     env_file:
-      - ".env.dev"
-
+     - ./accounts/config/.env
     ports:
       - "5433:5432"
-
-    volumes:
-      - kio_pgdata:/var/lib/postgresql/data
-
     networks:
       - kio_net
-
 
   accounts:
     build:
@@ -25,14 +17,24 @@ services:
       dockerfile: ./accounts/Dockerfile
     
     env_file:
-      - ".env.dev"
+      - ./accounts/config/.env
+      - .env.global
 
     ports:
       - "8001:8000"
 
     depends_on:
-      - postgres
+      - accounts-db
 
+    networks:
+      - kio_net
+
+  blog-db:
+    image: postgres:17.5-alpine3.22
+    env_file:
+     - ./blog/config/.env
+    ports:
+      - "5434:5432"
     networks:
       - kio_net
 
@@ -42,14 +44,25 @@ services:
       dockerfile: ./blog/Dockerfile
     
     env_file:
-      - ".env.dev"
+      - ./blog/config/.env
+      - .env.global
 
     ports:
       - "8003:8000"
 
     depends_on:
-      - postgres
+      - blog-db
 
+    networks:
+      - kio_net
+
+
+  projects-db:
+    image: postgres:17.5-alpine3.22
+    env_file:
+     - ./projects/config/.env
+    ports:
+      - "5435:5432"
     networks:
       - kio_net
 
@@ -60,13 +73,14 @@ services:
       dockerfile: ./projects/Dockerfile
 
     env_file:
-      - ".env.dev"
+      - ./projects/config/.env
+      - .env.global
 
     ports:
       - "8002:8000"
 
     depends_on:
-      - postgres
+      - projects-db
 
     networks:
       - kio_net
@@ -83,6 +97,7 @@ services:
     depends_on:
       - accounts
       - projects
+      - blog
 
     networks:
       - kio_net

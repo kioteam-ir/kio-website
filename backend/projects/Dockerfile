@@ -3,7 +3,7 @@ FROM kio-base
 WORKDIR /app
 ENV PYTHONPATH=/app
 
-COPY .env.dev /app/
+COPY .env.global /app/
 
 COPY projects/ .
 
