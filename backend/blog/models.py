@@ -12,7 +12,7 @@ class PostStatus(str, Enum):
 
 class Post(SQLModel, table=True):
     id: int | None = Field(primary_key=True, default=None)
-    auther_id: int = Field(foreign_key="user.id")
+    auther_id: int
     parent_id: int = Field(foreign_key="post.id")
     title: str = Field(max_length=75)
     meta_tile: str = Field(max_length=100)
