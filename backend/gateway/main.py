@@ -1,10 +1,32 @@
-from fastapi import FastAPI, status, Request, Response
+from fastapi import FastAPI, HTTPException, status, Request, Response
+from fastapi.responses import JSONResponse
+import redis.asyncio as redis
 
 from conf import settings
 from core import route
+from middleware import RedisTokenBucket
 
 
 app = FastAPI()
+redis_client = redis.Redis(host="redis", port=6379, decode_responses=True)
+
+bucket = RedisTokenBucket(redis_client, rate=1, capacity=10)
+
+
+@app.middleware("http")
+async def tocken_buscket_middlewar(request: Request, call_next):
+    client_ip = request.client
+    key = f"rate_limit:{client_ip}"
+
+    allowed = await bucket.allow_request(key)
+
+    if not allowed:
+      return JSONResponse(
+            status_code=429,
+            content={"detail": "Too Many Requests"}
+        )
+
+    return await call_next(request)
 
 
 @route(

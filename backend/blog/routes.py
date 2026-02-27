@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from config.database import get_session
-import schemas
+from schemas import AddBlog
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -11,5 +11,5 @@ class FrontBlogView:
 
     @staticmethod
     @router.post("/")
-    async def add_blog(blog_data: schemas.AddBlog, session: AsyncSession = Depends(get_session)):
+    async def add_blog(data: AddBlog, session: AsyncSession = Depends(get_session)):
         pass

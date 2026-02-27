@@ -1,11 +1,9 @@
-import aiohttp
 import functools
 
 from importlib import import_module
 from fastapi import Request, Response, HTTPException, status
 from typing import Any, List
 
-from exceptions import AuthTokenMissing, AuthTokenExpired, AuthTokenCorrupted
 from network import make_request
 from conf import settings
 
@@ -137,8 +135,13 @@ def route(
             path = scope["path"]
             url = f"{service_url}{path}"
 
+            payload = {}
             payload_obj = kwargs.get(payload_key)
-            payload = payload_obj.dict() if payload_obj else {}
+            if payload_obj and not isinstance(payload_obj, str):
+                try:
+                    payload = payload_obj.dict()
+                except Exception:
+                    payload = {}
 
             try:
                 resp_data, status_code_from_service = await make_request(

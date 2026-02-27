@@ -2,6 +2,15 @@ version: "3.9"
 
 services:
 
+  redis:
+    image: redis:8.4-alpine
+    env_file:
+      - .env.global
+    ports:
+    - "6380:6379"
+    networks:
+      - kio_net
+
   accounts-db:
     image: postgres:17.5-alpine3.22
     env_file:
@@ -98,6 +107,7 @@ services:
       - accounts
       - projects
       - blog
+      - redis
 
     networks:
       - kio_net
