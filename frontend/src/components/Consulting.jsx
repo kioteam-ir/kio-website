@@ -2,18 +2,16 @@ import React from 'react'
 
 export default function Consulting() {
   return (
-    <div className="2xl:max-w-7xl xl:max-w-6xl lg:max-w-5xl md:max-w-4xl sm:max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+    <div className="2xl:max-w-7xl h-150 mb-15 overflow-hidden xl:max-w-6xl lg:max-w-5xl md:max-w-4xl sm:max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
 
-      {/* کانتینر اصلی - فقط در lg و بزرگ‌تر سه ستونه */}
       <div className="grid lg:grid-cols-3 gap-8 lg:gap-16 items-center">
 
-        {/* عکس سمت چپ - فقط در lg و بزرگ‌تر */}
         <div className="hidden lg:block">
           <div className="rounded-3xl overflow-hidden border-4 border-purple-500/30 shadow-2xl">
             <img
               src="/grow-w.png"
               alt="Woman writing notes"
-              className="w-full h-auto object-cover rounded-3xl"
+              className="w-full h-125 object-cover rounded-3xl"
             />
           </div>
         </div>
@@ -49,7 +47,7 @@ export default function Consulting() {
             <img
               src="/grow-m.png"
               alt="Man thinking on laptop"
-              className="w-full h-auto object-cover rounded-3xl"
+              className="w-full h-125 object-cover rounded-3xl"
             />
           </div>
         </div>
