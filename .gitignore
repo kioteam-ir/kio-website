@@ -64,6 +64,7 @@ db.sqlite3-journal
 *.db
 local_*
 .env.dev
+.env.global
 
 # Flask stuff:
 instance/
