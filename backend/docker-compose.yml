@@ -2,19 +2,25 @@ version: "3.9"
 
 services:
 
+  kio-base:
+    build:
+      context: .
+      dockerfile: base.Dockerfile
+    image: kio-base:latest
+
   redis:
     image: redis:8.4-alpine
     env_file:
       - .env.global
     ports:
-    - "6380:6379"
+      - "6380:6379"
     networks:
       - kio_net
 
   accounts-db:
     image: postgres:17.5-alpine3.22
     env_file:
-     - ./accounts/config/.env
+      - ./accounts/config/.env
     ports:
       - "5433:5432"
     networks:
@@ -24,24 +30,21 @@ services:
     build:
       context: .
       dockerfile: ./accounts/Dockerfile
-    
     env_file:
       - ./accounts/config/.env
       - .env.global
-
     ports:
       - "8001:8000"
-
     depends_on:
+      - kio-base
       - accounts-db
-
     networks:
       - kio_net
 
   blog-db:
     image: postgres:17.5-alpine3.22
     env_file:
-     - ./blog/config/.env
+      - ./blog/config/.env
     ports:
       - "5434:5432"
     networks:
@@ -51,67 +54,54 @@ services:
     build:
       context: .
       dockerfile: ./blog/Dockerfile
-    
     env_file:
       - ./blog/config/.env
       - .env.global
-
     ports:
       - "8003:8000"
-
     depends_on:
+      - kio-base
       - blog-db
-
     networks:
       - kio_net
-
 
   projects-db:
     image: postgres:17.5-alpine3.22
     env_file:
-     - ./projects/config/.env
+      - ./projects/config/.env
     ports:
       - "5435:5432"
     networks:
       - kio_net
 
-
   projects:
     build:
       context: .
       dockerfile: ./projects/Dockerfile
-
     env_file:
       - ./projects/config/.env
       - .env.global
-
     ports:
       - "8002:8000"
-
     depends_on:
+      - kio-base
       - projects-db
-
     networks:
       - kio_net
-
 
   gateway:
     build:
       context: .
       dockerfile: ./gateway/Dockerfile
-
     ports:
       - "8000:8000"
-
     depends_on:
       - accounts
       - projects
       - blog
       - redis
-
     networks:
       - kio_net
-
 
 volumes:
   kio_pgdata:

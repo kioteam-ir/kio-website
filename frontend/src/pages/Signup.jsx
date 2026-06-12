@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Label } from "../components/ui/lable";
+import { Label } from "../components/ui/Lable";
 import { Input } from "../components/ui/Input";
 import { cn } from "../lib/utils";
 import { Link } from "react-router-dom";
