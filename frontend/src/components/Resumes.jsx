@@ -60,7 +60,7 @@ export default function Resumes() {
   <div className="flex h-80 flex-col p-8">
     <div className="mb-5">{card.icon}</div>
 
-    <h3 className="mb-4 text-3xl font-bold text-white">
+    <h3 className="mb-4 text-3xl font-bold text-cyan-500">
       {card.title}
     </h3>
 
