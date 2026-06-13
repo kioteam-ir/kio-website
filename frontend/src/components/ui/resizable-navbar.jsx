@@ -53,7 +53,7 @@ export const NavBody = ({ children, className, visible }) => {
       transition={{ type: "spring", stiffness: 200, damping: 50 }}
       style={{ minWidth: "800px" }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between rounded-full px-4 py-2 lg:flex",
+        "relative z-60 mx-auto hidden w-full max-w-7xl flex-row items-center justify-between rounded-full px-4 py-2 lg:flex",
         visible && "bg-white/80 dark:bg-neutral-950/80",
         className
       )}
@@ -137,7 +137,7 @@ export const MobileNavMenu = ({ children, className, isOpen }) => (
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className={cn(
-          "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start gap-4 rounded-lg bg-white px-4 py-8 shadow-lg dark:bg-gray-800",
+          "absolute inset-x-0 top-20 z-50 flex w-full flex-col items-start gap-4 rounded-lg bg-white px-4 py-8 shadow-lg dark:bg-gray-800",
           className
         )}
       >
