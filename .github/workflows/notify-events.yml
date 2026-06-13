@@ -32,7 +32,7 @@ jobs:
             🆕 Push to `${{ github.repository }}`
             By: `${{ github.actor }}`
             Ref: `${{ github.ref_name }}`
-            Message: ```${{ github.event.head_commit.message }}```
+            Message: `${{ github.event.head_commit.message }}`
             ${{ github.event.head_commit.url }}
 
       - name: Notify issue
