@@ -17,19 +17,19 @@ import { useState } from "react";
 export function Header() {
   const navItems = [
     {
-      name: "Home",
+      name: "خانه",
       link: "#",
     },
     {
-      name: "About",
+      name: "درباره ما",
       link: "#",
     },
     {
-      name: "Contact",
+      name: "تماس با ما",
       link: "#",
     },
     {
-      name: "Career",
+      name: "رزومه",
       link: "#",
     },
   ];
@@ -45,10 +45,10 @@ export function Header() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <NavbarButton to="/login" variant="secondary">
-              Login
+              ورود
             </NavbarButton>
             <NavbarButton to="/signup" variant="primary">
-              Signup
+              ثبتنام
             </NavbarButton>
           </div>
         </NavBody>
@@ -68,7 +68,7 @@ export function Header() {
                 key={idx}
                 to={`/${item.link}`}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-neutral-600 dark:text-neutral-300">
+                className="relative text-center font-bold w-full text-neutral-600 dark:text-neutral-300">
                 <span className="block">{item.name}</span>
               </Link>
             ))}
@@ -79,7 +79,7 @@ export function Header() {
                 variant="primary"
                 className="w-full"
               >
-                Login
+                ورود
               </NavbarButton>
               <NavbarButton
                 to="/signup"
@@ -87,7 +87,7 @@ export function Header() {
                 variant="primary"
                 className="w-full"
               >
-                Signup
+                ثبتنام
               </NavbarButton>
             </div>
           </MobileNavMenu>
