@@ -59,16 +59,21 @@ export function Header() {
             <NavbarLogo />
             <MobileNavToggle
               isOpen={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
           </MobileNavHeader>
 
-          <MobileNavMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
+          <MobileNavMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+          >
             {navItems.map((item, idx) => (
               <Link
                 key={idx}
                 to={`/${item.link}`}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-center font-bold w-full text-neutral-600 dark:text-neutral-300">
+                className="relative text-center font-bold w-full text-neutral-600 dark:text-neutral-300"
+              >
                 <span className="block">{item.name}</span>
               </Link>
             ))}
@@ -87,7 +92,7 @@ export function Header() {
                 variant="primary"
                 className="w-full"
               >
-                ثبتنام
+                ثبت‌نام
               </NavbarButton>
             </div>
           </MobileNavMenu>

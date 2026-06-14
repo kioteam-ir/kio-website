@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Consulting() {
   return (
-    <div className="2xl:max-w-7xl h-150 mb-15 overflow-hidden xl:max-w-6xl lg:max-w-5xl md:max-w-4xl sm:max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+    <div className="2xl:max-w-7xl h-150 lg:mb-15 -mb-50 overflow-hidden xl:max-w-6xl lg:max-w-5xl md:max-w-4xl sm:max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
       <div className="grid lg:grid-cols-3 gap-8 lg:gap-16 items-center">
         <div className="hidden lg:block">
           <div className="rounded-3xl overflow-hidden border-4 border-purple-500/30 shadow-2xl">
@@ -14,11 +14,8 @@ export default function Consulting() {
           </div>
         </div>
 
-        <div
-          dir="rtl"
-          className=" text-center space-y-8 lg:space-y-12 lg:col-span-1"
-        >
-          <h2 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-white leading-tight">
+        <div dir="rtl" className=" space-y-8 lg:space-y-12 lg:col-span-1">
+          <h2 className="text-2xl text-center sm:text-3xl lg:text-3xl xl:text-3xl font-bold text-cyan-500 leading-tight">
             با هم رشد کنیم.
           </h2>
 
