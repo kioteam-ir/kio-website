@@ -14,7 +14,7 @@ bucket = RedisTokenBucket(redis_client, rate=1, capacity=10)
 
 
 @app.middleware("http")
-async def tocken_buscket_middlewar(request: Request, call_next):
+async def tocken_buscket_middleware(request: Request, call_next):
     client_ip = request.client
     key = f"rate_limit:{client_ip}"
 
