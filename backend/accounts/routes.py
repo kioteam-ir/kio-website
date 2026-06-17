@@ -1,5 +1,7 @@
+from sqlalchemy import desc
+
 from models import User
-from schemas import UserCreate, UserRead
+from schemas import AdminCreateAccount, UserCreate, UserRead
 
 from utils import hash_password_async
 from dependency import get_current_user, require_admin
@@ -89,3 +91,34 @@ class AdminAccountsView:
             raise HTTPException(status_code=404, detail="User not found")
 
         return user
+    
+    @staticmethod
+    @router.post("/create-account")
+    async def create_account(
+        user: AdminCreateAccount,
+        session: AsyncSession = Depends(get_session),
+        admin_user: User = Depends(require_admin)
+        ):
+        if user.phone_number is not None:
+            stmt = select(User).where(
+                or_(User.email == user.email, User.phone_number == user.phone_number)
+            )
+        else:
+            stmt = select(User).where(User.email == user.email)
+
+        result = await session.exec(stmt)
+        existing_user = result.first()
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email and Phone number already exists",
+            )
+
+        password = await hash_password_async(user.password)
+        user.password = password["hash"]
+
+        db_user = User(**user.model_dump())
+        db_user.salt = password["salt"]
+        session.add(db_user)
+        await session.commit()
+        return db_user

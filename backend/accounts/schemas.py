@@ -1,10 +1,11 @@
 from pydantic import BaseModel, field_validator, EmailStr
 
+from string import ascii_letters
 
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    phone_number: str | None
+    phone_number: str | None = None
     first_name: str
     last_name: str
 
@@ -50,7 +51,7 @@ class UserRead(BaseModel):
 
 class AdminCreateAccount(BaseModel):
     email: str
-    phone_number: str | None
-    first_name: str | None
-    last_name: str | None
+    phone_number: str | None = None
+    first_name: str | None = "User"
+    last_name: str | None = "Unknown"
     password: str
