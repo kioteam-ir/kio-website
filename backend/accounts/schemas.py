@@ -7,8 +7,6 @@ class UserCreate(BaseModel):
     phone_number: str | None
     first_name: str
     last_name: str
-    is_admin: bool = False
-    is_active: bool = True
 
     @field_validator("password")
     @classmethod
@@ -48,3 +46,11 @@ class UserRead(BaseModel):
     phone_number: str | None
     first_name: str
     last_name: str
+
+
+class AdminCreateAccount(BaseModel):
+    email: str
+    phone_number: str | None
+    first_name: str | None
+    last_name: str | None
+    password: str
