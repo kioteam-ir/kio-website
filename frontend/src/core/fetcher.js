@@ -1,71 +1,88 @@
-// fetcher.ts
 import axios from 'axios';
 import { BASE_URL } from './url';
 
+// ─── Instance ─────────────────────────────────────────────────────────────────
 
 const api = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
 });
 
+// Attach token automatically to every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// Global response error handler — rethrows so callers can handle UI
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error(
+      `[API Error] ${error.config?.method?.toUpperCase()} ${error.config?.url}`,
+      error.response?.data ?? error.message
+    );
+    return Promise.reject(error);
+  }
+);
+
+// ─── Fetcher ──────────────────────────────────────────────────────────────────
+
 export const fetcher = {
+  /**
+   * POST /api/front/accounts/
+   * @param {{ email: string, password: string, first_name: string, last_name: string, phone_number?: string }} data
+   */
   create_account: async (data) => {
-    try {
-      const response = await api.post('api/front/accounts/', data);
-      return response.data;
-    } catch (error) {
-      console.error('Create account error:', error);
-      throw error;
-    }
+    const response = await api.post('/api/front/accounts/', data);
+    return response.data;
   },
 
-  // GET - Get user profile
-  get_profile: async (userId) => {
-    try {
-      const response = await api.get(`/users/${userId}`);
-      return response.data;
-    } catch (error) {
-      console.error('Get profile error:', error);
-      throw error;
-    }
-  },
-
-  // PUT - Update user
-  update_user: async (userId, data) => {
-    try {
-      const response = await api.put(`/users/${userId}`, data);
-      return response.data;
-    } catch (error) {
-      console.error('Update user error:', error);
-      throw error;
-    }
-  },
-
-  // DELETE - Delete user
-  delete_user: async (userId) => {
-    try {
-      await api.delete(`/users/${userId}`);
-    } catch (error) {
-      console.error('Delete user error:', error);
-      throw error;
-    }
-  },
-
-  // POST - Login
+  /**
+   * POST /auth/login
+   * @param {string} email
+   * @param {string} password
+   */
   login: async (email, password) => {
-    try {
-      const response = await api.post('/auth/login', { email, password });
-      // Store token if needed
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-      }
-      return response.data;
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
+    const response = await api.post('/api/login/', { email, password });
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
     }
+    return response.data;
+  },
+
+  /**
+   * GET /users/:userId
+   * @param {string} userId
+   */
+  get_profile: async (userId) => {
+    const response = await api.get(`/users/${userId}`);
+    return response.data;
+  },
+
+  /**
+   * PUT /users/:userId
+   * @param {string} userId
+   * @param {object} data
+   */
+  update_user: async (userId, data) => {
+    const response = await api.put(`/users/${userId}`, data);
+    return response.data;
+  },
+
+  /**
+   * DELETE /users/:userId
+   * @param {string} userId
+   */
+  delete_user: async (userId) => {
+    await api.delete(`/users/${userId}`);
+  },
+
+  /**
+   * Clears the auth token from storage (call on logout)
+   */
+  logout: () => {
+    localStorage.removeItem('token');
   },
 };
-

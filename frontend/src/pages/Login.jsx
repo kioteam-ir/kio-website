@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "../components/ui/Lable";
 import { Input } from "../components/ui/Input";
 import { cn } from "../lib/utils";
 import { Link } from "react-router-dom";
+import { fetcher } from "../core/fetcher";
 
 export function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted");
+    fetcher.login(email, password);
   };
 
   return (
@@ -36,6 +39,10 @@ export function Login() {
               placeholder="example@gmail.com"
               type="email"
               className="text-right"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
             />
           </LabelInputContainer>
 
@@ -47,11 +54,15 @@ export function Login() {
               placeholder="••••••••"
               type="password"
               className="text-right"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
           </LabelInputContainer>
 
           <button
-            className="group/btn relative block h-11 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
+            className="group/btn cursor-pointer relative block h-11 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
             type="submit"
           >
             ورود به حساب کاربری
