@@ -31,7 +31,6 @@ async def make_request(url: str, method: str, data: dict | None = None, headers:
         async with aiohttp.ClientSession() as session:
 
             request = getattr(session, method)
-
             async with request(url, json=data, headers=headers) as response:
 
                 content_type = response.headers.get("Content-Type", "")
@@ -41,5 +40,7 @@ async def make_request(url: str, method: str, data: dict | None = None, headers:
                     resp_data = await response.json()
                 else:
                     resp_data = await response.text()
+
+                text = await response.text()
 
                 return resp_data, response.status

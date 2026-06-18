@@ -17,69 +17,33 @@ class FrontAccountsView:
     router = APIRouter(prefix="/api/front/accounts", tags=["front-accounts"])
 
     @staticmethod
-    @router.post("/debug")
-    async def debug_endpoint(request: Request):
-        """Debug endpoint to see what's actually being sent"""
-        body = await request.body()
-        headers = dict(request.headers)
-        content_type = request.headers.get("content-type")
-
-        print("=" * 50)
-        print("CONTENT-TYPE:", content_type)
-        print("HEADERS:", headers)
-        print("RAW BODY:", body)
-        print("RAW BODY (decoded):", body.decode() if body else "EMPTY")
-
-        try:
-            json_data = await request.json()
-            print("PARSED JSON:", json_data)
-        except:
-            print("NOT VALID JSON")
-
-        print("=" * 50)
-
-        return {
-            "received": body.decode() if body else "EMPTY",
-            "content_type": content_type,
-        }
-
-    @staticmethod
-    @router.post("/")
+    @router.post("/", response_model=UserRead)
     async def create_account(
         user: UserCreate, session: AsyncSession = Depends(get_session)
-    ):
-        print("\n\n\n")
-        print(user)
-        print("\n\n\n")
+        ):
+        if user.phone_number is not None:
+            stmt = select(User).where(
+                or_(User.email == user.email, User.phone_number == user.phone_number)
+            )
+        else:
+            stmt = select(User).where(User.email == user.email)
 
-    # @staticmethod
-    # @router.post("/", response_model=UserRead)
-    # async def create_account(
-    #     user: UserCreate, session: AsyncSession = Depends(get_session)
-    #     ):
-    #     if user.phone_number is not None:
-    #         stmt = select(User).where(
-    #             or_(User.email == user.email, User.phone_number == user.phone_number)
-    #         )
-    #     else:
-    #         stmt = select(User).where(User.email == user.email)
+        result = await session.exec(stmt)
+        existing_user = result.first()
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email and Phone number already exists",
+            )
 
-    #     result = await session.exec(stmt)
-    #     existing_user = result.first()
-    #     if existing_user:
-    #         raise HTTPException(
-    #             status_code=status.HTTP_400_BAD_REQUEST,
-    #             detail="Email and Phone number already exists",
-    #         )
+        password = await hash_password_async(user.password)
+        user.password = password["hash"]
 
-    #     password = await hash_password_async(user.password)
-    #     user.password = password["hash"]
-
-    #     db_user = User(**user.model_dump())
-    #     db_user.salt = password["salt"]
-    #     session.add(db_user)
-    #     await session.commit()
-    #     return db_user
+        db_user = User(**user.model_dump())
+        db_user.salt = password["salt"]
+        session.add(db_user)
+        await session.commit()
+        return db_user
 
     @staticmethod
     @router.get("/{account_id}")

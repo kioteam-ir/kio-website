@@ -135,13 +135,7 @@ def route(
             path = scope["path"]
             url = f"{service_url}{path}"
 
-            payload = {}
-            payload_obj = kwargs.get(payload_key)
-            if payload_obj and not isinstance(payload_obj, str):
-                try:
-                    payload = payload_obj.dict()
-                except Exception:
-                    payload = {}
+            payload = await request.json()
 
             try:
                 resp_data, status_code_from_service = await make_request(
