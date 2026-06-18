@@ -45,14 +45,14 @@ async def tocken_buscket_middleware(request: Request, call_next):
 
 @route(
     request_method=app.post,
-    path="/api/login",
+    path="/api/login/",
     status_code=status.HTTP_201_CREATED,
     payload_key="login_data",
     service_url=settings.ACCOUNTS_SERVICE_URL,
     authentication_required=False,
     methods=None
 )
-async def login(login_data, request: Request, response: Response):
+async def login(request: Request, response: Response):
     pass
 
 

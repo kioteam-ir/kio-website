@@ -46,7 +46,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-@app.post("/api/login")
+@app.post("/api/login/")
 async def login(login_data: LoginRequest, session: AsyncSession = Depends(get_session)):
     stmt = select(User).where(User.email == login_data.email)
     user = (await session.exec(stmt)).first()
@@ -68,7 +68,7 @@ async def login(login_data: LoginRequest, session: AsyncSession = Depends(get_se
     }
 
 
-@app.post("/api/refresh")
+@app.post("/api/refresh/")
 async def refresh_token(
     refresh_token: str, session: AsyncSession = Depends(get_session)
 ):
@@ -97,7 +97,7 @@ async def refresh_token(
     }
 
 
-@app.post("/api/verify")
+@app.post("/api/verify/")
 async def verify_jwt_token(token: str):
     print("verify called")
     try:
