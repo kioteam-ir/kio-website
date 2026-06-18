@@ -8,7 +8,7 @@ from dependency import get_current_user, require_admin
 from sqlmodel import select, or_
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import Request, APIRouter, Depends, status, HTTPException
 
 from config.database import get_session
 
@@ -17,33 +17,69 @@ class FrontAccountsView:
     router = APIRouter(prefix="/api/front/accounts", tags=["front-accounts"])
 
     @staticmethod
-    @router.post("/", response_model=UserRead)
+    @router.post("/debug")
+    async def debug_endpoint(request: Request):
+        """Debug endpoint to see what's actually being sent"""
+        body = await request.body()
+        headers = dict(request.headers)
+        content_type = request.headers.get("content-type")
+
+        print("=" * 50)
+        print("CONTENT-TYPE:", content_type)
+        print("HEADERS:", headers)
+        print("RAW BODY:", body)
+        print("RAW BODY (decoded):", body.decode() if body else "EMPTY")
+
+        try:
+            json_data = await request.json()
+            print("PARSED JSON:", json_data)
+        except:
+            print("NOT VALID JSON")
+
+        print("=" * 50)
+
+        return {
+            "received": body.decode() if body else "EMPTY",
+            "content_type": content_type,
+        }
+
+    @staticmethod
+    @router.post("/")
     async def create_account(
         user: UserCreate, session: AsyncSession = Depends(get_session)
-        ):
-        if user.phone_number is not None:
-            stmt = select(User).where(
-                or_(User.email == user.email, User.phone_number == user.phone_number)
-            )
-        else:
-            stmt = select(User).where(User.email == user.email)
+    ):
+        print("\n\n\n")
+        print(user)
+        print("\n\n\n")
 
-        result = await session.exec(stmt)
-        existing_user = result.first()
-        if existing_user:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email and Phone number already exists",
-            )
+    # @staticmethod
+    # @router.post("/", response_model=UserRead)
+    # async def create_account(
+    #     user: UserCreate, session: AsyncSession = Depends(get_session)
+    #     ):
+    #     if user.phone_number is not None:
+    #         stmt = select(User).where(
+    #             or_(User.email == user.email, User.phone_number == user.phone_number)
+    #         )
+    #     else:
+    #         stmt = select(User).where(User.email == user.email)
 
-        password = await hash_password_async(user.password)
-        user.password = password["hash"]
+    #     result = await session.exec(stmt)
+    #     existing_user = result.first()
+    #     if existing_user:
+    #         raise HTTPException(
+    #             status_code=status.HTTP_400_BAD_REQUEST,
+    #             detail="Email and Phone number already exists",
+    #         )
 
-        db_user = User(**user.model_dump())
-        db_user.salt = password["salt"]
-        session.add(db_user)
-        await session.commit()
-        return db_user
+    #     password = await hash_password_async(user.password)
+    #     user.password = password["hash"]
+
+    #     db_user = User(**user.model_dump())
+    #     db_user.salt = password["salt"]
+    #     session.add(db_user)
+    #     await session.commit()
+    #     return db_user
 
     @staticmethod
     @router.get("/{account_id}")
@@ -51,7 +87,7 @@ class FrontAccountsView:
         user_id: int,
         session: AsyncSession = Depends(get_session),
         check_user: User = Depends(get_current_user),
-        ):
+    ):
 
         user = await session.get(User, user_id)
         if not user:
@@ -74,7 +110,7 @@ class AdminAccountsView:
     async def list_accounts(
         session: AsyncSession = Depends(get_session),
         admin_user: User = Depends(require_admin),
-        ):
+    ):
         users = await session.exec(select(User))
         await session.close()
         return {"result": users.all()}
@@ -85,20 +121,20 @@ class AdminAccountsView:
         user_id: int,
         session: AsyncSession = Depends(get_session),
         admin_user: User = Depends(require_admin),
-        ):
+    ):
         user = await session.get(User, user_id)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
         return user
-    
+
     @staticmethod
     @router.post("/create-account")
     async def create_account(
         user: AdminCreateAccount,
         session: AsyncSession = Depends(get_session),
-        admin_user: User = Depends(require_admin)
-        ):
+        admin_user: User = Depends(require_admin),
+    ):
         if user.phone_number is not None:
             stmt = select(User).where(
                 or_(User.email == user.email, User.phone_number == user.phone_number)
