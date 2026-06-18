@@ -20,7 +20,7 @@ class FrontAccountsView:
     @router.post("/", response_model=UserRead)
     async def create_account(
         user: UserCreate, session: AsyncSession = Depends(get_session)
-    ):
+        ):
         if user.phone_number is not None:
             stmt = select(User).where(
                 or_(User.email == user.email, User.phone_number == user.phone_number)

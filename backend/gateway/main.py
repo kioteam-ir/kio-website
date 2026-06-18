@@ -1,13 +1,27 @@
-from fastapi import FastAPI, HTTPException, status, Request, Response
+from fastapi import FastAPI, status, Request, Response
 from fastapi.responses import JSONResponse
 import redis.asyncio as redis
 
 from conf import settings
 from core import route
 from middleware import RedisTokenBucket
+from fastapi.middleware.cors import CORSMiddleware
 
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 redis_client = redis.Redis(host="redis", port=6379, decode_responses=True)
 
 bucket = RedisTokenBucket(redis_client, rate=1, capacity=10)
@@ -56,7 +70,7 @@ async def verify(request: Request, response: Response):
 @route(
     request_method=app.api_route,
     path="/api/admin/accounts/{full_path:path}",
-    methods=["GET", "POST", "PUT", "DELETE"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     status_code=status.HTTP_201_CREATED,
     payload_key="login_data",
     service_url=settings.ACCOUNTS_SERVICE_URL,
@@ -70,7 +84,7 @@ async def proxy_admin_accounts(request: Request, response: Response):
 @route(
     request_method=app.api_route,
     path="/api/front/accounts/{full_path:path}",
-    methods=["GET", "POST", "PUT", "DELETE"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     status_code=status.HTTP_201_CREATED,
     payload_key="login_data",
     service_url=settings.ACCOUNTS_SERVICE_URL,
@@ -84,7 +98,7 @@ def proxy_front_accounts(request: Request, response: Response):
 @route(
     request_method=app.api_route,
     path="/api/admin/projects/{full_path:path}",
-    methods=["GET", "POST", "PUT", "DELETE"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     status_code=status.HTTP_201_CREATED,
     payload_key="login_data",
     service_url=settings.PROJECTS_SERVICE_URL,
@@ -98,7 +112,7 @@ async def proxy_admin_projects(request: Request, response: Response):
 @route(
     request_method=app.api_route,
     path="/api/front/projects/{full_path:path}",
-    methods=["GET", "POST", "PUT", "DELETE"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     status_code=status.HTTP_201_CREATED,
     payload_key="login_data",
     service_url=settings.PROJECTS_SERVICE_URL,
@@ -116,7 +130,7 @@ async def proxy_front_projects(request: Request, response: Response):
     payload_key="login_data",
     service_url=settings.ACCOUNTS_SERVICE_URL,
     authentication_required=False,
-    methods=["GET", "POST", "PUT", "DELETE"]
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 )
 async def crudadmin(request: Request, response: Response):
     pass
@@ -125,7 +139,7 @@ async def crudadmin(request: Request, response: Response):
 @route(
     request_method=app.api_route,
     path="/api/front/blog/{full_path:path}",
-    methods=["GET", "POST", "PUT", "DELETE"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     status_code=status.HTTP_201_CREATED,
     payload_key="blog_data",
     service_url=settings.PROJECTS_SERVICE_URL,
@@ -139,7 +153,7 @@ async def proxy_front_blog(request: Request, response: Response):
 @route(
     request_method=app.api_route,
     path="/api/admin/blog/{full_path:path}",
-    methods=["GET", "POST", "PUT", "DELETE"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     status_code=status.HTTP_201_CREATED,
     payload_key="login_data",
     service_url=settings.BLOG_SERVICE_URL,
