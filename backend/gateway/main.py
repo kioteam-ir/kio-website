@@ -58,7 +58,7 @@ async def login(request: Request, response: Response):
 
 @route(
     request_method=app.post,
-    path="/api/verify",
+    path="/api/verify/",
     status_code=status.HTTP_201_CREATED,
     payload_key="login_data",
     service_url=settings.ACCOUNTS_SERVICE_URL,

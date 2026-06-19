@@ -46,7 +46,7 @@ class FrontAccountsView:
         return db_user
 
     @staticmethod
-    @router.get("/{account_id}")
+    @router.get("/{account_id}/")
     async def get_account(
         user_id: int,
         session: AsyncSession = Depends(get_session),
@@ -80,7 +80,7 @@ class AdminAccountsView:
         return {"result": users.all()}
 
     @staticmethod
-    @router.get("/{user_id}")
+    @router.get("/{user_id}/")
     async def get_account(
         user_id: int,
         session: AsyncSession = Depends(get_session),
@@ -93,7 +93,7 @@ class AdminAccountsView:
         return user
 
     @staticmethod
-    @router.post("/create-account")
+    @router.post("/create-account/")
     async def create_account(
         user: AdminCreateAccount,
         session: AsyncSession = Depends(get_session),
