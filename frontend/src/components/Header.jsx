@@ -12,7 +12,7 @@ import {
   MobileNavMenu,
 } from "../components/ui/resizable-navbar";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function Header() {
   const navItems = [
@@ -34,6 +34,17 @@ export function Header() {
     },
   ];
 
+  const [loginData, setLoginData] = useState(null);
+  useEffect(() => {
+    const access_token = localStorage.getItem("access_token");
+    const refresh_token = localStorage.getItem("refresh_token");
+    setLoginData({
+      access_token,
+      refresh_token,
+    });
+    console.log("sex");
+  }, []);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -43,14 +54,16 @@ export function Header() {
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
-          <div className="flex items-center gap-4">
-            <NavbarButton to="/login" variant="secondary">
-              ورود
-            </NavbarButton>
-            <NavbarButton to="/signup" variant="primary">
-              ثبتنام
-            </NavbarButton>
-          </div>
+          {!loginData && (
+            <div className="flex items-center gap-4">
+              <NavbarButton to="/login" variant="secondary">
+                ورود
+              </NavbarButton>
+              <NavbarButton to="/signup" variant="primary">
+                ثبتنام
+              </NavbarButton>
+            </div>
+          )}
         </NavBody>
 
         {/* Mobile Navigation */}

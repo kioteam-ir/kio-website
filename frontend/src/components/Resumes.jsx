@@ -89,7 +89,10 @@ export default function Resumes() {
     >
       <div className="grid w-full max-w-7xl gap-6 md:grid-cols-3">
         {cards.map((card) => (
-          <article className="flex h-130 flex-col overflow-hidden rounded-2xl border-[3px] border-zinc-200 bg-slate-800">
+          <article
+            key={card.title}
+            className="flex h-130 flex-col overflow-hidden rounded-2xl border-[3px] border-zinc-200 bg-slate-800"
+          >
             <div className="flex h-80 flex-col p-8">
               <div className="mb-5 w-7 h-7">{card.icon}</div>
 
