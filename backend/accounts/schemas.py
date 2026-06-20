@@ -55,3 +55,7 @@ class AdminCreateAccount(BaseModel):
     first_name: str | None = "User"
     last_name: str | None = "Unknown"
     password: str
+
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str

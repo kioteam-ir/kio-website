@@ -2,7 +2,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import desc
 
 from models import User
-from schemas import AdminCreateAccount, LoginRequest, UserCreate, UserRead
+from schemas import AdminCreateAccount, LoginRequest, RefreshTokenRequest, UserCreate, UserRead
 
 from utils import create_access_token, create_refresh_token, hash_password_async, verify_password
 from dependency import get_current_user, require_admin
@@ -154,10 +154,10 @@ class AuthView:
     @staticmethod    
     @router.post("/refresh/")
     async def refresh_token(
-        refresh_token: str, session: AsyncSession = Depends(get_session)
+        refresh_token: RefreshTokenRequest, session: AsyncSession = Depends(get_session)
         ):
         try:
-            payload = jwt.decode(refresh_token, settings.SECRET_KEY, settings.ALGORITHM)
+            payload = jwt.decode(refresh_token.refresh_token, settings.SECRET_KEY, settings.ALGORITHM)
             if payload.get("type") != "refresh":
                 raise HTTPException(status_code=401, detail="Invalid token type")
         except JWTError:
