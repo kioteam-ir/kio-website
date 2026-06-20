@@ -41,6 +41,10 @@ export const fetcher = {
     const response = await api.get(`/users/${userId}`);
     return response.data;
   },
+  create_project: async (data) => {
+    const response = await api.post('/api/front/project', data);
+    return response.data;
+  },
 
   update_user: async (userId, data) => {
     const response = await api.put(`/users/${userId}`, data);
