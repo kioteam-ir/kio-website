@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI, HTTPException, status
 from contextlib import asynccontextmanager
 
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -9,7 +10,7 @@ from sqlalchemy.orm import DeclarativeBase
 from models import User
 from schemas import LoginRequest, UserCreate
 from utils import create_access_token, create_refresh_token, verify_password
-from routes import FrontAccountsView, AdminAccountsView
+from routes import AuthView, FrontAccountsView, AdminAccountsView
 
 from config.configs import settings
 from config.database import get_session, init_db
@@ -19,6 +20,8 @@ from typing import Type, cast
 
 
 ModelType = Type[DeclarativeBase]
+
+security = HTTPBearer()
 
 
 admin = CRUDAdmin(
@@ -68,59 +71,40 @@ async def login(login_data: LoginRequest, session: AsyncSession = Depends(get_se
     }
 
 
-@app.post("/api/refresh/")
-async def refresh_token(
-    refresh_token: str, session: AsyncSession = Depends(get_session)
-):
-    try:
-        payload = jwt.decode(refresh_token, settings.SECRET_KEY, settings.ALGORITHM)
-        if payload.get("type") != "refresh":
-            raise HTTPException(status_code=401, detail="Invalid token type")
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid refresh token")
+# @app.post("/api/refresh/")
+# async def refresh_token(
+#     refresh_token: str, session: AsyncSession = Depends(get_session)
+# ):
+#     try:
+#         payload = jwt.decode(refresh_token, settings.SECRET_KEY, settings.ALGORITHM)
+#         if payload.get("type") != "refresh":
+#             raise HTTPException(status_code=401, detail="Invalid token type")
+#     except JWTError:
+#         raise HTTPException(status_code=401, detail="Invalid refresh token")
 
-    user_id = int(payload["sub"])
-    stmt = select(User).where(User.id == user_id)
-    user = (await session.exec(stmt)).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+#     user_id = int(payload["sub"])
+#     stmt = select(User).where(User.id == user_id)
+#     user = (await session.exec(stmt)).first()
+#     if not user:
+#         raise HTTPException(status_code=404, detail="User not found")
 
-    if user.id is None:
-        raise HTTPException(505, "Runtime Error")
+#     if user.id is None:
+#         raise HTTPException(505, "Runtime Error")
     
-    access_token = await create_access_token(user, session)
-    new_refresh_token = await create_refresh_token(user.id)
-    return {
-        "access_token": access_token,
-        "refresh_token": new_refresh_token,
-        "token_type": "bearer",
-    }
+#     access_token = await create_access_token(user, session)
+#     new_refresh_token = await create_refresh_token(user.id)
+#     return {
+#         "access_token": access_token,
+#         "refresh_token": new_refresh_token,
+#         "token_type": "bearer",
+#     }
 
 
-@app.post("/api/verify/")
-async def verify_jwt_token(token: str):
-    print("verify called")
-    try:
-        if token.startswith("Bearer "):
-            token = token.split(" ", 1)[1]
-
-        payload = jwt.decode(
-            token,
-            settings.SECRET_KEY,
-            algorithms=settings.ALGORITHM
-        )
-
-        return payload
-
-    except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token"
-        )
-    
 
 front_accounts_view = FrontAccountsView()
 admin_accounts_view = AdminAccountsView()
+admin_accounts_view = AuthView()
 app.include_router(admin_accounts_view.router)
+app.include_router(AuthView.router)
 app.include_router(front_accounts_view.router)
 app.mount("/api/admin/", admin.app)

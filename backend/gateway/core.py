@@ -8,33 +8,33 @@ from network import make_request
 from conf import settings
 
 
-async def verify_token_remote(token: str):
-    try:
-        if token.startswith("Bearer "):
-            token = token
+# async def verify_token_remote(token: str):
+#     try:
+#         if token.startswith("Bearer "):
+#             token = token
 
-        resp_data, status_code = await make_request(
-            url=f"{settings.ACCOUNTS_SERVICE_URL}/verify",
-            method="post",
-            data={},
-            headers={
-                "Authorization": token
-            },
-        )
+#         resp_data, status_code = await make_request(
+#             url=f"{settings.ACCOUNTS_SERVICE_URL}/verify",
+#             method="post",
+#             data={},
+#             headers={
+#                 "Authorization": token
+#             },
+#         )
 
-        if status_code != 200:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Unauthorized"
-            )
+#         if status_code != 200:
+#             raise HTTPException(
+#                 status_code=status.HTTP_401_UNAUTHORIZED,
+#                 detail="Unauthorized"
+#             )
 
-        return resp_data
+#         return resp_data
 
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Auth service unavailable"
-        )
+#     except Exception:
+#         raise HTTPException(
+#             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+#             detail="Auth service unavailable"
+#         )
 
 
 def route(
@@ -97,7 +97,12 @@ def route(
         @app_any
         @functools.wraps(f)
         async def inner(request: Request, response: Response, **kwargs):
+            # ۱. فقط هدرهایی که کلید و مقدار معتبر دارند را کپی کنید
             service_headers = {}
+
+            # ۲. هدر Host کلاینت را حذف کنید (چون با آدرس میکروسرویس داخلی تداخل ایجاد می‌کند)
+            if "host" in service_headers:
+                del service_headers["host"]
 
             if authentication_required:
                 authorization = request.headers.get("authorization")
@@ -106,31 +111,9 @@ def route(
                         status_code=status.HTTP_401_UNAUTHORIZED,
                         detail="Authorization header missing"
                     )
-                user_payload = await verify_token_remote(authorization)
-
-                request.state.user = user_payload
-
-                service_headers["authorization"] = authorization
-                # authorization
-                # if service_authorization_checker:
-                #     authorization_checker = import_function(
-                #         service_authorization_checker
-                #     )
-                #     is_user_eligible = authorization_checker(token_payload)
-                #     if not is_user_eligible:
-                #         raise HTTPException(
-                #             status_code=status.HTTP_403_FORBIDDEN,
-                #             detail="You are not allowed to access this scope.",
-                #             headers={"WWW-Authenticate": "Bearer"},
-                #         )
-
-                # service headers
-                # if service_header_generator:
-                #     header_generator = import_function(service_header_generator)
-                #     service_headers = header_generator(token_payload)
+                service_headers["authorization"] = str(authorization)
 
             scope = request.scope
-
             method = scope["method"].lower()
             path = scope["path"]
             url = f"{service_url}{path}"

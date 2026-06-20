@@ -58,13 +58,13 @@ async def login(request: Request, response: Response):
 
 @route(
     request_method=app.post,
-    path="/api/verify/",
+    path="/auth/{full_path:path}",
     status_code=status.HTTP_201_CREATED,
     payload_key="login_data",
     service_url=settings.ACCOUNTS_SERVICE_URL,
     methods=None
 )
-async def verify(request: Request, response: Response):
+async def auth_service(request: Request, response: Response):
     pass
 
 

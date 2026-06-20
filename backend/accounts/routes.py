@@ -1,16 +1,21 @@
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import desc
 
 from models import User
-from schemas import AdminCreateAccount, UserCreate, UserRead
+from schemas import AdminCreateAccount, LoginRequest, UserCreate, UserRead
 
-from utils import hash_password_async
+from utils import create_access_token, create_refresh_token, hash_password_async, verify_password
 from dependency import get_current_user, require_admin
 from sqlmodel import select, or_
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from fastapi import Request, APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 
 from config.database import get_session
+from config.configs import settings
+from jose import JWTError, jwt
+
+security = HTTPBearer()
 
 
 class FrontAccountsView:
@@ -122,3 +127,55 @@ class AdminAccountsView:
         session.add(db_user)
         await session.commit()
         return db_user
+
+
+class AuthView:
+
+    router = APIRouter(prefix="/auth", tags=["auth"])
+
+    @staticmethod
+    @router.post("/verify/")
+    async def verify(credentials: HTTPAuthorizationCredentials = Depends(security)):
+        try:
+            payload = jwt.decode(
+                credentials.credentials,
+                settings.SECRET_KEY,
+                algorithms=[settings.ALGORITHM]
+            )
+
+            return payload
+
+        except JWTError:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid or expired token"
+            )
+
+    @staticmethod    
+    @router.post("/refresh/")
+    async def refresh_token(
+        refresh_token: str, session: AsyncSession = Depends(get_session)
+        ):
+        try:
+            payload = jwt.decode(refresh_token, settings.SECRET_KEY, settings.ALGORITHM)
+            if payload.get("type") != "refresh":
+                raise HTTPException(status_code=401, detail="Invalid token type")
+        except JWTError:
+            raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+        user_id = int(payload["sub"])
+        stmt = select(User).where(User.id == user_id)
+        user = (await session.exec(stmt)).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        if user.id is None:
+            raise HTTPException(505, "Runtime Error")
+        
+        access_token = await create_access_token(user, session)
+        new_refresh_token = await create_refresh_token(user.id)
+        return {
+            "access_token": access_token,
+            "refresh_token": new_refresh_token,
+            "token_type": "bearer",
+        }
