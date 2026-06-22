@@ -63,6 +63,11 @@ export const fetcher = {
     await api.delete(`/users/${userId}`);
   },
 
+  project_list: async () => {
+    const response = await api.get("/api/admin/projects/list");
+    return response.data;
+  },
+
   logout: () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
