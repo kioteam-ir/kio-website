@@ -133,9 +133,9 @@ def route(
             path = scope["path"]
             url = f"{service_url}{path}"
 
-            if request.method in ["POST", "PUT", "PATCH"]:
+            try:
                 payload = await request.json()
-            else:
+            except:
                 payload = {}
 
             try:
