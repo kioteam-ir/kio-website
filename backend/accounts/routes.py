@@ -5,7 +5,7 @@ from models import User
 from schemas import AdminCreateAccount, LoginRequest, RefreshTokenRequest, UserCreate, UserRead
 
 from utils import create_access_token, create_refresh_token, hash_password_async, verify_password
-from dependency import get_current_user, require_admin
+from dependency import get_current_user, is_admin, require_admin
 from sqlmodel import select, or_
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -179,3 +179,18 @@ class AuthView:
             "refresh_token": new_refresh_token,
             "token_type": "bearer",
         }
+    
+    @staticmethod
+    @router.post("/admin")
+    async def check_admin_view(
+        token: RefreshTokenRequest,
+        session: AsyncSession = Depends(get_session),
+        ):
+            user = await is_admin(
+                token.refresh_token,
+                session
+            )
+
+            return {
+                "is_admin": True,
+            }

@@ -22,13 +22,16 @@ async def get_current_user(
     if settings.DEBUG:
         return None
     try:
+        print(token)
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id_raw = payload.get("sub")
         assert user_id_raw is not None, "JWT missing sub"
         user_id: int = user_id_raw
         if user_id is None:
+            print("user_id uis none")
             raise HTTPException(status_code=401, detail="Invalid token")
-    except:
+    except Exception as e:
+        print("exception", e)
         raise HTTPException(status_code=401, detail="Invalid token")
 
     user = await session.get(User, user_id)
@@ -49,3 +52,48 @@ async def require_admin(
             detail="Admin privileges required"
         )
     return current_user
+
+
+async def get_user_from_token(
+    session: AsyncSession,
+    token: str = Depends(oauth2_scheme),
+) -> User:
+
+    try:
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+
+        user_id = payload.get("sub")
+    except:
+        raise HTTPException(
+            status_code=401,
+            detail="unauthorized"
+        )    
+    if not user_id:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token"
+        )
+
+    user = await session.get(User, int(user_id))
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="User not found"
+        )
+
+    return user
+
+
+async def is_admin(
+    token: str,
+    session: AsyncSession,
+) -> bool:
+
+    user = await get_user_from_token(session, token)
+
+    return bool(user.is_admin)
