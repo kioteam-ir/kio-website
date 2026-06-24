@@ -4,7 +4,7 @@ from importlib import import_module
 from fastapi import Request, Response, HTTPException, status
 from typing import Any, List
 
-from network import make_request
+from network import check_admin, make_request
 from conf import settings
 
 
@@ -41,13 +41,14 @@ def route(
     request_method,
     path: str,
     status_code: int,
-    payload_key: str,
     service_url: str,
+    payload_key: str | None = None,
     methods: List | None = None,
     authentication_required: bool = True,
     post_processing_func: str | None = None,
     response_model: Any = None,
     response_list: bool = False,
+    admin_required: bool = False
 ):
     """
     it is an advanced wrapper for FastAPI router, purpose is to make FastAPI
@@ -97,13 +98,10 @@ def route(
         @app_any
         @functools.wraps(f)
         async def inner(request: Request, response: Response, **kwargs):
-            # ۱. فقط هدرهایی که کلید و مقدار معتبر دارند را کپی کنید
             service_headers = {}
-
-            # ۲. هدر Host کلاینت را حذف کنید (چون با آدرس میکروسرویس داخلی تداخل ایجاد می‌کند)
             if "host" in service_headers:
                 del service_headers["host"]
-
+                
             if authentication_required:
                 authorization = request.headers.get("authorization")
                 if not authorization:
@@ -111,6 +109,23 @@ def route(
                         status_code=status.HTTP_401_UNAUTHORIZED,
                         detail="Authorization header missing"
                     )
+                if admin_required:
+                    try:
+                        token = authorization.split(" ")[1]
+                        check = await check_admin(
+                            settings.ACCOUNTS_SERVICE_URL + "/auth/admin/",
+                            auth=authorization, data={"access_token": token})
+                        if check[1] == 401:
+                            raise HTTPException(
+                                status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail="Ops .... Authorization"
+                            )
+                    except:
+                        raise HTTPException(
+                                status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail="Ops .... Authorization ...."
+                            )
+
                 service_headers["authorization"] = str(authorization)
 
             scope = request.scope
@@ -118,7 +133,10 @@ def route(
             path = scope["path"]
             url = f"{service_url}{path}"
 
-            payload = await request.json()
+            if request.method in ["POST", "PUT", "PATCH"]:
+                payload = await request.json()
+            else:
+                payload = {}
 
             try:
                 resp_data, status_code_from_service = await make_request(

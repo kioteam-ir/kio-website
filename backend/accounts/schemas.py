@@ -59,3 +59,7 @@ class AdminCreateAccount(BaseModel):
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
+
+
+class AccessTokenRequest(BaseModel):
+    access_token: str

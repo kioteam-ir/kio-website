@@ -2,7 +2,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import desc
 
 from models import User
-from schemas import AdminCreateAccount, LoginRequest, RefreshTokenRequest, UserCreate, UserRead
+from schemas import AccessTokenRequest, AdminCreateAccount, LoginRequest, RefreshTokenRequest, UserCreate, UserRead
 
 from utils import create_access_token, create_refresh_token, hash_password_async, verify_password
 from dependency import get_current_user, is_admin, require_admin
@@ -183,11 +183,11 @@ class AuthView:
     @staticmethod
     @router.post("/admin")
     async def check_admin_view(
-        token: RefreshTokenRequest,
+        token: AccessTokenRequest,
         session: AsyncSession = Depends(get_session),
         ):
             user = await is_admin(
-                token.refresh_token,
+                token.access_token,
                 session
             )
 
