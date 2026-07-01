@@ -7,16 +7,25 @@ on:
       - opened
       - closed
       - reopened
+  issue_comment:
+    types:
+      - created
   pull_request:
     types:
       - opened
       - closed
       - reopened
+  pull_request_review_comment:
+    types:
+      - created
+  release:
+    types:
+      - published
 
 jobs:
   notify:
     name: telegram notify
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 5
     steps:
       - name: Notify push
@@ -45,10 +54,25 @@ jobs:
           disable_web_page_preview: true
           message: |
             **${{ github.event.action == 'opened' && '🆕' || github.event.action == 'closed' && '✅' || '🔄' }} Issue #${{ github.event.issue.number }} ${{ github.event.action }}**
-            Title: ${{ github.event.issue.title }}
+            Title: `${{ github.event.issue.title }}`
             By: `${{ github.actor }}`
             Repo: `${{ github.repository }}`
             ${{ github.event.issue.html_url }}
+
+      - name: Notify issue comment
+        if: github.event_name == 'issue_comment'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          disable_notification: true
+          message: |
+            💬 **Comment on Issue #${{ github.event.issue.number }}**
+            By: `${{ github.actor }}`
+            Repo: `${{ github.repository }}`
+            ${{ github.event.comment.html_url }}
 
       - name: Notify pull request
         if: github.event_name == 'pull_request'
@@ -60,7 +84,36 @@ jobs:
           disable_web_page_preview: true
           message: |
             **${{ github.event.action == 'opened' && '🆕' || github.event.action == 'closed' && (github.event.pull_request.merged && '🔀' || '❌') || '🔄' }} PR #${{ github.event.pull_request.number }} ${{ github.event.action }}**
-            Title: ${{ github.event.pull_request.title }}
+            Title: `${{ github.event.pull_request.title }}`
             By: `${{ github.actor }}`
             Repo: `${{ github.repository }}`
             ${{ github.event.pull_request.html_url }}
+
+      - name: Notify PR review comment
+        if: github.event_name == 'pull_request_review_comment'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          disable_notification: true
+          message: |
+            💬 **Review comment on PR #${{ github.event.pull_request.number }}**
+            By: `${{ github.actor }}`
+            Repo: `${{ github.repository }}`
+            ${{ github.event.comment.html_url }}
+
+      - name: Notify release
+        if: github.event_name == 'release'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          message: |
+            🚀 **Release ${{ github.event.release.tag_name }} published**
+            Repo: `${{ github.repository }}`
+            By: `${{ github.actor }}`
+            ${{ github.event.release.html_url }}
