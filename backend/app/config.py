@@ -1,8 +1,9 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Annotated
 
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -30,9 +31,11 @@ class Settings(BaseSettings):
     REDIS_HOST: str = "redis"
     REDIS_PORT: int = 6379
 
-    CORS_ORIGINS: list[str] = Field(
-        default_factory=lambda: ["http://localhost:5173", "http://127.0.0.1:5173"],
-    )
+    CORS_ORIGINS: Annotated[
+        list[str],
+        NoDecode,
+        Field(default_factory=lambda: ["http://localhost:5173", "http://127.0.0.1:5173"]),
+    ]
 
     CRUDADMIN_USERNAME: str
     CRUDADMIN_PASSWORD: str

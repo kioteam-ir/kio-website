@@ -3,7 +3,7 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from jose import jwt
 
-from app.config import get_settings
+from app.config import Settings, get_settings
 from app.core.auth.jwt import (
     create_access_token,
     create_refresh_token,
@@ -13,6 +13,28 @@ from app.core.auth.jwt import (
 from app.core.auth.password import hash_password, verify_password
 from app.core.exceptions import UnauthorizedError
 from app.core.roles import PlatformRole, resolve_role
+
+
+class TestSettings:
+    def test_cors_origins_parsed_from_comma_separated_env(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setenv("SECRET_KEY", "test-secret")
+        monkeypatch.setenv("DB_USER", "kio")
+        monkeypatch.setenv("DB_PASSWORD", "secret")
+        monkeypatch.setenv("CRUDADMIN_USERNAME", "admin")
+        monkeypatch.setenv("CRUDADMIN_PASSWORD", "admin-pass")
+        monkeypatch.setenv(
+            "CORS_ORIGINS",
+            "http://localhost:5173,http://127.0.0.1:5173",
+        )
+        get_settings.cache_clear()
+        settings = Settings()
+        assert settings.CORS_ORIGINS == [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+        ]
+        get_settings.cache_clear()
 
 
 class TestPasswordHashing:
