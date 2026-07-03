@@ -23,6 +23,10 @@ scripts/
 tests/
 ```
 
+## Environment
+
+Env templates live at the **repository root** (`.env.local.example`, `.env.deploy.example`). Copy one to `.env` there — see the main [README](../README.md).
+
 ## Local development (without Docker)
 
 From the **repository root**:
