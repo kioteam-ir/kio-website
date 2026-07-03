@@ -1,0 +1,31 @@
+name: kio
+
+# Application services only. Database and Redis are optional — use compose.infra.yml
+# for local infrastructure, or point env vars at external hosts.
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/backend/Dockerfile
+    env_file:
+      - ../.env
+    networks:
+      - kio
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/frontend/Dockerfile
+      target: production
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - kio
+
+networks:
+  kio:
+    driver: bridge
