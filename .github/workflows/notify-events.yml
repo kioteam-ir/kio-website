@@ -1,0 +1,138 @@
+name: Notify Repo Events
+
+on:
+  push:
+  issues:
+    types:
+      - opened
+      - closed
+      - reopened
+  issue_comment:
+    types:
+      - created
+  pull_request:
+    types:
+      - opened
+      - closed
+      - reopened
+  pull_request_review:
+    types:
+      - submitted
+  pull_request_review_comment:
+    types:
+      - created
+  release:
+    types:
+      - published
+
+jobs:
+  notify:
+    name: telegram notify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Notify push
+        if: github.event_name == 'push' && github.event.deleted == false
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          disable_notification: true
+          message: |
+            🆕 Push to `${{ github.repository }}`
+            By: `${{ github.actor }}`
+            Ref: `${{ github.ref_name }}`
+            Message: `${{ github.event.head_commit.message }}`
+            ${{ github.event.head_commit.url }}
+
+      - name: Notify issue
+        if: github.event_name == 'issues'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          message: |
+            **${{ github.event.action == 'opened' && '🆕' || github.event.action == 'closed' && '✅' || '🔄' }} Issue #${{ github.event.issue.number }} ${{ github.event.action }}**
+            Title: `${{ github.event.issue.title }}`
+            By: `${{ github.actor }}`
+            Repo: `${{ github.repository }}`
+            ${{ github.event.issue.html_url }}
+
+      - name: Notify issue comment
+        if: github.event_name == 'issue_comment'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          disable_notification: true
+          message: |
+            💬 **Comment on Issue #${{ github.event.issue.number }}**
+            By: `${{ github.actor }}`
+            Repo: `${{ github.repository }}`
+            ${{ github.event.comment.html_url }}
+
+      - name: Notify pull request
+        if: github.event_name == 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          message: |
+            **${{ github.event.action == 'opened' && '🆕' || github.event.action == 'closed' && (github.event.pull_request.merged && '🔀' || '❌') || '🔄' }} PR #${{ github.event.pull_request.number }} ${{ github.event.action }}**
+            Title: `${{ github.event.pull_request.title }}`
+            By: `${{ github.actor }}`
+            Repo: `${{ github.repository }}`
+            ${{ github.event.pull_request.html_url }}
+
+      - name: Notify PR review
+        if: github.event_name == 'pull_request_review'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          message: |
+            **${{ github.event.review.state == 'approved' && '✅' || github.event.review.state == 'changes_requested' && '📝' || '💬' }} Code review on PR #${{ github.event.pull_request.number }}**
+            State: `${{ github.event.review.state }}`
+            By: `${{ github.actor }}`
+            Title: `${{ github.event.pull_request.title }}`
+            Repo: `${{ github.repository }}`
+            ${{ github.event.pull_request.html_url }}
+
+      - name: Notify PR review comment
+        if: github.event_name == 'pull_request_review_comment'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          disable_notification: true
+          message: |
+            💬 **Review comment on PR #${{ github.event.pull_request.number }}**
+            By: `${{ github.actor }}`
+            Repo: `${{ github.repository }}`
+            ${{ github.event.comment.html_url }}
+
+      - name: Notify release
+        if: github.event_name == 'release'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          message: |
+            🚀 **Release ${{ github.event.release.tag_name }} published**
+            Repo: `${{ github.repository }}`
+            By: `${{ github.actor }}`
+            ${{ github.event.release.html_url }}
