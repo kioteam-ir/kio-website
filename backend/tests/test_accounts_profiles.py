@@ -14,7 +14,9 @@ class TestProfileAccess:
         regular_user: User,
         user_auth_headers: dict[str, str],
     ) -> None:
-        response = await client.get(f"/api/front/accounts/{regular_user.id}/", headers=user_auth_headers)
+        response = await client.get(
+            f"/api/front/accounts/{regular_user.id}/", headers=user_auth_headers
+        )
         assert response.status_code == 200
         body = response.json()
         assert body["id"] == regular_user.id
@@ -50,7 +52,9 @@ class TestProfileAccess:
         assert response.json()["email"] == regular_user.email
 
     @pytest.mark.asyncio
-    async def test_profile_without_auth_returns_401(self, client: AsyncClient, regular_user: User) -> None:
+    async def test_profile_without_auth_returns_401(
+        self, client: AsyncClient, regular_user: User
+    ) -> None:
         response = await client.get(f"/api/front/accounts/{regular_user.id}/")
         assert response.status_code == 401
 
@@ -112,7 +116,9 @@ class TestAdminAccountsRoutes:
         regular_user: User,
         admin_auth_headers: dict[str, str],
     ) -> None:
-        response = await client.get(f"/api/admin/accounts/{regular_user.id}/", headers=admin_auth_headers)
+        response = await client.get(
+            f"/api/admin/accounts/{regular_user.id}/", headers=admin_auth_headers
+        )
         assert response.status_code == 200
         assert response.json()["email"] == regular_user.email
 
@@ -138,7 +144,9 @@ class TestAdminAccountsRoutes:
             "first_name": "Created",
             "last_name": "ByAdmin",
         }
-        response = await client.post("/api/admin/accounts/create-account/", json=payload, headers=admin_auth_headers)
+        response = await client.post(
+            "/api/admin/accounts/create-account/", json=payload, headers=admin_auth_headers
+        )
         assert response.status_code == 201
         assert response.json()["email"] == payload["email"]
 
@@ -155,7 +163,9 @@ class TestAdminAccountsRoutes:
             "first_name": "Dup",
             "last_name": "User",
         }
-        response = await client.post("/api/admin/accounts/create-account/", json=payload, headers=admin_auth_headers)
+        response = await client.post(
+            "/api/admin/accounts/create-account/", json=payload, headers=admin_auth_headers
+        )
         assert response.status_code == 409
 
     @pytest.mark.asyncio

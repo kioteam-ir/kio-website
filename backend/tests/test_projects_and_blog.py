@@ -32,7 +32,9 @@ class TestProjectFrontEndpoint:
 
     @pytest.mark.asyncio
     async def test_submit_project_without_trailing_slash(self, client: AsyncClient) -> None:
-        response = await client.post("/api/front/projects", json=project_payload(project_type="web"))
+        response = await client.post(
+            "/api/front/projects", json=project_payload(project_type="web")
+        )
         assert response.status_code == 201
 
     @pytest.mark.asyncio
@@ -96,7 +98,9 @@ class TestProjectAdminEndpoints:
     ) -> None:
         created = await client.post("/api/front/projects/", json=project_payload())
         project_id = created.json()["id"]
-        response = await client.get(f"/api/admin/projects/{project_id}/", headers=admin_auth_headers)
+        response = await client.get(
+            f"/api/admin/projects/{project_id}/", headers=admin_auth_headers
+        )
         assert response.status_code == 200
         assert response.json()["id"] == project_id
 
@@ -160,7 +164,9 @@ class TestBlogEndpoints:
         client: AsyncClient,
         user_auth_headers: dict[str, str],
     ) -> None:
-        first = await client.post("/api/front/blog/", json=blog_post_payload(), headers=user_auth_headers)
+        first = await client.post(
+            "/api/front/blog/", json=blog_post_payload(), headers=user_auth_headers
+        )
         assert first.status_code == 201
 
         duplicate = await client.post(
@@ -197,7 +203,9 @@ class TestBlogEndpoints:
         assert response.status_code == 422
 
     @pytest.mark.asyncio
-    async def test_inactive_user_cannot_create_post(self, client: AsyncClient, inactive_user) -> None:
+    async def test_inactive_user_cannot_create_post(
+        self, client: AsyncClient, inactive_user
+    ) -> None:
         response = await client.post(
             "/api/front/blog/",
             json=blog_post_payload(slug="inactive-author"),

@@ -37,7 +37,9 @@ class TestLogin:
         assert response.json()["access_token"]
 
     @pytest.mark.asyncio
-    async def test_login_with_wrong_password_returns_401(self, client: AsyncClient, regular_user: User) -> None:
+    async def test_login_with_wrong_password_returns_401(
+        self, client: AsyncClient, regular_user: User
+    ) -> None:
         response = await client.post(
             "/api/login/",
             json={"email": regular_user.email, "password": "WrongPass1"},
