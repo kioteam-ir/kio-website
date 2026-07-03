@@ -1,2 +1,11 @@
-# ignore sqlite files
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.venv/
+.env
+.env.*
+!.env.example
 *.db
+crudadmin_data/
