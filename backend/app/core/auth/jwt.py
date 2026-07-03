@@ -52,6 +52,8 @@ def decode_access_token(token: str) -> AccessTokenPayload:
     settings = get_settings()
     try:
         raw = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        if raw.get("type") != "access":
+            raise UnauthorizedError("Invalid or expired token")
         return AccessTokenPayload(
             sub=str(raw["sub"]),
             email=raw["email"],
@@ -67,13 +69,12 @@ def decode_refresh_token(token: str) -> RefreshTokenPayload:
     settings = get_settings()
     try:
         raw = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        payload = RefreshTokenPayload(
+        if raw.get("type") != "refresh":
+            raise UnauthorizedError("Invalid token type")
+        return RefreshTokenPayload(
             sub=str(raw["sub"]),
             type="refresh",
             exp=datetime.fromtimestamp(int(raw["exp"]), UTC),
         )
     except (JWTError, KeyError, TypeError, ValueError) as exc:
         raise UnauthorizedError("Invalid refresh token") from exc
-    if payload.type != "refresh":
-        raise UnauthorizedError("Invalid token type")
-    return payload
