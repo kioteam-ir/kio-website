@@ -25,26 +25,18 @@ tests/
 
 ## Local development (without Docker)
 
+From the **repository root**:
+
 ```bash
-cp ../.env.example ../.env   # from repository root
-uv sync
-./scripts/dev.sh
+cp .env.local.example .env
+cd backend && uv sync && ./scripts/dev.sh
 ```
+
+Requires Postgres and Redis at the hosts configured in `.env`.
 
 ## Docker
 
-Compose files live at the **repository root** (`compose/`), not in this directory.
-
-```bash
-# From repository root — full local stack (apps + postgres + redis)
-docker compose -f compose/docker-compose.yml \
-  -f compose/docker-compose.infra.yml \
-  -f compose/docker-compose.dev.yml up --build
-
-# Apps only — external database/redis via .env
-docker compose -f compose/docker-compose.yml \
-  -f compose/docker-compose.dev.yml up --build
-```
+Compose files and env templates live at the **repository root**. See the main [README](../README.md) for local vs deploy flows.
 
 ## Quality
 
