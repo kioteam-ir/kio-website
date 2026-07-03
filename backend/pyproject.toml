@@ -48,6 +48,7 @@ select = [
 "app/**/router.py" = ["B008"]
 "app/**/dependencies.py" = ["B008"]
 "app/**/service.py" = ["B008"]
+"tests/**" = ["E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
