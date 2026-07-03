@@ -1,51 +1,37 @@
 # KIO Backend
 
-Modular monolith API for the KIO corporate website.
+FastAPI modular monolith — `accounts`, `projects`, `blog`.
 
-## Stack
-
-- Python 3.13, FastAPI, SQLModel
-- `uv` for dependency management
-- `ruff` + `mypy --strict` for quality gates
-
-## Layout
+Python 3.13 · uv · ruff · mypy · pytest
 
 ```
 app/
-  config.py
-  main.py
-  core/              # auth, db, logging, middleware, roles
-  modules/
-    accounts/
-    projects/
-    blog/
+  core/       auth, db, middleware
+  modules/    accounts · projects · blog
 scripts/
 tests/
 ```
 
-## Environment
+Env and Docker Compose live at the [repository root](../README.md).
 
-Env templates live at the **repository root** (`.env.local.example`, `.env.deploy.example`). Copy one to `.env` there — see the main [README](../README.md).
-
-## Local development (without Docker)
-
-From the **repository root**:
+## Setup
 
 ```bash
-cp .env.local.example .env
-cd backend && uv sync && ./scripts/dev.sh
+cp .env.local.example .env    # from repo root
+cd backend && uv sync
 ```
 
-Requires Postgres and Redis at the hosts configured in `.env`.
+## Scripts
 
-## Docker
+| Command | What it does |
+|---------|----------------|
+| `./scripts/dev.sh` | API with hot reload |
+| `./scripts/lint.sh` | ruff check + format |
+| `./scripts/typecheck.sh` | mypy --strict |
+| `./scripts/test.sh` | pytest |
 
-Compose files and env templates live at the **repository root**. See the main [README](../README.md) for local vs deploy flows.
-
-## Quality
+Run all gates:
 
 ```bash
-./scripts/lint.sh
-./scripts/typecheck.sh
-./scripts/test.sh
+./scripts/lint.sh && ./scripts/typecheck.sh && ./scripts/test.sh
 ```
