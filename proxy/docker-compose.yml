@@ -1,0 +1,26 @@
+networks:
+  # Reuses a network your other services already join, so this proxy
+  # can reach them by container name. Create it once with:
+  #   docker network create kioteam_network
+  # then make sure your backend/frontend/yasin containers are attached
+  # to it (e.g. `networks: [kioteam_network]` in their own compose files).
+  kioteam_network:
+    external: true
+
+services:
+  nginx-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kioteam/nginx-proxy:latest
+    container_name: kioteam_nginx_proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - kioteam_network
+    # Uncomment once you add TLS certs (e.g. via certbot):
+    # volumes:
+    #   - ./certbot/conf:/etc/letsencrypt:ro
+    #   - ./certbot/www:/var/www/certbot:ro

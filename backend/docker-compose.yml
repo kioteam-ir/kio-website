@@ -1,6 +1,24 @@
 version: "3.9"
 
 services:
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: nginx
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./app:/var/www/app
+
+    depends_on:
+      - gateway
+
+    networks:
+      - kio_net
 
   kio-base:
     build:
@@ -93,6 +111,7 @@ services:
     build:
       context: .
       dockerfile: ./gateway/Dockerfile
+    container_name: backend
     ports:
       - "8000:8000"
     depends_on:
@@ -102,6 +121,7 @@ services:
       - redis
     networks:
       - kio_net
+      - kioteam_network
 
 volumes:
   kio_pgdata:
@@ -109,3 +129,5 @@ volumes:
 networks:
   kio_net:
     driver: bridge
+  kioteam_network:
+    external: true
