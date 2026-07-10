@@ -20,7 +20,6 @@ services:
       - "443:443"
     networks:
       - kioteam_network
-    # Uncomment once you add TLS certs (e.g. via certbot):
-    # volumes:
-    #   - ./certbot/conf:/etc/letsencrypt:ro
-    #   - ./certbot/www:/var/www/certbot:ro
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
