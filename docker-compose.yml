@@ -1,23 +1,18 @@
+# "Fullstack" local setup: runs the backend microservices plus a single
+# combined container that serves both the gateway API and the frontend
+# dev server (see app/Dockerfile).
+#
+# This is a lighter alternative to docker-compose.local.yml, which runs
+# the gateway and the frontend as separate containers instead.
+#
+# Run with:
+#   docker compose up --build
+
 networks:
-  kioteam_network:
-    driver: bridge
   kio_net:
     driver: bridge
 
 services:
-  # ── Central Proxy ────────────────────────────────────────────────────────────
-  nginx-proxy:
-    build:
-      context: ./proxy
-      dockerfile: Dockerfile
-    container_name: kioteam_nginx_proxy
-    restart: unless-stopped
-    ports:
-      - "8000:80"
-    networks:
-      - kioteam_network
-
-  # ── Backend ──────────────────────────────────────────────────────────────────
   kio-base:
     build:
       context: ./backend
@@ -91,44 +86,21 @@ services:
     networks:
       - kio_net
 
-  gateway:
+  fullstack:
     build:
-      context: ./backend
-      dockerfile: ./gateway/Dockerfile
-    container_name: backend
-    ports:
-      - "8001:8000"
+      context: .
+      dockerfile: app/Dockerfile
+    container_name: fullstack
     depends_on:
+      - kio-base
       - accounts
       - projects
       - blog
       - redis
-    networks:
-      - kio_net
-      - kioteam_network
-
-  # ── Frontend ─────────────────────────────────────────────────────────────────
-  react-dev:
-    build:
-      context: ./frontend
-    container_name: frontend
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "8000:8000"
+      - "5173:5173"
     networks:
-      - kioteam_network
-
-  # ── Yasin ────────────────────────────────────────────────────────────────────
-  # frontend-resume_website is an external repo.
-  # Clone it alongside this project, then add it here:
-  #
-  # yasin:
-  #   build:
-  #     context: ../resume_website   # adjust to the actual path
-  #   container_name: frontend-resume_website
-  #   networks:
-  #     - kioteam_network
+      - kio_net

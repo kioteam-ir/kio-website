@@ -1,0 +1,155 @@
+networks:
+  kioteam_network:
+    driver: bridge
+  kio_net:
+    driver: bridge
+
+services:
+  # ── Central Proxy ────────────────────────────────────────────────────────────
+  nginx-proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    container_name: kioteam_nginx_proxy
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    networks:
+      - kioteam_network
+
+  # ── Backend ──────────────────────────────────────────────────────────────────
+  kio-base:
+    build:
+      context: ./backend
+      dockerfile: base.Dockerfile
+    image: kio-base:latest
+
+  redis:
+    image: redis:8.4-alpine
+    env_file:
+      - ./backend/.env.global
+    networks:
+      - kio_net
+
+  accounts-db:
+    image: postgres:17.5-alpine3.22
+    env_file:
+      - ./backend/accounts/config/.env
+    networks:
+      - kio_net
+
+  accounts:
+    build:
+      context: ./backend
+      dockerfile: ./accounts/Dockerfile
+    env_file:
+      - ./backend/accounts/config/.env
+      - ./backend/.env.global
+    depends_on:
+      - kio-base
+      - accounts-db
+    networks:
+      - kio_net
+
+  blog-db:
+    image: postgres:17.5-alpine3.22
+    env_file:
+      - ./backend/blog/config/.env
+    networks:
+      - kio_net
+
+  blog:
+    build:
+      context: ./backend
+      dockerfile: ./blog/Dockerfile
+    env_file:
+      - ./backend/blog/config/.env
+      - ./backend/.env.global
+    depends_on:
+      - kio-base
+      - blog-db
+    networks:
+      - kio_net
+
+  projects-db:
+    image: postgres:17.5-alpine3.22
+    env_file:
+      - ./backend/projects/config/.env
+    networks:
+      - kio_net
+
+  projects:
+    build:
+      context: ./backend
+      dockerfile: ./projects/Dockerfile
+    env_file:
+      - ./backend/projects/config/.env
+      - ./backend/.env.global
+    depends_on:
+      - kio-base
+      - projects-db
+    networks:
+      - kio_net
+
+  gateway:
+    build:
+      context: ./backend
+      dockerfile: ./gateway/Dockerfile
+    container_name: backend
+    ports:
+      - "8001:8000"
+    depends_on:
+      - accounts
+      - projects
+      - blog
+      - redis
+    networks:
+      - kio_net
+      - kioteam_network
+
+  # ── Frontend ─────────────────────────────────────────────────────────────────
+  react-dev:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - kioteam_network
+
+  # ── Combined backend + frontend (convenience/dev container) ────────────────────
+  fullstack:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    container_name: fullstack
+    depends_on:
+      - kio-base
+      - accounts
+      - projects
+      - blog
+      - redis
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "9000:8000"
+      - "5174:5173"
+    networks:
+      - kio_net
+      - kioteam_network
+
+  # ── Yasin ────────────────────────────────────────────────────────────────────
+  # frontend-resume_website is an external repo.
+  # Clone it alongside this project, then add it here:
+  #
+  # yasin:
+  #   build:
+  #     context: ../resume_website   # adjust to the actual path
+  #   container_name: frontend-resume_website
+  #   networks:
+  #     - kioteam_network
