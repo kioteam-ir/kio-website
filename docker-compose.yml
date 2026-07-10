@@ -11,6 +11,8 @@
 networks:
   kio_net:
     driver: bridge
+  kioteam_network:
+    external: true
 
 services:
   kio-base:
@@ -103,4 +105,8 @@ services:
       - "8000:8000"
       - "5173:5173"
     networks:
-      - kio_net
+      kio_net: {}
+      kioteam_network:
+        aliases:
+          - backend
+          - frontend
