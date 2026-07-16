@@ -1,22 +1,11 @@
 networks:
   kioteam_network:
-    driver: bridge
+    external: true
+
   kio_net:
     driver: bridge
 
 services:
-  # ── Central Proxy ────────────────────────────────────────────────────────────
-  nginx-proxy:
-    build:
-      context: ./proxy
-      dockerfile: Dockerfile
-    container_name: kioteam_nginx_proxy
-    restart: unless-stopped
-    ports:
-      - "8088:80"
-    networks:
-      - kioteam_network
-
   # ── Backend ──────────────────────────────────────────────────────────────────
   kio-base:
     build:
