@@ -1,7 +1,7 @@
 import React from "react";
 import { AnimatedTestimonials } from "./ui/animated-testimonials";
 
-export default function GrowthSection() {
+export default function Devs() {
   const testimonials = [
     {
       quote:

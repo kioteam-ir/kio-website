@@ -1,7 +1,7 @@
 import React from "react";
 import { Highlight } from "./ui/hero-highlight";
 
-export default function HeroSection() {
+export default function Hero() {
   return (
     <div
       dir="rtl"

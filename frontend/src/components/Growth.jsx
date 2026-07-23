@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Consulting() {
+export default function Growth() {
   return (
     <div className="2xl:max-w-7xl h-150 lg:mb-15 -mb-50 overflow-hidden xl:max-w-6xl lg:max-w-5xl md:max-w-4xl sm:max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
       <div className="grid lg:grid-cols-3 gap-8 lg:gap-16 items-center">
