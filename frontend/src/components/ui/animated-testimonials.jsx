@@ -23,7 +23,7 @@ export const AnimatedTestimonials = ({ testimonials, autoplay = false }) => {
 
   return (
     <div className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12">
-      <div className="relative grid grid-cols-1 gap-12 md:grid-cols-2">
+      <div className="relative border shadow-2xl shadow-cyan-800 border-cyan-500 hover:scale-[1.02] transition-all rounded-4xl p-4 grid grid-cols-1 gap-12 md:grid-cols-2">
         {/* Image Section */}
         <div>
           <div className="relative h-80 w-full">
@@ -81,13 +81,13 @@ export const AnimatedTestimonials = ({ testimonials, autoplay = false }) => {
           <div className="flex gap-4 pt-6 md:pt-0">
             <button
               onClick={handleNext}
-              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+              className="cursor-pointer group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
             >
               <IconArrowRight className="h-5 w-5 text-black dark:text-neutral-400" />
             </button>
             <button
               onClick={handlePrev}
-              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+              className="cursor-pointer group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
             >
               <IconArrowLeft className="h-5 w-5 text-black dark:text-neutral-400" />
             </button>
