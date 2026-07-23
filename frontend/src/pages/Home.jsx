@@ -16,7 +16,7 @@ export default function Home() {
         <HeroSection />
         <MethodologySection />
         <ServicesSection />
-        {/* <GrowthSection /> */}
+        <GrowthSection />
         <Resumes />
         <Consulting />
         <ContactForm />

@@ -159,7 +159,7 @@ export const MobileNavToggle = ({ isOpen, onClick }) =>
   isOpen ? (
     <IconX className="text-black dark:text-white" onClick={onClick} />
   ) : (
-    <IconMenu2 className="text-black dark:text-white" onClick={onClick} />
+    <IconMenu2 className="text-black mr-5 dark:text-white" onClick={onClick} />
   );
 
 // ---------------- NavbarLogo ----------------
@@ -169,7 +169,6 @@ export const NavbarLogo = () => (
     className="relative z-20 mr-4 flex items-center px-2 text-sm font-normal text-black"
   >
     <img src="/logo.png" alt="logo" width={100} height={100} />
-    {/* <span className="font-medium text-xl text-black dark:text-white">Kio</span> */}
   </Link>
 );
 
