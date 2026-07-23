@@ -49,7 +49,6 @@ const AuthButtons = () => (
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // null = still checking, true = logged in, false = logged out
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
