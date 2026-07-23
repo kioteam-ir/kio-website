@@ -41,11 +41,8 @@ const UserAvatar = ({ className = "" }) => (
 
 const AuthButtons = () => (
   <div className="flex items-center gap-4">
-    <NavbarButton to="/login" variant="secondary">
-      ورود
-    </NavbarButton>
     <NavbarButton to="/signup" variant="primary">
-      ثبتنام
+      ورود / ثبتنام
     </NavbarButton>
   </div>
 );

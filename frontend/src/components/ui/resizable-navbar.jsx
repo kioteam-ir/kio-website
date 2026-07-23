@@ -32,7 +32,7 @@ export const Navbar = ({ children, className }) => {
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
           ? React.cloneElement(child, { visible })
-          : child
+          : child,
       )}
     </motion.div>
   );
@@ -55,7 +55,7 @@ export const NavBody = ({ children, className, visible }) => {
       className={cn(
         "relative z-60 mx-auto hidden w-full max-w-7xl flex-row items-center justify-between rounded-full px-4 py-2 lg:flex",
         visible && "bg-white/80 dark:bg-neutral-950/80",
-        className
+        className,
       )}
     >
       {children}
@@ -72,7 +72,7 @@ export const NavItems = ({ items, className, onItemClick }) => {
       onMouseLeave={() => setHovered(null)}
       className={cn(
         "absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-zinc-600 transition duration-200 hover:text-zinc-800 lg:flex",
-        className
+        className,
       )}
     >
       {items.map((item, idx) => (
@@ -89,7 +89,9 @@ export const NavItems = ({ items, className, onItemClick }) => {
               className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800"
             />
           )}
-          <span className="relative z-20">{item.name}</span>
+          <span className="relative z-20 text-[16px] font-bold">
+            {item.name}
+          </span>
         </Link>
       ))}
     </motion.div>
@@ -113,7 +115,7 @@ export const MobileNav = ({ children, className, visible }) => {
       className={cn(
         "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between px-0 py-2 lg:hidden",
         visible && "bg-white/80 dark:bg-neutral-950/80",
-        className
+        className,
       )}
     >
       {children}
@@ -123,7 +125,12 @@ export const MobileNav = ({ children, className, visible }) => {
 
 // ---------------- MobileNavHeader ----------------
 export const MobileNavHeader = ({ children, className }) => (
-  <div className={cn("flex w-full flex-row items-center justify-between", className)}>
+  <div
+    className={cn(
+      "flex w-full flex-row items-center justify-between",
+      className,
+    )}
+  >
     {children}
   </div>
 );
@@ -138,7 +145,7 @@ export const MobileNavMenu = ({ children, className, isOpen }) => (
         exit={{ opacity: 0 }}
         className={cn(
           "absolute inset-x-0 top-20 z-50 flex w-full flex-col items-start gap-4 rounded-lg bg-white px-4 py-8 shadow-lg dark:bg-gray-800",
-          className
+          className,
         )}
       >
         {children}
@@ -175,15 +182,13 @@ export const NavbarButton = ({
   ...props
 }) => {
   const baseStyles =
-    "px-4 py-2 rounded-md text-sm font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
+    "px-4 py-2 rounded-md text-[16px] font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
 
   const variantStyles = {
-    primary:
-      "bg-white text-black shadow-md",
+    primary: "bg-white text-black shadow-md",
     secondary: "bg-transparent shadow-none dark:text-white",
     dark: "bg-black text-white shadow-md",
-    gradient:
-      "bg-gradient-to-b from-blue-500 to-blue-700 text-white shadow-md",
+    gradient: "bg-gradient-to-b from-blue-500 to-blue-700 text-white shadow-md",
   };
 
   return (
