@@ -96,7 +96,7 @@ export default function Footer() {
               © ۲۰۲۵ Kio. تمامی حقوق محفوظ است.
             </span>
 
-            <div className="flex mt-4 sm:mt-0 gap-5">
+            <div className="flex justify-center mt-4 sm:mt-0 gap-5">
               <a
                 href="https://github.com/ashrafi-frontDeveloper"
                 target="_blank"
