@@ -126,18 +126,22 @@ export default function Header() {
           <MobileNavMenu
             isOpen={isMobileMenuOpen}
             onClose={() => setIsMobileMenuOpen(false)}
-            className="backdrop-blur-md"
+            className="backdrop-blur-md mt-9"
           >
-            {navItems.map((item, idx) => (
-              <Link
-                key={idx}
-                to={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-center font-bold w-full text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors"
-              >
-                <span className="block">{item.name}</span>
-              </Link>
-            ))}
+            <div className="w-full text-cyan-500 mt-5 grid grid-cols-2 gap-y-10 align-middle items-center">
+              {navItems.map((item, idx) => (
+                <Link
+                  key={idx}
+                  to={item.link}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="relative text-center hover:scale-110 transition-all font-bold w-full duration-300"
+                >
+                  <span className="block border border-gray-500 rounded-[5px] py-8 mx-15 text-[18px] text-center align-middle">
+                    {item.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
 
             <div className="w-full flex justify-center mt-2">
               {isAuthenticated === null ? (

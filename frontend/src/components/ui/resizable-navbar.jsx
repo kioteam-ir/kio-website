@@ -113,8 +113,8 @@ export const MobileNav = ({ children, className, visible }) => {
       }}
       transition={{ type: "spring", stiffness: 200, damping: 50 }}
       className={cn(
-        "relative z-50 mx-auto rounded-2xl flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between px-0 py-2 lg:hidden",
-        visible && "bg-gray-900/50",
+        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between px-0 py-2 lg:hidden",
+        visible && "bg-gray-900/60",
         className,
       )}
     >
