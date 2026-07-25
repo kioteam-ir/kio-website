@@ -97,8 +97,8 @@ export default function Header() {
   }, []);
 
   return (
-    <div className="relative w-full pt-0 md:pt-5">
-      <Navbar>
+    <div className="sticky top-0 w-full pt-0 md:pt-5 z-50">
+      <Navbar className="backdrop-blur-m shadow-lg">
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
@@ -126,13 +126,14 @@ export default function Header() {
           <MobileNavMenu
             isOpen={isMobileMenuOpen}
             onClose={() => setIsMobileMenuOpen(false)}
+            className="backdrop-blur-md"
           >
             {navItems.map((item, idx) => (
               <Link
                 key={idx}
                 to={item.link}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-center font-bold w-full text-neutral-600 dark:text-neutral-300"
+                className="relative text-center font-bold w-full text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors"
               >
                 <span className="block">{item.name}</span>
               </Link>

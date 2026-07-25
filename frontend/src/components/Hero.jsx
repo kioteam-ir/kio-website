@@ -17,17 +17,14 @@ export default function Hero() {
               آینده رو بسازیم
             </h3>
           </div>
-          <p className="max-w-125 font-light text-[17px] leading-8">
+          <p className="max-w-125 font-light text-[16px] leading-8">
             تیم کایو ارائه دهنده خدمات مختلف در زمینه تولید نرم افزارهای تحت وب
             و ارائه خدمات میزبانی می باشد. هدف اصلی تیم ایجاد و ارتقاء جایگاه
             کسب و کار شما در دنیای وب می‌باشد و در این راستا راهکار های لازم را
-            با در نظر گرفتن استاندارد های روز ارائه می‌کند. ایجاد بستر مناسب
-            برای ورود یک کسب و کار در دنیای وب اولین قدم است و شما بدون داشتن
-            پشتیبان خوب مسیر دشواری را خواهید داشت. پشتیبانی به موقع و با کیفیت
-            یکی از مهمترین اهداف این مجموعه است و متخصصین ما همواره همراه شما
-            هستند تا با آسودگی خاطر کسب و کار خود را در دنیای وب گسترش دهید.
+            با در نظر گرفتن استاندارد های روز ارائه می‌کند. پشتیبانی به موقع و
+            با کیفیت یکی از مهمترین اهداف این مجموعه است.
           </p>
-          <div className="pt-4 mt-10 lg:pt-7">
+          <div className="pt-4 lg:pt-7">
             <a
               href="#contact"
               className="inline-block px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-md font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-2xl shadow-lg hover:shadow-purple-500/40 transition-all duration-300 transform hover:scale-105"

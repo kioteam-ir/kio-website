@@ -27,7 +27,7 @@ export const Navbar = ({ children, className }) => {
   return (
     <motion.div
       ref={ref}
-      className={cn("sticky inset-x-0 top-20 z-40 w-full", className)}
+      className={cn("sticky inset-x-0 top-0 z-40 w-full", className)}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
@@ -53,8 +53,8 @@ export const NavBody = ({ children, className, visible }) => {
       transition={{ type: "spring", stiffness: 200, damping: 50 }}
       style={{ minWidth: "800px" }}
       className={cn(
-        "relative z-60 mx-auto hidden w-full max-w-7xl flex-row items-center justify-between rounded-full px-4 py-2 lg:flex",
-        visible && "bg-white/80 dark:bg-neutral-950/80",
+        "relative z-60 mx-auto hidden w-full max-w-7xl flex-row items-center justify-between rounded-2xl px-4 py-2 lg:flex",
+        visible && "bg-gray-900/50",
         className,
       )}
     >
@@ -113,8 +113,8 @@ export const MobileNav = ({ children, className, visible }) => {
       }}
       transition={{ type: "spring", stiffness: 200, damping: 50 }}
       className={cn(
-        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between px-0 py-2 lg:hidden",
-        visible && "bg-white/80 dark:bg-neutral-950/80",
+        "relative z-50 mx-auto rounded-2xl flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between px-0 py-2 lg:hidden",
+        visible && "bg-gray-900/50",
         className,
       )}
     >
@@ -157,9 +157,15 @@ export const MobileNavMenu = ({ children, className, isOpen }) => (
 // ---------------- MobileNavToggle ----------------
 export const MobileNavToggle = ({ isOpen, onClick }) =>
   isOpen ? (
-    <IconX className="text-black dark:text-white" onClick={onClick} />
+    <IconX
+      className="text-black mr-5 scale-125 cursor-pointer dark:text-white"
+      onClick={onClick}
+    />
   ) : (
-    <IconMenu2 className="text-black mr-5 dark:text-white" onClick={onClick} />
+    <IconMenu2
+      className="text-black mr-5 scale-125 cursor-pointer dark:text-white"
+      onClick={onClick}
+    />
   );
 
 // ---------------- NavbarLogo ----------------
