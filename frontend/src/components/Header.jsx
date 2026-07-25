@@ -126,7 +126,7 @@ export default function Header() {
           <MobileNavMenu
             isOpen={isMobileMenuOpen}
             onClose={() => setIsMobileMenuOpen(false)}
-            className="backdrop-blur-md mt-9"
+            className="backdrop-blur-md "
           >
             <div className="w-full text-cyan-500 mt-5 grid grid-cols-2 gap-y-10 align-middle items-center">
               {navItems.map((item, idx) => (

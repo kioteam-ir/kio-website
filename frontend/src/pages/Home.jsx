@@ -17,7 +17,7 @@ export default function Home() {
         <Techs />
         <Services />
         <Devs />
-        {/* <Resumes /> */}
+        <Resumes />
         <Growth />
         <ContactForm />
         <Footer />
