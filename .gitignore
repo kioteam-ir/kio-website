@@ -221,3 +221,4 @@ __marimo__/
 .env.global
 
 template.html
+.vscode/settings.json
