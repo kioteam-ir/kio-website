@@ -14,7 +14,7 @@ export default function Footer() {
           <div className="md:flex md:justify-between">
             {/* Logo */}
             <div className="mb-6 md:mb-0">
-              <a href="#" className="flex items-center gap-2">
+              <a href="#" className="flex justify-center items-center gap-2">
                 <img src="/logo.png" className="h-20 w-20" alt="Kio Logo" />
                 <span className="text-heading text-2xl font-semibold whitespace-nowrap">
                   Kio
@@ -96,7 +96,7 @@ export default function Footer() {
               © ۲۰۲۵ Kio. تمامی حقوق محفوظ است.
             </span>
 
-            <div className="flex mt-4 sm:mt-0 gap-5">
+            <div className="flex justify-center mt-4 sm:mt-0 gap-5">
               <a
                 href="https://github.com/ashrafi-frontDeveloper"
                 target="_blank"

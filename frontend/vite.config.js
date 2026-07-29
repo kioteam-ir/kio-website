@@ -7,6 +7,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: ['kioteam.ir', 'www.kioteam.ir'],
+  },
   // server: {
   //   proxy: {
   //     '/api': 'localhost:8000'
