@@ -22,12 +22,12 @@ export default function Resumes() {
           </defs>
         </svg>
       ),
-      title: "شروع فروش",
-      description:
-        "اگر صاحب یک رستوران هستید و می‌خواهید کسب‌وکارتان را توسعه دهید، به شبکه ما بپیوندید و مشتریان جدید جذب کنید.",
-      image:
-        "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80",
+      title: "مدیریت وام و صندوق",
+      description: "اپلیکیشن مدیریت وام، صندوق و انجام تراکنشات و معاملات.",
+
+      image: "./projects/loan.png",
       bg: "bg-yellow-400",
+      url: "https://loan.kio.team",
     },
     {
       icon: (
@@ -54,9 +54,9 @@ export default function Resumes() {
       title: "ارسال با لبخند",
       description:
         "به جمع پیک‌های حرفه‌ای ما بپیوندید و در کنار کسب درآمد، تجربه‌ای متفاوت برای مشتریان خلق کنید.",
-      image:
-        "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=800&q=80",
+      image: "./projects/loan.png",
       bg: "bg-emerald-600",
+      url: "https://loan.kio.team",
     },
     {
       icon: (
@@ -76,9 +76,9 @@ export default function Resumes() {
       title: "پشت صحنه",
       description:
         "اگر به همکاری در تیمی پویا علاقه دارید و می‌خواهید در رشد یک محصول تأثیرگذار باشید، به ما ملحق شوید.",
-      image:
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
+      image: "./projects/loan.png",
       bg: "bg-violet-400",
+      url: "https://loan.kio.team",
     },
   ];
 
@@ -91,25 +91,9 @@ export default function Resumes() {
         {cards.map((card) => (
           <article
             key={card.title}
-            className="flex h-130 flex-col overflow-hidden rounded-2xl border-[3px] border-zinc-200 bg-slate-800"
+            className="flex h-110 flex-col overflow-hidden rounded-2xl border-[3px] border-zinc-200 bg-slate-800"
           >
-            <div className="flex h-80 flex-col p-8">
-              <div className="mb-5 w-7 h-7">{card.icon}</div>
-
-              <h3 className="mb-4 text-3xl font-bold text-cyan-500">
-                {card.title}
-              </h3>
-
-              <p className="line-clamp-4 text-zinc-300 leading-7">
-                {card.description}
-              </p>
-
-              <button className="mt-auto inline-flex items-center gap-2 text-lg font-bold tracking-[0.25em] text-white uppercase">
-                بیشتر بخوانید
-                <span>←</span>
-              </button>
-            </div>
-
+            {" "}
             {/* Image */}
             <div className="h-50">
               <img
@@ -117,6 +101,24 @@ export default function Resumes() {
                 alt={card.title}
                 className="h-full w-full object-cover"
               />
+            </div>
+            <div className="flex h-80 flex-col p-8 pt-3">
+              {/* <div className="mb-5 w-7 h-7">{card.icon}</div> */}
+
+              <h3 className="mb-3 text-[23px] font-bold text-cyan-500">
+                {card.title}
+              </h3>
+
+              <p className="line-clamp-4 text-zinc-300 leading-7">
+                {card.description}
+              </p>
+
+              <a
+                href={card.url}
+                className="text-center w-full mt-auto hover:opacity-80 hover:scale-105 transition-all duration-300 text-lg font-bold tracking-[0.25em] text-white uppercase"
+              >
+                {"< "}مشاهده زنده{" >"}
+              </a>
             </div>
           </article>
         ))}
