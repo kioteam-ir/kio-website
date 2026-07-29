@@ -1,0 +1,9 @@
+# Optional local overlay when host ports 5432/6379 are already taken.
+# Override image tags here if you want to reuse cached images on your machine.
+
+services:
+  db:
+    ports: !reset []
+
+  redis:
+    ports: !reset []

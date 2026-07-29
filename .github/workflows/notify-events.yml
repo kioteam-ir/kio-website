@@ -15,6 +15,9 @@ on:
       - opened
       - closed
       - reopened
+  pull_request_review:
+    types:
+      - submitted
   pull_request_review_comment:
     types:
       - created
@@ -86,6 +89,22 @@ jobs:
             **${{ github.event.action == 'opened' && '🆕' || github.event.action == 'closed' && (github.event.pull_request.merged && '🔀' || '❌') || '🔄' }} PR #${{ github.event.pull_request.number }} ${{ github.event.action }}**
             Title: `${{ github.event.pull_request.title }}`
             By: `${{ github.actor }}`
+            Repo: `${{ github.repository }}`
+            ${{ github.event.pull_request.html_url }}
+
+      - name: Notify PR review
+        if: github.event_name == 'pull_request_review'
+        uses: appleboy/telegram-action@master
+        with:
+          format: markdown
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          disable_web_page_preview: true
+          message: |
+            **${{ github.event.review.state == 'approved' && '✅' || github.event.review.state == 'changes_requested' && '📝' || '💬' }} Code review on PR #${{ github.event.pull_request.number }}**
+            State: `${{ github.event.review.state }}`
+            By: `${{ github.actor }}`
+            Title: `${{ github.event.pull_request.title }}`
             Repo: `${{ github.repository }}`
             ${{ github.event.pull_request.html_url }}
 
