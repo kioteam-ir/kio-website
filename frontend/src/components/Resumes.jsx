@@ -26,7 +26,6 @@ export default function Resumes() {
       description: "اپلیکیشن مدیریت وام، صندوق و انجام تراکنشات و معاملات.",
 
       image: "./projects/loan.png",
-      bg: "bg-yellow-400",
       url: "https://loan.kio.team",
     },
     {
@@ -55,7 +54,6 @@ export default function Resumes() {
       description:
         "به جمع پیک‌های حرفه‌ای ما بپیوندید و در کنار کسب درآمد، تجربه‌ای متفاوت برای مشتریان خلق کنید.",
       image: "./projects/loan.png",
-      bg: "bg-emerald-600",
       url: "https://loan.kio.team",
     },
     {
@@ -77,7 +75,6 @@ export default function Resumes() {
       description:
         "اگر به همکاری در تیمی پویا علاقه دارید و می‌خواهید در رشد یک محصول تأثیرگذار باشید، به ما ملحق شوید.",
       image: "./projects/loan.png",
-      bg: "bg-violet-400",
       url: "https://loan.kio.team",
     },
   ];

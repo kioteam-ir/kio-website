@@ -128,18 +128,23 @@ export default function Header() {
             onClose={() => setIsMobileMenuOpen(false)}
             className="backdrop-blur-md "
           >
-            <div className="w-full text-cyan-500 mt-5 grid grid-cols-2 gap-y-10 align-middle items-center">
+            <div className="w-full text-cyan-500 mt-5 grid grid-cols-2 gap-10 align-middle items-center">
               {navItems.map((item, idx) => (
-                <Link
+                <div
+                  className="w-full flex justify-center relative text-center "
                   key={idx}
-                  to={item.link}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="relative text-center hover:scale-110 transition-all font-bold w-full duration-300"
                 >
-                  <span className="block border border-gray-500 rounded-[5px] py-8 mx-15 text-[18px] text-center align-middle">
-                    {item.name}
-                  </span>
-                </Link>
+                  <Link
+                    key={idx}
+                    to={item.link}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="relative text-center hover:scale-110 transition-all font-bold duration-300"
+                  >
+                    <span className="block border w-30 px-4 text-nowrap truncate border-gray-500 rounded-[5px] py-8 mx-15 text-[18px] text-center align-middle">
+                      {item.name}
+                    </span>
+                  </Link>
+                </div>
               ))}
             </div>
 
