@@ -9,6 +9,7 @@ export default function Devs() {
       name: "یاسین افاضل",
       designation: "توسعه‌دهنده بک‌اند",
       src: "/dev/yasin.jpg",
+      website: "https://yasinafazel.ir",
     },
     {
       quote:
@@ -16,6 +17,7 @@ export default function Devs() {
       name: "محمد اشرفی",
       designation: "توسعه‌دهنده فرانت‌اند",
       src: "/dev/mamad.jfif",
+      website: "https://yasinafazel.ir",
     },
     {
       quote:
@@ -23,6 +25,7 @@ export default function Devs() {
       name: "محمد حسین کوهکن",
       designation: "مهندس DevOps",
       src: "/dev/hoos.webp",
+      website: "https://yasinafazel.ir",
     },
   ];
 

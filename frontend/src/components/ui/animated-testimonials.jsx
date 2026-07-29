@@ -78,19 +78,30 @@ export const AnimatedTestimonials = ({ testimonials, autoplay = false }) => {
           </AnimatePresence>
 
           {/* Navigation Buttons */}
-          <div className="flex gap-4 pt-6 md:pt-0">
-            <button
-              onClick={handleNext}
-              className="cursor-pointer group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+          <div className="flex gap-4 items-center justify-between px-3 pt-6 md:pt-0">
+            <div className="flex gap-2">
+              <button
+                onClick={handleNext}
+                className="cursor-pointer group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+              >
+                <IconArrowRight className="h-5 w-5 text-black dark:text-neutral-400" />
+              </button>
+              <button
+                onClick={handlePrev}
+                className="cursor-pointer group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+              >
+                <IconArrowLeft className="h-5 w-5 text-black dark:text-neutral-400" />
+              </button>
+            </div>
+
+            <a
+              href={testimonials[active].website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className=" inline-block truncate text-cyan-500 hover:text-cyan-600 hover:scale-110 transition-all duration-200 dark:text-cyan-400 dark:hover:text-cyan-300"
             >
-              <IconArrowRight className="h-5 w-5 text-black dark:text-neutral-400" />
-            </button>
-            <button
-              onClick={handlePrev}
-              className="cursor-pointer group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-            >
-              <IconArrowLeft className="h-5 w-5 text-black dark:text-neutral-400" />
-            </button>
+              صفحه شخصی {String(testimonials[active].name).split(" ")[0]}
+            </a>
           </div>
         </div>
       </div>
