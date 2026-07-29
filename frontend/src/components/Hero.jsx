@@ -8,7 +8,7 @@ export default function Hero() {
       className="mb-20 2xl:max-w-7xl xl:max-w-6xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl max-w-lg mx-auto mt-7 md:mt-20 sm:px-0 px-2"
     >
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-baseline lg:justify-between w-full xl:w-5/6 mx-auto">
-        <div className="space-y-5 w-full font-bold">
+        <div className="space-y-5 px-4 w-full font-bold">
           <div>
             <Highlight className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl text-cyan-500">
               Kio Team
