@@ -199,7 +199,7 @@ body::before {
 }
 
 body:has(:is(button, a, [role="button"]):hover) .cursor-follower {
-  opacity: 0.2;
+  opacity: 0.4;
 }
 
 @keyframes float {

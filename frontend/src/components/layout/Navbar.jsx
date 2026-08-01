@@ -41,19 +41,11 @@ function AuthSlot() {
 }
 
 export function Navbar() {
-  const scrolled = useScrollPosition(60);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
     <header className="fixed top-0 z-50 w-full" dir="ltr">
-      <div
-        className={cn(
-          "border-b transition-all duration-300",
-          scrolled
-            ? "border-slate-800 bg-slate-950/85 backdrop-blur-md"
-            : "border-transparent bg-transparent",
-        )}
-      >
+      <div className="border-b transition-all opacity-98 backdrop-blur-[20px] duration-300 border-slate-800 bg-slate-950/85">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <Link
             to="/"
