@@ -1,19 +1,31 @@
 import { cn } from "../../utils/cn";
 
-export function Marquee({ items, renderItem, speedSeconds = 30, pauseOnHover = true, className }) {
+export function Marquee({ items, renderItem, speedSeconds = 15, className }) {
   return (
     <div
-      className={cn(
-        "group relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]",
-        className,
-      )}
+      className={cn("flex w-full overflow-hidden gap-4", className)}
+      dir="ltr"
     >
       <div
-        className={cn("flex w-max shrink-0 gap-4 py-2 animate-marquee", pauseOnHover && "group-hover:[animation-play-state:paused]")}
-        style={{ "--marquee-duration": `${speedSeconds}s` }}
+        className="flex shrink-0 gap-4 animate-marquee"
+        style={{ animationDuration: `${speedSeconds}s` }}
       >
-        {[...items, ...items].map((item, index) => (
-          <div key={`${item.title}-${index}`}>{renderItem(item)}</div>
+        {items.map((item, index) => (
+          <div key={`group1-${index}`} className="shrink-0">
+            {renderItem(item)}
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="flex shrink-0 gap-4 animate-marquee"
+        style={{ animationDuration: `${speedSeconds}s` }}
+        aria-hidden="true"
+      >
+        {items.map((item, index) => (
+          <div key={`group2-${index}`} className="shrink-0">
+            {renderItem(item)}
+          </div>
         ))}
       </div>
     </div>

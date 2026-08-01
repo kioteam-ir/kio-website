@@ -211,3 +211,15 @@ body:has(:is(button, a, [role="button"]):hover) .cursor-follower {
     transform: translateY(-20px);
   }
 }
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% - 1rem));
+  }
+}
+
+.animate-marquee {
+  animation: marquee linear infinite;
+}
