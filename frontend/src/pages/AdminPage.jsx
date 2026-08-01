@@ -25,17 +25,13 @@ export default function AdminPage() {
       <Container dir="rtl" className="min-h-screen py-8">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <span className="font-mono text-xs tracking-widest text-amber-400/80">KIO / ADMIN</span>
+            <span className="font-mono text-xs tracking-widest text-slate-500">KIO / ADMIN</span>
             <h1 className="mt-1 text-xl font-medium text-slate-100">درخواست‌های همکاری</h1>
             {!loading && !error && <p className="mt-0.5 text-sm text-slate-500">{submissions.length} درخواست</p>}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={refetch}>
-              <IconRefresh className="h-4 w-4" /> بروزرسانی
-            </Button>
-            <Button variant="danger" size="sm" onClick={logout}>
-              <IconLogout className="h-4 w-4" /> خروج
-            </Button>
+            <Button variant="outline" size="sm" onClick={refetch}><IconRefresh className="h-4 w-4" /> بروزرسانی</Button>
+            <Button variant="danger" size="sm" onClick={logout}><IconLogout className="h-4 w-4" /> خروج</Button>
           </div>
         </div>
 

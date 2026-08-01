@@ -5,9 +5,9 @@ export default function NotFoundPage() {
   return (
     <MainLayout showChrome={false}>
       <section dir="rtl" className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
-        <span className="mb-4 font-mono text-xs tracking-widest text-amber-400/80">ERROR / 404</span>
-        <h1 className="mb-4 text-7xl font-extrabold text-white lg:text-9xl">
-          ۴<span className="text-amber-400">۰</span>۴
+        <span className="mb-4 font-mono text-xs tracking-widest text-slate-500">ERROR / 404</span>
+        <h1 className="mb-4 text-7xl font-extrabold lg:text-9xl">
+          <span className="grad-brand-text">۴۰۴</span>
         </h1>
         <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">صفحه مورد نظر پیدا نشد</h2>
         <p className="mb-8 max-w-xl text-lg leading-loose text-slate-400">

@@ -2,11 +2,10 @@ import { Link } from "react-router-dom";
 import { cn } from "../../utils/cn";
 
 const VARIANTS = {
-  primary: "bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/10 hover:bg-amber-300",
-  secondary: "bg-teal-400 text-slate-950 shadow-lg shadow-teal-500/10 hover:bg-teal-300",
-  outline: "border border-slate-600 text-slate-200 hover:border-amber-400/60 hover:text-amber-300",
+  primary: "grad-brand text-white shadow-lg shadow-black/30 hover:brightness-110",
+  outline: "border border-slate-600 text-slate-200 hover:border-brand-blue-400/60 hover:text-brand-blue-300",
   ghost: "text-slate-300 hover:bg-white/5",
-  danger: "border border-rose-500/30 text-rose-400 hover:bg-rose-500/10",
+  danger: "border border-brand-crimson-400/30 text-brand-crimson-300 hover:bg-brand-crimson-900/20",
 };
 
 const SIZES = {

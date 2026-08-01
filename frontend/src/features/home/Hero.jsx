@@ -7,20 +7,27 @@ const TAGS = ["React", "FastAPI", "Docker", "Tailwind CSS"];
 
 export function Hero() {
   return (
-    <Container as="section" id="top" dir="rtl" className="pt-10 md:pt-24">
-      <div className="flex flex-col items-center gap-14 md:flex-row md:items-start md:justify-between">
+    <Container as="section" id="top" dir="rtl" className="relative overflow-hidden pt-10 md:pt-24">
+      <img
+        src="/logo.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-24 -top-24 hidden h-[32rem] w-[32rem] rotate-12 opacity-[0.06] md:block"
+      />
+
+      <div className="relative flex flex-col items-center gap-14 md:flex-row md:items-start md:justify-between">
         <div className="w-full max-w-xl space-y-7">
           <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3.5 py-1.5 font-mono text-xs text-slate-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-teal-400" />
+            <span className="h-1.5 w-1.5 rounded-full grad-brand" />
             در دسترس برای پروژه‌های جدید
           </div>
 
           <div>
-            <span className="font-mono text-sm tracking-widest text-amber-400/80">KIO / SOFTWARE STUDIO</span>
+            <span className="font-mono text-sm tracking-widest text-slate-500">KIO / SOFTWARE STUDIO</span>
             <h1 className="mt-3 text-4xl font-extrabold leading-[1.15] text-white sm:text-5xl lg:text-6xl">
               محصولات دیجیتال را
               <br />
-              مثل یک <span className="text-amber-400">نقشه مهندسی</span> می‌سازیم.
+              مثل یک <span className="grad-brand-text">نقشه مهندسی</span> می‌سازیم.
             </h1>
           </div>
 
@@ -36,22 +43,20 @@ export function Hero() {
 
           <div className="flex flex-wrap gap-2 pt-2">
             {TAGS.map((tag) => (
-              <span key={tag} className="rounded border border-slate-800 px-2.5 py-1 font-mono text-xs text-slate-500">
-                {tag}
-              </span>
+              <span key={tag} className="rounded border border-slate-800 px-2.5 py-1 font-mono text-xs text-slate-500">{tag}</span>
             ))}
           </div>
         </div>
 
-        <div className="w-full max-w-md md:max-w-lg">
+        <div className="w-full max-w-md md:max-w-lg animate-float">
           <img src="/404-computer.svg" alt="Kio illustration" className="w-full" />
         </div>
       </div>
 
-      <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4 md:mt-24">
+      <div className="relative mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4 md:mt-24">
         {STATS.map((stat) => (
-          <CornerFrame key={stat.label} className="rounded-lg border border-dashed border-slate-800 px-4 py-6 text-center">
-            <div className="font-mono text-2xl font-bold text-amber-400 sm:text-3xl">{stat.value}</div>
+          <CornerFrame key={stat.label} className="rounded-lg border border-dashed border-slate-800 px-4 py-6 text-center transition-colors hover:border-slate-700">
+            <div className="font-mono text-2xl font-bold text-white sm:text-3xl">{stat.value}</div>
             <div className="mt-1 text-xs text-slate-500 sm:text-sm">{stat.label}</div>
           </CornerFrame>
         ))}

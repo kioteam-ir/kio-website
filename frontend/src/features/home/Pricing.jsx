@@ -10,7 +10,7 @@ export function Pricing() {
   return (
     <Container as="section" id="pricing" dir="rtl" className="py-20">
       <SectionHeading
-        index="03"
+        index="04"
         eyebrow="تعرفه‌ها"
         title="پلن مناسب پروژه‌تان را انتخاب کنید"
         description="قیمت‌ها برآورد اولیه هستند؛ برای هر پروژه پیش‌فاکتور دقیق بعد از جلسه اول ارسال می‌شود."
@@ -20,25 +20,26 @@ export function Pricing() {
         {PRICING_PLANS.map((plan) => (
           <CornerFrame
             key={plan.id}
-            tone={plan.highlighted ? "amber" : "teal"}
             className={cn(
-              "flex flex-col rounded-lg border p-7",
-              plan.highlighted ? "border-amber-400/40 bg-amber-400/[0.04]" : "border-dashed border-slate-800 bg-slate-900/30",
+              "flex flex-col rounded-lg p-7",
+              plan.highlighted
+                ? "grad-brand-ring bg-slate-900/50"
+                : "border border-dashed border-slate-800 bg-slate-900/30",
             )}
           >
             {plan.highlighted && (
-              <span className="mb-4 inline-block w-fit rounded-full bg-amber-400 px-3 py-1 font-mono text-xs font-bold text-slate-950">
+              <span className="grad-brand mb-4 inline-block w-fit rounded-full px-3 py-1 font-mono text-xs font-bold text-white">
                 پیشنهاد ویژه
               </span>
             )}
             <h3 className="text-xl font-bold text-white">{plan.name}</h3>
             <p className="mt-1 text-sm text-slate-500">{plan.tagline}</p>
-            <p className="mt-4 font-mono text-2xl font-bold text-amber-400">{plan.price}</p>
+            <p className="mt-4 font-mono text-2xl font-bold text-white">{plan.price}</p>
 
             <ul className="mt-6 flex-1 space-y-3">
               {plan.features.map((feature) => (
                 <li key={feature} className="flex items-start gap-2.5 text-sm text-slate-300">
-                  <IconCheck className="mt-0.5 h-4 w-4 shrink-0 text-teal-400" />
+                  <IconCheck className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue-400" />
                   {feature}
                 </li>
               ))}

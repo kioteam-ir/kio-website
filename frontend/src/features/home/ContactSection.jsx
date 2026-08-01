@@ -37,26 +37,12 @@ export function ContactSection() {
                 </FormField>
 
                 <FormField id="project_type" label="نوع پروژه" error={errors.project_type}>
-                  <Input
-                    id="project_type"
-                    name="project_type"
-                    value={values.project_type}
-                    onChange={handleChange}
-                    placeholder="مثال: فروشگاهی، شرکتی، خبری"
-                    error={!!errors.project_type}
-                  />
+                  <Input id="project_type" name="project_type" value={values.project_type} onChange={handleChange} placeholder="مثال: فروشگاهی، شرکتی، خبری" error={!!errors.project_type} />
                 </FormField>
               </div>
 
               <FormField id="phone_number" label="شماره تماس" error={errors.phone_number}>
-                <Input
-                  id="phone_number"
-                  name="phone_number"
-                  value={values.phone_number}
-                  onChange={handleChange}
-                  placeholder="09XXXXXXXXX"
-                  error={!!errors.phone_number}
-                />
+                <Input id="phone_number" name="phone_number" value={values.phone_number} onChange={handleChange} placeholder="09XXXXXXXXX" error={!!errors.phone_number} />
               </FormField>
 
               <FormField id="description" label="توضیحات پروژه" error={errors.description}>
@@ -81,21 +67,19 @@ export function ContactSection() {
           </CornerFrame>
 
           <div className="space-y-5">
-            <CornerFrame tone="teal" className="overflow-hidden rounded-lg border border-slate-800">
+            <CornerFrame className="overflow-hidden rounded-lg border border-slate-800">
               <img src="/person-playing-3d-video-games-device.png" alt="مشاوره و توسعه پروژه" className="h-56 w-full object-cover" />
             </CornerFrame>
 
             <div className="space-y-4 rounded-lg border border-dashed border-slate-800 bg-slate-900/40 p-6">
               {CONTACT_DETAILS.map((item) => (
                 <div key={item.label} className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white/5 text-amber-400">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white/5 text-brand-blue-300">
                     <item.icon className="h-4 w-4" />
                   </span>
                   <div>
                     <p className="font-mono text-[11px] text-slate-500">{item.label}</p>
-                    <p className="text-sm text-slate-200" dir={item.ltr ? "ltr" : undefined}>
-                      {item.value}
-                    </p>
+                    <p className="text-sm text-slate-200" dir={item.ltr ? "ltr" : undefined}>{item.value}</p>
                   </div>
                 </div>
               ))}

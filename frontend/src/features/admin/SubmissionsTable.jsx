@@ -21,18 +21,13 @@ export function SubmissionsTable({ submissions, onSelect, onDelete }) {
               <td className="truncate px-4 py-3 text-slate-200">{item.title}</td>
               <td className="truncate px-4 py-3 font-mono text-slate-400" dir="ltr">{item.phone_number}</td>
               <td className="truncate px-4 py-3 text-slate-300">
-                {String(item.description).slice(0, 30)}
-                {item.description?.length > 30 ? "..." : ""}
+                {String(item.description).slice(0, 30)}{item.description?.length > 30 ? "..." : ""}
               </td>
               <td className="px-4 py-3 text-xs text-slate-500">{formatDate(item.createdAt)}</td>
               <td className="px-4 py-3">
                 <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                  <button onClick={() => onSelect(item)} className="rounded-md border border-slate-700 px-3 py-1.5 text-xs text-slate-300 hover:border-amber-400/40 hover:text-amber-300">
-                    مشاهده
-                  </button>
-                  <button onClick={() => onDelete(item.id)} className="rounded-md border border-rose-500/20 px-3 py-1.5 text-xs text-rose-400 hover:bg-rose-500/10">
-                    حذف
-                  </button>
+                  <button onClick={() => onSelect(item)} className="rounded-md border border-slate-700 px-3 py-1.5 text-xs text-slate-300 hover:border-brand-blue-400/40 hover:text-brand-blue-300">مشاهده</button>
+                  <button onClick={() => onDelete(item.id)} className="rounded-md border border-brand-crimson-400/20 px-3 py-1.5 text-xs text-brand-crimson-300 hover:bg-brand-crimson-900/20">حذف</button>
                 </div>
               </td>
             </tr>

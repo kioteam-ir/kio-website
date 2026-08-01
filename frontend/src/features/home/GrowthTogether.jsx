@@ -11,7 +11,7 @@ export function GrowthTogether() {
         </div>
 
         <div className="space-y-6 text-center lg:col-span-1">
-          <span className="font-mono text-xs tracking-widest text-amber-400/80">// PARTNERSHIP</span>
+          <span className="font-mono text-xs tracking-widest text-slate-500">// PARTNERSHIP</span>
           <h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl">با هم رشد کنیم.</h2>
           <p className="text-base leading-8 text-slate-400 lg:text-lg">
             شما دانش ارزشمندی درباره بازار و خدمات خود در اختیار دارید. این اطلاعات برای ما اهمیت

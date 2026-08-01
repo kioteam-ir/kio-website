@@ -23,7 +23,7 @@ export function Services() {
         {SERVICES.map((service, index) => (
           <CornerFrame
             key={service.id}
-            className="rounded-lg border border-dashed border-slate-800 bg-slate-900/30 p-6 transition-colors hover:border-amber-400/30"
+            className="rounded-lg border border-dashed border-slate-800 bg-slate-900/30 p-6 transition-colors hover:border-slate-700"
           >
             <span className="font-mono text-xs text-slate-600">{String(index + 1).padStart(2, "0")}</span>
             <div className="my-4 flex h-12 w-12 items-center justify-center rounded-md bg-white/5 text-2xl">{service.icon}</div>

@@ -1,13 +1,28 @@
 @import "tailwindcss";
 
 /**
- * KIO / SCHEMATIC THEME
- * A blueprint/engineering-drawing aesthetic instead of a generic dark
- * SaaS gradient: ink background, faint grid, amber ink accent, teal
- * secondary, dashed borders and corner brackets on cards like a technical
- * drawing. Ties the studio's visual identity to "we build things precisely".
+ * KIO / DUOTONE-SCHEMATIC THEME
+ * Brand colors sampled directly from the Kio logo: deep navy/teal on one
+ * side, dark crimson on the other. The devtool-minimal layout (grid
+ * backdrop, mono section labels, corner-bracket cards) stays, but the
+ * single lime accent is replaced by a signature navy→crimson gradient
+ * used deliberately on buttons, active states, highlighted cards and the
+ * hero watermark — never as random decoration.
  */
 @theme inline {
+  --color-brand-navy-950: #060a14;
+  --color-brand-navy-900: #0a1730;
+  --color-brand-navy-700: #123055;
+  --color-brand-navy-500: #1d4a73;
+  --color-brand-blue-400: #2f8fc4;
+  --color-brand-blue-300: #57b3e0;
+
+  --color-brand-crimson-900: #350f16;
+  --color-brand-crimson-700: #5c1a22;
+  --color-brand-crimson-500: #8a2c3a;
+  --color-brand-crimson-400: #c34456;
+  --color-brand-crimson-300: #dd6672;
+
   --shadow-input:
     0px 2px 3px -1px rgba(0, 0, 0, 0.1),
     0px 1px 0px 0px rgba(25, 28, 33, 0.02),
@@ -16,68 +31,62 @@
   --animate-marquee: marquee var(--marquee-duration, 30s) linear infinite;
   --animate-fade-in: fade-in 0.3s ease-out both;
   --animate-scale-in: scale-in 0.2s ease-out both;
-  --animate-rise: rise 0.5s ease-out both;
+  --animate-float: float 7s ease-in-out infinite;
 
-  @keyframes marquee {
-    to {
-      transform: translateX(calc(-50% - 0.5rem));
-    }
-  }
-  @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes scale-in {
-    from { opacity: 0; transform: scale(0.97); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes marquee { to { transform: translateX(calc(-50% - 0.5rem)); } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes scale-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
-body {
-  background-color: #05070a;
-}
+body { background-color: #060a14; }
 
-/* Faint engineering-grid backdrop. Applied once on <body> level wrappers. */
+/* Faint engineering-grid backdrop. */
 .bg-blueprint-grid {
   background-image:
-    linear-gradient(to left, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
-    linear-gradient(to top, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+    linear-gradient(to left, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(to top, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
   background-size: 44px 44px;
 }
 
-.bg-blueprint-grid-fine {
-  background-image:
-    linear-gradient(to left, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
-    linear-gradient(to top, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
-  background-size: 16px 16px;
+/* The signature duotone gradient — navy to crimson, matching the logo. */
+.grad-brand {
+  background-image: linear-gradient(115deg, var(--color-brand-blue-400) 0%, var(--color-brand-navy-700) 42%, var(--color-brand-crimson-700) 58%, var(--color-brand-crimson-400) 100%);
 }
 
-/* Radial ink vignette so the grid fades toward the page edges. */
+.grad-brand-text {
+  background-image: linear-gradient(95deg, var(--color-brand-blue-300) 0%, var(--color-brand-crimson-300) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.grad-brand-ring {
+  position: relative;
+}
+.grad-brand-ring::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background-image: linear-gradient(120deg, var(--color-brand-blue-400), var(--color-brand-crimson-400));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
 .bg-ink-vignette {
-  background-image: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(45, 212, 191, 0.08), transparent 60%);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 15% 0%, rgba(47, 143, 196, 0.10), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 90% 15%, rgba(196, 68, 86, 0.10), transparent 60%);
 }
 
-::selection {
-  background-color: rgba(251, 191, 36, 0.3);
-  color: #fff;
-}
+::selection { background-color: rgba(196, 68, 86, 0.35); color: #fff; }
 
-/* thin scrollbar to match the technical, precise feel */
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: #05070a;
-}
-::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 999px;
-}
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #060a14; }
+::-webkit-scrollbar-thumb { background: #1a2540; border-radius: 999px; }

@@ -24,7 +24,7 @@ function AuthSlot() {
     return (
       <Link
         to="/dashboard"
-        className="flex h-10 w-10 items-center justify-center rounded-md border border-amber-400/40 text-amber-300 transition-colors hover:bg-amber-400/10"
+        className="grad-brand-ring flex h-10 w-10 items-center justify-center rounded-md text-slate-200 transition-transform hover:scale-105"
         aria-label="حساب کاربری"
       >
         <IconUser className="h-5 w-5" />
@@ -45,18 +45,11 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full" dir="rtl">
-      <div
-        className={cn(
-          "border-b transition-all duration-300",
-          scrolled ? "border-slate-800 bg-slate-950/85 backdrop-blur-md" : "border-transparent bg-transparent",
-        )}
-      >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
+      <div className={cn("border-b transition-all duration-300", scrolled ? "border-slate-800 bg-slate-950/85 backdrop-blur-md" : "border-transparent bg-transparent")}>
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-2.5 text-lg font-bold text-white">
             <img src="/logo.png" alt="Kio" className="h-9 w-9" />
-            <span>
-              Kio<span className="text-amber-400">.</span>
-            </span>
+            Kio
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">
@@ -64,9 +57,10 @@ export function Navbar() {
               <NavLink
                 key={item.name}
                 to={item.to}
-                className="rounded-md px-3.5 py-2 font-mono text-sm text-slate-400 transition-colors hover:bg-white/5 hover:text-amber-300"
+                className="group relative rounded-md px-3.5 py-2 font-mono text-sm text-slate-400 transition-colors hover:text-white"
               >
                 {item.name}
+                <span className="absolute inset-x-3 -bottom-0.5 h-px scale-x-0 grad-brand transition-transform duration-200 group-hover:scale-x-100" />
               </NavLink>
             ))}
           </nav>
@@ -75,11 +69,7 @@ export function Navbar() {
             <AuthSlot />
           </div>
 
-          <button
-            onClick={() => setIsMobileOpen((v) => !v)}
-            className="rounded-md border border-slate-700 p-2 text-white lg:hidden"
-            aria-label="منو"
-          >
+          <button onClick={() => setIsMobileOpen((v) => !v)} className="rounded-md border border-slate-700 p-2 text-white lg:hidden" aria-label="منو">
             {isMobileOpen ? <IconClose /> : <IconMenu />}
           </button>
         </div>
@@ -93,7 +83,7 @@ export function Navbar() {
                 key={item.name}
                 to={item.to}
                 onClick={() => setIsMobileOpen(false)}
-                className="rounded-md border border-slate-800 py-3 text-center font-mono text-sm text-slate-300 transition-colors hover:border-amber-400/40 hover:text-amber-300"
+                className="rounded-md border border-slate-800 py-3 text-center font-mono text-sm text-slate-300 transition-colors hover:border-brand-blue-400/40 hover:text-brand-blue-300"
               >
                 {item.name}
               </NavLink>

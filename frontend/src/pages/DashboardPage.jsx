@@ -4,11 +4,6 @@ import { Button } from "../components/ui/Button";
 import { CornerFrame } from "../components/ui/CornerFrame";
 import { useAuth } from "../hooks/useAuth";
 
-/**
- * Placeholder dashboard — wire this up to real user/project data once the
- * corresponding backend endpoints exist. Layout, auth guard, and logout
- * are already fully functional.
- */
 export default function DashboardPage() {
   const { logout } = useAuth();
 
@@ -17,7 +12,7 @@ export default function DashboardPage() {
       <Container as="section" dir="rtl" className="min-h-[70vh] py-24">
         <div className="flex items-center justify-between">
           <div>
-            <span className="font-mono text-xs tracking-widest text-amber-400/80">KIO / ACCOUNT</span>
+            <span className="font-mono text-xs tracking-widest text-slate-500">KIO / ACCOUNT</span>
             <h1 className="mt-1 text-2xl font-bold text-white">داشبورد کاربری</h1>
           </div>
           <Button variant="danger" size="sm" onClick={logout}>خروج از حساب</Button>

@@ -1,29 +1,17 @@
 import { cn } from "../../utils/cn";
 
-const CORNERS = [
-  "top-0 start-0 border-t border-s rounded-tr-none",
-  "top-0 end-0 border-t border-e",
-  "bottom-0 start-0 border-b border-s",
-  "bottom-0 end-0 border-b border-e",
-];
-
 /**
- * The signature visual motif of the site: four small corner brackets around
- * a card, like a callout on a technical drawing. Pure CSS/SVG-free — just
- * absolutely positioned bordered squares.
+ * Signature visual motif: four corner brackets, colored to echo the two
+ * halves of the Kio logo — blue at the top, crimson at the bottom — so
+ * every framed card quietly carries the brand mark's duotone split.
  */
-export function CornerFrame({ as: Tag = "div", tone = "amber", className, children, ...props }) {
-  const toneClass = tone === "amber" ? "border-amber-400/70" : "border-teal-400/70";
-
+export function CornerFrame({ as: Tag = "div", className, children, ...props }) {
   return (
     <Tag className={cn("group relative", className)} {...props}>
-      {CORNERS.map((pos) => (
-        <span
-          key={pos}
-          aria-hidden="true"
-          className={cn("pointer-events-none absolute h-3 w-3 opacity-70 transition-opacity group-hover:opacity-100", toneClass, pos)}
-        />
-      ))}
+      <span aria-hidden="true" className="pointer-events-none absolute top-0 start-0 h-3 w-3 border-t border-s border-brand-blue-400/70 opacity-70 transition-opacity group-hover:opacity-100" />
+      <span aria-hidden="true" className="pointer-events-none absolute top-0 end-0 h-3 w-3 border-t border-e border-brand-blue-400/70 opacity-70 transition-opacity group-hover:opacity-100" />
+      <span aria-hidden="true" className="pointer-events-none absolute bottom-0 start-0 h-3 w-3 border-b border-s border-brand-crimson-400/70 opacity-70 transition-opacity group-hover:opacity-100" />
+      <span aria-hidden="true" className="pointer-events-none absolute bottom-0 end-0 h-3 w-3 border-b border-e border-brand-crimson-400/70 opacity-70 transition-opacity group-hover:opacity-100" />
       {children}
     </Tag>
   );

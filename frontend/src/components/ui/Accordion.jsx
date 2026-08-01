@@ -18,7 +18,7 @@ export function Accordion({ items }) {
               aria-expanded={isOpen}
             >
               <span className="font-semibold text-slate-100">{item.question}</span>
-              <IconChevronDown className={cn("h-5 w-5 shrink-0 text-amber-400 transition-transform duration-200", isOpen && "rotate-180")} />
+              <IconChevronDown className={cn("h-5 w-5 shrink-0 text-brand-blue-400 transition-transform duration-200", isOpen && "rotate-180")} />
             </button>
             <div className={cn("grid transition-all duration-200 ease-out", isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
               <div className="overflow-hidden">

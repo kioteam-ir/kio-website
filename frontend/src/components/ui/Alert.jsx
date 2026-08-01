@@ -1,9 +1,9 @@
 import { cn } from "../../utils/cn";
 
 const TONES = {
-  error: "bg-rose-500/10 border-rose-500/30 text-rose-400",
-  success: "bg-teal-500/10 border-teal-500/30 text-teal-300",
-  info: "bg-amber-400/10 border-amber-400/30 text-amber-300",
+  error: "bg-brand-crimson-900/30 border-brand-crimson-400/30 text-brand-crimson-300",
+  success: "bg-emerald-500/10 border-emerald-500/30 text-emerald-400",
+  info: "bg-brand-blue-400/10 border-brand-blue-400/30 text-brand-blue-300",
 };
 
 export function Alert({ tone = "info", className, children }) {
