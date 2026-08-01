@@ -1,18 +1,225 @@
 @import "tailwindcss";
 
 @theme inline {
-  --shadow-input:
-    0px 2px 3px -1px rgba(0, 0, 0, 0.1),
-    0px 1px 0px 0px rgba(25, 28, 33, 0.02),
-    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
+  /* ===== Background ===== */
+  --background: #010101;
+  --background-grid-size: 48px;
+
+  --background-vertical-line: rgba(47, 143, 196, 0.14);
+  --background-horizontal-line: rgba(196, 68, 86, 0.14);
+
+  --background-glow-blue: rgba(47, 143, 196, 0.08);
+  --background-glow-red: rgba(196, 68, 86, 0.08);
+
+  /* Your existing colors... */
+  --color-brand-navy-950: #060a14;
+  --color-brand-navy-900: #0a1730;
+  --color-brand-navy-700: #123055;
+  --color-brand-navy-500: #1d4a73;
+  --color-brand-blue-400: #2f8fc4;
+  --color-brand-blue-300: #57b3e0;
+
+  --color-brand-crimson-900: #350f16;
+  --color-brand-crimson-700: #5c1a22;
+  --color-brand-crimson-500: #8a2c3a;
+  --color-brand-crimson-400: #c34456;
+  --color-brand-crimson-300: #dd6672;
 }
 
-@theme inline {
-  --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
+}
 
-  @keyframes scroll {
-    to {
-      transform: translate(calc(-50% - 0.5rem));
-    }
+body {
+  min-height: 100vh;
+  background: var(--background);
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+
+  background-color: var(--background);
+
+  background-image:
+    radial-gradient(
+      circle at 15% 10%,
+      var(--background-glow-blue),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 85% 15%,
+      var(--background-glow-red),
+      transparent 35%
+    ),
+    linear-gradient(
+      to right,
+      var(--background-vertical-line) 2px,
+      transparent 2px
+    ),
+    linear-gradient(
+      to bottom,
+      var(--background-horizontal-line) 2px,
+      transparent 2px
+    );
+
+  background-size:
+    auto,
+    auto,
+    var(--background-grid-size) var(--background-grid-size),
+    var(--background-grid-size) var(--background-grid-size);
+
+  filter: blur(3px);
+  transform: scale(1.03); /* Prevent blurred edges showing */
+  pointer-events: none;
+}
+/* The signature duotone gradient — navy to crimson, matching the logo. */
+.grad-brand {
+  background-image: linear-gradient(
+    115deg,
+    var(--color-brand-blue-400) 0%,
+    var(--color-brand-navy-700) 42%,
+    var(--color-brand-crimson-700) 58%,
+    var(--color-brand-crimson-400) 100%
+  );
+}
+
+.grad-brand-text {
+  background-image: linear-gradient(
+    95deg,
+    var(--color-brand-blue-300) 0%,
+    var(--color-brand-crimson-300) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.grad-brand-ring {
+  position: relative;
+}
+.grad-brand-ring::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background-image: linear-gradient(
+    120deg,
+    var(--color-brand-blue-400),
+    var(--color-brand-crimson-400)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.bg-ink-vignette {
+  background-image:
+    radial-gradient(
+      ellipse 70% 50% at 15% 0%,
+      rgba(47, 143, 196, 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 90% 15%,
+      rgba(196, 68, 86, 0.1),
+      transparent 60%
+    );
+}
+
+::selection {
+  background-color: rgba(196, 68, 86, 0.35);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #060a14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a2540;
+  border-radius: 999px;
+}
+
+.cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 68px;
+  height: 68px;
+
+  border-radius: 58% 77% 63% 41% / 42% 31% 69% 56%;
+  transform: rotate(-18deg);
+  animation: blob 10s ease-in-out infinite;
+  transition:
+    opacity 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 80ms linear;
+  pointer-events: none;
+  z-index: 9999;
+
+  transform: translate(-50%, -50%);
+
+  /* Glass */
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(4px) saturate(0%) brightness(1.2);
+  -webkit-backdrop-filter: blur(4px) saturate(0%) brightness(1.2);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -8px 16px rgba(255, 255, 255, 0.03),
+    0 8px 24px rgba(0, 0, 0, 0.25);
+
+  overflow: hidden;
+}
+
+@keyframes blob {
+  0%,
+  100% {
+    border-radius: 63% 37% 56% 44% / 38% 61% 39% 62%;
   }
+  33% {
+    border-radius: 45% 55% 32% 68% / 63% 39% 61% 37%;
+  }
+  66% {
+    border-radius: 71% 29% 46% 54% / 42% 60% 40% 58%;
+  }
+}
+
+body:has(:is(button, a, [role="button"]):hover) .cursor-follower {
+  opacity: 0.2;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% - 1rem));
+  }
+}
+
+.animate-marquee {
+  animation: marquee linear infinite;
 }
