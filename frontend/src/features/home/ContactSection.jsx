@@ -16,10 +16,22 @@ const CONTACT_DETAILS = [
 ];
 
 export function ContactSection() {
-  const { values, errors, status, errorMessage, isLoading, handleChange, handleSubmit } = useContactForm();
+  const {
+    values,
+    errors,
+    status,
+    errorMessage,
+    isLoading,
+    handleChange,
+    handleSubmit,
+  } = useContactForm();
 
   return (
-    <section dir="rtl" id="contact" className="border-t border-slate-800 bg-slate-900/20 py-20 lg:py-28">
+    <section
+      dir="rtl"
+      id="contact"
+      className="border-t border-slate-800 bg-slate-900/20 py-20 lg:py-28"
+    >
       <Container>
         <SectionHeading
           index="07"
@@ -33,19 +45,52 @@ export function ContactSection() {
             <form className="space-y-5" onSubmit={handleSubmit} noValidate>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <FormField id="title" label="نام پروژه" error={errors.title}>
-                  <Input id="title" name="title" value={values.title} onChange={handleChange} placeholder="مثال: فروشگاه اینترنتی" error={!!errors.title} />
+                  <Input
+                    id="title"
+                    name="title"
+                    value={values.title}
+                    onChange={handleChange}
+                    placeholder="مثال: فروشگاه اینترنتی"
+                    error={!!errors.title}
+                  />
                 </FormField>
 
-                <FormField id="project_type" label="نوع پروژه" error={errors.project_type}>
-                  <Input id="project_type" name="project_type" value={values.project_type} onChange={handleChange} placeholder="مثال: فروشگاهی، شرکتی، خبری" error={!!errors.project_type} />
+                <FormField
+                  id="project_type"
+                  label="نوع پروژه"
+                  error={errors.project_type}
+                >
+                  <Input
+                    id="project_type"
+                    name="project_type"
+                    value={values.project_type}
+                    onChange={handleChange}
+                    placeholder="مثال: فروشگاهی، شرکتی، خبری"
+                    error={!!errors.project_type}
+                  />
                 </FormField>
               </div>
 
-              <FormField id="phone_number" label="شماره تماس" error={errors.phone_number}>
-                <Input id="phone_number" name="phone_number" value={values.phone_number} onChange={handleChange} placeholder="09XXXXXXXXX" error={!!errors.phone_number} />
+              <FormField
+                id="phone_number"
+                label="شماره تماس"
+                error={errors.phone_number}
+              >
+                <Input
+                  id="phone_number"
+                  name="phone_number"
+                  value={values.phone_number}
+                  onChange={handleChange}
+                  placeholder="09XXXXXXXXX"
+                  error={!!errors.phone_number}
+                />
               </FormField>
 
-              <FormField id="description" label="توضیحات پروژه" error={errors.description}>
+              <FormField
+                id="description"
+                label="توضیحات پروژه"
+                error={errors.description}
+              >
                 <TextArea
                   id="description"
                   name="description"
@@ -57,10 +102,21 @@ export function ContactSection() {
                 />
               </FormField>
 
-              {status === "error" && errorMessage && <Alert tone="error">{errorMessage}</Alert>}
-              {status === "success" && <Alert tone="success">درخواست شما با موفقیت ثبت شد. به زودی با شما تماس می‌گیریم.</Alert>}
+              {status === "error" && errorMessage && (
+                <Alert tone="error">{errorMessage}</Alert>
+              )}
+              {status === "success" && (
+                <Alert tone="success">
+                  درخواست شما با موفقیت ثبت شد. به زودی با شما تماس می‌گیریم.
+                </Alert>
+              )}
 
-              <Button type="submit" disabled={isLoading} className="w-full" size="lg">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full cursor-pointer hover:scale-105 transition-all duration-300"
+                size="lg"
+              >
                 {isLoading ? "در حال ارسال..." : "ثبت درخواست مشاوره"}
               </Button>
             </form>
@@ -68,7 +124,11 @@ export function ContactSection() {
 
           <div className="space-y-5">
             <CornerFrame className="overflow-hidden rounded-lg border border-slate-800">
-              <img src="/person-playing-3d-video-games-device.png" alt="مشاوره و توسعه پروژه" className="h-56 w-full object-cover" />
+              <img
+                src="/person-playing-3d-video-games-device.png"
+                alt="مشاوره و توسعه پروژه"
+                className="h-56 w-full object-cover"
+              />
             </CornerFrame>
 
             <div className="space-y-4 rounded-lg border border-dashed border-slate-800 bg-slate-900/40 p-6">
@@ -78,8 +138,15 @@ export function ContactSection() {
                     <item.icon className="h-4 w-4" />
                   </span>
                   <div>
-                    <p className="font-mono text-[11px] text-slate-500">{item.label}</p>
-                    <p className="text-sm text-slate-200" dir={item.ltr ? "ltr" : undefined}>{item.value}</p>
+                    <p className="font-mono text-[11px] text-slate-500">
+                      {item.label}
+                    </p>
+                    <p
+                      className="text-sm text-slate-200"
+                      dir={item.ltr ? "ltr" : undefined}
+                    >
+                      {item.value}
+                    </p>
                   </div>
                 </div>
               ))}
