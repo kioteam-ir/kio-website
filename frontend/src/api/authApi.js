@@ -1,4 +1,4 @@
-import { httpClient, tokenStorage } from "../lib/httpClient";
+import { httpClient, tokenStorage } from "../client/httpClient";
 
 /**
  * Everything the app knows about talking to the auth endpoints lives here.

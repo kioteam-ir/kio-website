@@ -1,4 +1,4 @@
-import { httpClient } from "../lib/httpClient";
+import { httpClient } from "../client/httpClient";
 
 export const projectApi = {
   createProject: (data) => httpClient.post("/api/front/projects", data, { auth: false }),
