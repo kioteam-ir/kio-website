@@ -82,7 +82,7 @@ export function Navbar() {
 
           <button
             onClick={() => setIsMobileOpen((v) => !v)}
-            className="rounded-md border border-slate-700 p-2 text-white lg:hidden"
+            className="rounded-md border cursor-pointer border-slate-700 p-2 text-white lg:hidden"
             aria-label="منو"
           >
             {isMobileOpen ? <IconClose /> : <IconMenu />}
@@ -90,8 +90,14 @@ export function Navbar() {
         </div>
       </div>
 
-      {isMobileOpen && (
-        <div className="border-b border-slate-800 bg-slate-950/95 px-4 py-5 backdrop-blur-md lg:hidden">
+      <div
+        className={`
+    overflow-hidden border-b border-slate-800 bg-slate-950/95 backdrop-blur-md
+    transition-all duration-300 ease-out lg:hidden
+    ${isMobileOpen ? "max-h-96 opacity-100 py-5" : "max-h-0 opacity-0 py-0"}
+  `}
+      >
+        <div className="px-4">
           <nav className="grid grid-cols-2 gap-2.5">
             {NAV_ITEMS.map((item) => (
               <NavLink
@@ -104,11 +110,12 @@ export function Navbar() {
               </NavLink>
             ))}
           </nav>
+
           <div className="mt-4 flex justify-center">
             <AuthSlot />
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
