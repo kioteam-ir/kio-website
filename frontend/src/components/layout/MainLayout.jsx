@@ -1,6 +1,7 @@
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { BackToTop } from "./BackToTop";
+import CursorFollower from "./../ui/CursorFollower";
 
 /** Shared page chrome: sticky nav, blueprint-grid backdrop, footer, back-to-top. */
 export function MainLayout({ children, showChrome = true }) {
@@ -16,6 +17,7 @@ export function MainLayout({ children, showChrome = true }) {
         {showChrome && <Footer />}
       </div>
       <BackToTop />
+      <CursorFollower />
     </div>
   );
 }
