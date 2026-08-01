@@ -1,6 +1,12 @@
-import { createContext, useCallback, useEffect, useMemo, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 import { authApi } from "../api/authApi";
-import { tokenStorage } from "../lib/httpClient";
+import { tokenStorage } from "../client/httpClient";
 
 /**
  * Auth state machine.
