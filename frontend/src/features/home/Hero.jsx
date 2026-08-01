@@ -25,10 +25,9 @@ export function Hero() {
               KIO / SOFTWARE STUDIO
             </span>
             <h1 className="mt-3 text-4xl font-extrabold leading-[1.15] text-white sm:text-5xl lg:text-6xl">
-              محصولات دیجیتال را
+              محصولات دیجیتال،
               <br />
-              مثل یک <span className="grad-brand-text">نقشه مهندسی</span>{" "}
-              می‌سازیم.
+              با <span className="grad-brand-text">دقت مهندسی</span>
             </h1>
           </div>
 
