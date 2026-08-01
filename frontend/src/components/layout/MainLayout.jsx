@@ -13,6 +13,7 @@ export function MainLayout({ children, showChrome = true }) {
       />
       <div className="relative">
         {showChrome && <Navbar />}
+        <div className="mb-20"></div>
         {children}
         {showChrome && <Footer />}
       </div>

@@ -18,7 +18,8 @@ const NAV_ITEMS = [
 function AuthSlot() {
   const { isChecking, isAuthenticated } = useAuth();
 
-  if (isChecking) return <div className="h-10 w-24 animate-pulse rounded-md bg-white/5" />;
+  if (isChecking)
+    return <div className="h-10 w-24 animate-pulse rounded-md bg-white/5" />;
 
   if (isAuthenticated) {
     return (
@@ -44,12 +45,22 @@ export function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full" dir="rtl">
-      <div className={cn("border-b transition-all duration-300", scrolled ? "border-slate-800 bg-slate-950/85 backdrop-blur-md" : "border-transparent bg-transparent")}>
+    <header className="fixed top-0 z-50 w-full" dir="ltr">
+      <div
+        className={cn(
+          "border-b transition-all duration-300",
+          scrolled
+            ? "border-slate-800 bg-slate-950/85 backdrop-blur-md"
+            : "border-transparent bg-transparent",
+        )}
+      >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-          <Link to="/" className="flex items-center gap-2.5 text-lg font-bold text-white">
-            <img src="/logo.png" alt="Kio" className="h-9 w-9" />
-            Kio
+          <Link
+            to="/"
+            className="flex items-center gap-2.5 text-lg font-bold text-white"
+          >
+            <img src="/logo.png" alt="Kio" className="h-9 scale-250 w-9" />
+            {/* Kio */}
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">
@@ -69,7 +80,11 @@ export function Navbar() {
             <AuthSlot />
           </div>
 
-          <button onClick={() => setIsMobileOpen((v) => !v)} className="rounded-md border border-slate-700 p-2 text-white lg:hidden" aria-label="منو">
+          <button
+            onClick={() => setIsMobileOpen((v) => !v)}
+            className="rounded-md border border-slate-700 p-2 text-white lg:hidden"
+            aria-label="منو"
+          >
             {isMobileOpen ? <IconClose /> : <IconMenu />}
           </button>
         </div>
