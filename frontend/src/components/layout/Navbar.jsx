@@ -68,7 +68,7 @@ export function Navbar() {
               <NavLink
                 key={item.name}
                 to={item.to}
-                className="group relative rounded-md px-3.5 py-2 font-mono text-sm text-slate-400 transition-colors hover:text-white"
+                className="group relative rounded-md px-3.5 py-2 font-mono text-md text-slate-300 transition-colors hover:text-white"
               >
                 {item.name}
                 <span className="absolute inset-x-3 -bottom-0.5 h-px scale-x-0 grad-brand transition-transform duration-200 group-hover:scale-x-100" />
