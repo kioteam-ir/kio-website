@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
-/**
- * KIO / DUOTONE-SCHEMATIC THEME
- * Brand colors sampled directly from the Kio logo: deep navy/teal on one
- * side, dark crimson on the other. The devtool-minimal layout (grid
- * backdrop, mono section labels, corner-bracket cards) stays, but the
- * single lime accent is replaced by a signature navy→crimson gradient
- * used deliberately on buttons, active states, highlighted cards and the
- * hero watermark — never as random decoration.
- */
 @theme inline {
+  /* ===== Background ===== */
+  --background: #010101;
+  --background-grid-size: 48px;
+
+  --background-vertical-line: rgba(47, 143, 196, 0.14);
+  --background-horizontal-line: rgba(196, 68, 86, 0.14);
+
+  --background-glow-blue: rgba(47, 143, 196, 0.08);
+  --background-glow-red: rgba(196, 68, 86, 0.08);
+
+  /* Your existing colors... */
   --color-brand-navy-950: #060a14;
   --color-brand-navy-900: #0a1730;
   --color-brand-navy-700: #123055;
@@ -22,42 +24,76 @@
   --color-brand-crimson-500: #8a2c3a;
   --color-brand-crimson-400: #c34456;
   --color-brand-crimson-300: #dd6672;
-
-  --shadow-input:
-    0px 2px 3px -1px rgba(0, 0, 0, 0.1),
-    0px 1px 0px 0px rgba(25, 28, 33, 0.02),
-    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
-
-  --animate-marquee: marquee var(--marquee-duration, 30s) linear infinite;
-  --animate-fade-in: fade-in 0.3s ease-out both;
-  --animate-scale-in: scale-in 0.2s ease-out both;
-  --animate-float: float 7s ease-in-out infinite;
-
-  @keyframes marquee { to { transform: translateX(calc(-50% - 0.5rem)); } }
-  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes scale-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
-  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
+}
 
-body { background-color: #060a14; }
+body {
+  min-height: 100vh;
+  background: var(--background);
+  position: relative;
+}
 
-/* Faint engineering-grid backdrop. */
-.bg-blueprint-grid {
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+
+  background-color: var(--background);
+
   background-image:
-    linear-gradient(to left, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
-    linear-gradient(to top, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-  background-size: 44px 44px;
-}
+    radial-gradient(
+      circle at 15% 10%,
+      var(--background-glow-blue),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 85% 15%,
+      var(--background-glow-red),
+      transparent 35%
+    ),
+    linear-gradient(
+      to right,
+      var(--background-vertical-line) 2px,
+      transparent 2px
+    ),
+    linear-gradient(
+      to bottom,
+      var(--background-horizontal-line) 2px,
+      transparent 2px
+    );
 
+  background-size:
+    auto,
+    auto,
+    var(--background-grid-size) var(--background-grid-size),
+    var(--background-grid-size) var(--background-grid-size);
+
+  filter: blur(3px);
+  transform: scale(1.03); /* Prevent blurred edges showing */
+  pointer-events: none;
+}
 /* The signature duotone gradient — navy to crimson, matching the logo. */
 .grad-brand {
-  background-image: linear-gradient(115deg, var(--color-brand-blue-400) 0%, var(--color-brand-navy-700) 42%, var(--color-brand-crimson-700) 58%, var(--color-brand-crimson-400) 100%);
+  background-image: linear-gradient(
+    115deg,
+    var(--color-brand-blue-400) 0%,
+    var(--color-brand-navy-700) 42%,
+    var(--color-brand-crimson-700) 58%,
+    var(--color-brand-crimson-400) 100%
+  );
 }
 
 .grad-brand-text {
-  background-image: linear-gradient(95deg, var(--color-brand-blue-300) 0%, var(--color-brand-crimson-300) 100%);
+  background-image: linear-gradient(
+    95deg,
+    var(--color-brand-blue-300) 0%,
+    var(--color-brand-crimson-300) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -72,8 +108,14 @@ body { background-color: #060a14; }
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background-image: linear-gradient(120deg, var(--color-brand-blue-400), var(--color-brand-crimson-400));
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  background-image: linear-gradient(
+    120deg,
+    var(--color-brand-blue-400),
+    var(--color-brand-crimson-400)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -81,12 +123,30 @@ body { background-color: #060a14; }
 
 .bg-ink-vignette {
   background-image:
-    radial-gradient(ellipse 70% 50% at 15% 0%, rgba(47, 143, 196, 0.10), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 90% 15%, rgba(196, 68, 86, 0.10), transparent 60%);
+    radial-gradient(
+      ellipse 70% 50% at 15% 0%,
+      rgba(47, 143, 196, 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 90% 15%,
+      rgba(196, 68, 86, 0.1),
+      transparent 60%
+    );
 }
 
-::selection { background-color: rgba(196, 68, 86, 0.35); color: #fff; }
+::selection {
+  background-color: rgba(196, 68, 86, 0.35);
+  color: #fff;
+}
 
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #060a14; }
-::-webkit-scrollbar-thumb { background: #1a2540; border-radius: 999px; }
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #060a14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a2540;
+  border-radius: 999px;
+}

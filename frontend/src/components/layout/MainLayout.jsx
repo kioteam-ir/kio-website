@@ -5,8 +5,11 @@ import { BackToTop } from "./BackToTop";
 /** Shared page chrome: sticky nav, blueprint-grid backdrop, footer, back-to-top. */
 export function MainLayout({ children, showChrome = true }) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
-      <div className="pointer-events-none absolute inset-0 bg-blueprint-grid bg-ink-vignette" aria-hidden="true" />
+    <div className="relative min-h-screen overflow-hidden text-white">
+      <div
+        className="pointer-events-none absolute inset-0 bg-blueprint-grid bg-ink-vignette"
+        aria-hidden="true"
+      />
       <div className="relative">
         {showChrome && <Navbar />}
         {children}
