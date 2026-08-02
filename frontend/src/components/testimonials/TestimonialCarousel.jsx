@@ -34,7 +34,7 @@ export function TestimonialCarousel({ testimonials, autoplay = false }) {
         <div className="flex flex-col justify-between">
           <div key={active} className="animate-fade-in">
             <h3 className="text-2xl font-bold text-white">{current.name}</h3>
-            <p className="font-mono text-sm text-brand-blue-300">
+            <p className="font-mono text-sm mt-2 text-brand-blue-300">
               {current.designation}
             </p>
             <p className="mt-3 text-lg leading-8 text-slate-300">
