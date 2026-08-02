@@ -6,16 +6,16 @@ export const TECHNOLOGIES = [
   { title: "React", icon: "/Icon/react.svg" },
   { title: "Linux", icon: "/Icon/linux.svg" },
   { title: "Tailwind", icon: "/Icon/tailwind.svg" },
-  { title: "Django", icon: "/Icon/django.svg" }, // Assuming you still want Django; add the correct icon if available
+  { title: "Django", icon: "/Icon/django.svg" },
   { title: "Git", icon: "/Icon/git-icon.svg" },
   { title: "Python", icon: "/Icon/python.svg" },
-  { title: "PostgreSQL", icon: "/Icon/postgresql.svg" }, // Added PostgreSQL as an example
-  { title: "Redis", icon: "/Icon/redis.svg" }, // Added Redis as an example
-  { title: "Golang", icon: "/Icon/golang.svg" }, // Added Golang as an example
-  { title: "Kubernetes", icon: "/Icon/kubernetes.svg" }, // Added Kubernetes as an example
-  { title: "Prometheus", icon: "/Icon/prometheus.svg" }, // Added Prometheus as an example
-  { title: "FastAPI", icon: "/Icon/fastapi.svg" }, // Added FastAPI as an example
-  { title: "Grafana", icon: "/Icon/grafana.svg" }, // Added Grafana as an example
-  { title: "Next.js", icon: "/Icon/nextjs.svg" }, // Added Next.js as an example
-  { title: "TypeScript", icon: "/Icon/typescript.svg" }, // Added TypeScript as an example
+  { title: "PostgreSQL", icon: "/Icon/postgresql.svg" },
+  { title: "Redis", icon: "/Icon/redis.svg" },
+  { title: "Golang", icon: "/Icon/golang.svg" },
+  { title: "Kubernetes", icon: "/Icon/kubernetes.svg" },
+  { title: "Prometheus", icon: "/Icon/prometheus.svg" },
+  { title: "FastAPI", icon: "/Icon/fastapi.svg" },
+  { title: "Grafana", icon: "/Icon/grafana.svg" },
+  { title: "Next.js", icon: "/Icon/nextjs.svg" },
+  { title: "TypeScript", icon: "/Icon/typescript.svg" },
 ];
