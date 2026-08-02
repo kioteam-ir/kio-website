@@ -26,7 +26,7 @@ const SOCIAL_LINKS = [
     href: "https://instagram.com/YourInstagramID",
     icon: IconInstagram,
   },
-  { label: "ایمیل", href: "mailto:hello@kio.team", icon: IconEmail },
+  { label: "ایمیل", href: "mailto:info@kioteam.ir", icon: IconEmail },
 ];
 
 const SITEMAP_LINKS = [
