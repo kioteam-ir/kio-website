@@ -198,7 +198,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="mt-14 flex flex-col items-center justify-center gap-4 border-t border-slate-800 pt-6 lg:flex-row lg:justify-between text-center lg:text-start">
           <span className="font-mono text-xs text-slate-500">
-            © ۱۴۰۴ Kio — تمامی حقوق محفوظ است.
+            © 1405 Kio — تمامی حقوق محفوظ است.
           </span>
           <div className="flex flex-wrap justify-center lg:justify-start gap-4 lg:gap-6 text-xs text-slate-500">
             {LEGAL_LINKS.map((link) => (
