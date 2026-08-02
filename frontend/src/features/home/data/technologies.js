@@ -1,13 +1,21 @@
 export const TECHNOLOGIES = [
-  { title: "HTML5", icon: "/Icon/icons8-html-96.png" },
-  { title: "CSS3", icon: "/Icon/icons8-css-96.png" },
-  { title: "Docker", icon: "/Icon/icons8-docker-logo-96.png" },
-  { title: "Javascript", icon: "/Icon/icons8-javascript-96.png" },
-  { title: "React", icon: "/Icon/icons8-react-96.png" },
-  { title: "Linux", icon: "/Icon/icons8-linux-96.png" },
-  { title: "Tailwind", icon: "/Icon/icons8-tailwindcss-96.png" },
-  { title: "Bootstrap", icon: "/Icon/icons8-bootstrap-96.png" },
-  { title: "Django", icon: "/Icon/icons8-django-96.png" },
-  { title: "Git", icon: "/Icon/icons8-git-96.png" },
-  { title: "Python", icon: "/Icon/icons8-python-96.png" },
+  { title: "HTML5", icon: "/Icon/html-5.svg" },
+  { title: "CSS3", icon: "/Icon/css.svg" },
+  { title: "Docker", icon: "/Icon/docker-icon.svg" },
+  { title: "Javascript", icon: "/Icon/javascript.svg" },
+  { title: "React", icon: "/Icon/react.svg" },
+  { title: "Linux", icon: "/Icon/linux.svg" },
+  { title: "Tailwind", icon: "/Icon/tailwind.svg" },
+  { title: "Django", icon: "/Icon/django.svg" }, // Assuming you still want Django; add the correct icon if available
+  { title: "Git", icon: "/Icon/git-icon.svg" },
+  { title: "Python", icon: "/Icon/python.svg" },
+  { title: "PostgreSQL", icon: "/Icon/postgresql.svg" }, // Added PostgreSQL as an example
+  { title: "Redis", icon: "/Icon/redis.svg" }, // Added Redis as an example
+  { title: "Golang", icon: "/Icon/golang.svg" }, // Added Golang as an example
+  { title: "Kubernetes", icon: "/Icon/kubernetes.svg" }, // Added Kubernetes as an example
+  { title: "Prometheus", icon: "/Icon/prometheus.svg" }, // Added Prometheus as an example
+  { title: "FastAPI", icon: "/Icon/fastapi.svg" }, // Added FastAPI as an example
+  { title: "Grafana", icon: "/Icon/grafana.svg" }, // Added Grafana as an example
+  { title: "Next.js", icon: "/Icon/nextjs.svg" }, // Added Next.js as an example
+  { title: "TypeScript", icon: "/Icon/typescript.svg" }, // Added TypeScript as an example
 ];
