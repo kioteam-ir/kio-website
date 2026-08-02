@@ -3,7 +3,14 @@ import { Container } from "../../components/ui/Container";
 import { CornerFrame } from "../../components/ui/CornerFrame";
 import { STATS } from "./data/stats";
 
-const TAGS = ["React", "FastAPI", "Docker", "Tailwind CSS"];
+const TAGS = [
+  "React",
+  "Tailwind CSS",
+  "FastAPI",
+  "Django",
+  "Docker",
+  "Kubernetes",
+];
 
 export function Hero() {
   return (
