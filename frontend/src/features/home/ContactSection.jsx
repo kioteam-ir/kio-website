@@ -12,7 +12,7 @@ import { useContactForm } from "./hooks/useContactForm";
 const CONTACT_DETAILS = [
   { icon: IconMapPin, label: "آدرس", value: "ایران — کرمانشاه" },
   { icon: IconPhone, label: "تلفن", value: "+98 912 000 0000", ltr: true },
-  { icon: IconEmail, label: "ایمیل", value: "hello@kio.team", ltr: true },
+  { icon: IconEmail, label: "ایمیل", value: "info@kioteam.ir", ltr: true },
 ];
 
 export function ContactSection() {
