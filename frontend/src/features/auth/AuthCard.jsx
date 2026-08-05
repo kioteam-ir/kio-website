@@ -11,7 +11,7 @@ export function AuthCard({ title, subtitle, subtitleTo, children }) {
         className="pointer-events-none absolute inset-0 bg-blueprint-grid bg-ink-vignette"
         aria-hidden="true"
       />
-      <CornerFrame className="relative w-full max-w-md rounded-lg border border-dashed border-slate-700 bg-slate-900/50 p-6 shadow-2xl md:p-8">
+      <CornerFrame className="relative w-full max-w-md rounded-lg border border-dashed border-slate-700 bg-slate-900/40 p-6 shadow-2xl md:p-8">
         <div className="space-y-3 text-center">
           <span className="font-mono text-xs tracking-widest text-slate-400">
             KIO / ACCESS
