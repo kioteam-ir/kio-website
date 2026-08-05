@@ -4,7 +4,7 @@ from typing import cast
 
 import redis.asyncio as aioredis
 from crudadmin import CRUDAdmin
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import DeclarativeBase
@@ -56,7 +56,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     configure_logging()
     runtime_settings = settings or get_settings()
     logger = get_logger(__name__)
-    crud_admin = _build_crud_admin(runtime_settings) if runtime_settings.CRUDADMIN_ENABLED else None
+    crud_admin = (
+        _build_crud_admin(runtime_settings)
+        if runtime_settings.CRUDADMIN_ENABLED
+        else None
+    )
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
@@ -88,6 +92,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_headers=["*"],
     )
 
+    # TODO
+    """
+    getting CORS errors from frontend while connecting to backend.
+    """
     if runtime_settings.RATE_LIMIT_ENABLED:
         redis_client = aioredis.Redis(
             host=runtime_settings.REDIS_HOST,
