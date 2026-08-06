@@ -21,3 +21,9 @@ class ProjectRepository:
         await self._session.commit()
         await self._session.refresh(project)
         return project
+
+    async def update(self, project: Project) -> Project:
+        self._session.add(project)
+        await self._session.commit()
+        await self._session.refresh(project)
+        return project

@@ -26,6 +26,14 @@ class ProjectService:
             raise NotFoundError("Project not found")
         return ProjectRead.model_validate(project)
 
+    async def update_status(self, project_id: int, is_done: bool) -> ProjectRead:
+        project = await self._projects.get_by_id(project_id)
+        if project is None:
+            raise NotFoundError("Project not found")
+        project.is_done = is_done
+        updated_project = await self._projects.update(project)
+        return ProjectRead.model_validate(updated_project)
+
 
 async def get_project_service(session: AsyncSession = Depends(get_session)) -> ProjectService:
     return ProjectService(session)
