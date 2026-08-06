@@ -18,8 +18,7 @@ class ProjectService:
         return ProjectRead.model_validate(created)
 
     async def list_projects(self) -> ProjectListResponse:
-        projects = await self._projects.list_all()
-        return ProjectListResponse(result=[ProjectRead.model_validate(p) for p in projects])
+        return await self._projects.list_all()
 
     async def get_by_id(self, project_id: int) -> ProjectRead:
         project = await self._projects.get_by_id(project_id)

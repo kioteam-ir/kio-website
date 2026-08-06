@@ -2,9 +2,10 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import cast
 
+from fastapi_pagination import add_pagination
 import redis.asyncio as aioredis
 from crudadmin import CRUDAdmin
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import DeclarativeBase
@@ -81,6 +82,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         version="0.1.0",
         lifespan=lifespan,
     )
+
+    add_pagination(app)
 
     register_exception_handlers(app)
 

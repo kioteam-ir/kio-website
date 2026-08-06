@@ -1,3 +1,4 @@
+from fastapi_pagination import paginate
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -12,9 +13,8 @@ class ProjectRepository:
         return await self._session.get(Project, project_id)
 
     async def list_all(self) -> list[Project]:
-        statement = select(Project)
-        result = await self._session.exec(statement)
-        return list(result.all())
+        query = select(Project)
+        return await paginate(self._session, query)
 
     async def add(self, project: Project) -> Project:
         self._session.add(project)
