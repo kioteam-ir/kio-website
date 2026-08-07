@@ -107,10 +107,13 @@ export function Footer() {
           <div className="flex flex-col items-center space-y-5 lg:items-start text-center lg:text-start">
             <Link
               to="/"
-              className="flex items-center justify-center gap-2.5 text-2xl font-bold text-white lg:justify-start"
+              className="flex items-center justify-center gap-2.5 text-2xl w-full font-bold text-white lg:justify-center"
             >
-              <img src="/logo.png" alt="Kio" className="h-11 w-11" />
-              Kio
+              <img
+                src="/logo.png"
+                alt="Kio"
+                className="h-11 w-11 scale-250 -mt-5 mb-5"
+              />
             </Link>
             <p className="max-w-sm text-sm leading-7 text-slate-400">
               تیم کایو ارائه‌دهنده خدمات توسعه نرم‌افزار تحت وب، طراحی رابط
