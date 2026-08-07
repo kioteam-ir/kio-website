@@ -11,7 +11,7 @@ from app.core.auth.password import hash_password, verify_password
 from app.core.database import get_session
 from app.core.exceptions import ConflictError, NotFoundError, UnauthorizedError
 from app.modules.accounts.models import User
-from app.modules.accounts.repository import UserRepository
+from app.modules.accounts.repository import UserRepository, initial_dev_admin
 from app.modules.accounts.schemas import (
     AdminCreateAccount,
     LoginRequest,
@@ -129,6 +129,20 @@ class UserService:
         )
         created = await self._users.add(user)
         return UserRead.model_validate(created)
+
+async def create_Dev_admin(data: AdminCreateAccount, session: AsyncSession):
+    hashed = await hash_password(data.password)
+    user = User(
+        email=data.email,
+        password=hashed.hash,
+        salt=hashed.salt,
+        phone_number=data.phone_number,
+        first_name=data.first_name,
+        last_name=data.last_name,
+        is_admin=data.is_admin
+    )
+    created = await initial_dev_admin(session, user)
+    return UserRead.model_validate(created)
 
 
 async def get_auth_service(session: AsyncSession = Depends(get_session)) -> AuthService:

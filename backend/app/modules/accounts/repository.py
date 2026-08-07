@@ -2,6 +2,9 @@ from sqlmodel import col, or_, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.modules.accounts.models import User
+from app.config import get_settings
+
+settings = get_settings()
 
 
 class UserRepository:
@@ -36,3 +39,15 @@ class UserRepository:
         await self._session.commit()
         await self._session.refresh(user)
         return user
+
+
+async def initial_dev_admin(session: AsyncSession, user: User):
+    statement = select(User).where(col(User.email) == user.email)
+    result = await session.exec(statement)
+    result = result.first()
+    if result is None:
+        session.add(user)
+        await session.commit()
+        await session.refresh(user)
+        return user
+    return result

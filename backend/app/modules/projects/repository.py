@@ -14,7 +14,7 @@ class ProjectRepository:
 
     async def list_all(self) -> list[Project]:
         query = select(Project)
-        return await paginate(self._session, query)
+        return await paginate(self._session, query) #type: ignore
 
     async def add(self, project: Project) -> Project:
         self._session.add(project)

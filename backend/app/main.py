@@ -25,6 +25,9 @@ from app.modules.blog.router import admin_router as blog_admin_router
 from app.modules.blog.router import front_router as blog_front_router
 from app.modules.projects.router import admin_router as projects_admin_router
 from app.modules.projects.router import front_router as projects_front_router
+from app.core.database import get_engine
+from sqlmodel.ext.asyncio.session import AsyncSession
+from app.modules.accounts.service import UserService, create_Dev_admin
 
 _registered_models = (User, Project, Post)
 ModelType = type[DeclarativeBase]
@@ -65,6 +68,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+        settings = get_settings()
+        if settings.DEBUG:
+            data = AdminCreateAccount(email=settings.ADMIN_DEV_EMAIL, password=settings.ADMIN_DEV_PASSWORD)
+            async with AsyncSession(get_engine()) as session:
+                await create_Dev_admin(data, session)
+
         _ = _registered_models
         await init_database()
         if crud_admin is not None:

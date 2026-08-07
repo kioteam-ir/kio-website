@@ -45,6 +45,9 @@ class Settings(BaseSettings):
     RATE_LIMIT_CAPACITY: int = 10
     RATE_LIMIT_ENABLED: bool = True
 
+    ADMIN_DEV_EMAIL: str
+    ADMIN_DEV_PASSWORD: str
+
     BASE_DIR: Path = Path(__file__).resolve().parent
 
     @field_validator("CORS_ORIGINS", mode="before")
