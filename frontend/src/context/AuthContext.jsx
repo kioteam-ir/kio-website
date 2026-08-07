@@ -8,14 +8,6 @@ import {
 import { authApi } from "../api/authApi";
 import { tokenStorage } from "../lib/httpClient";
 
-/**
- * Auth state machine.
- * status: "checking" | "authenticated" | "guest"
- * `user` holds whatever /auth/verify/ returns: { sub, email, is_admin }.
- * We never expose raw tokens to components — only the derived status,
- * the user's role, and the actions (login / signup / logout) needed to
- * change it.
- */
 const initialState = { status: "checking", user: null };
 
 function authReducer(state, action) {
