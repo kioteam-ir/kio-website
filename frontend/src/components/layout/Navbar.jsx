@@ -55,7 +55,7 @@ export function Navbar() {
             {/* Kio */}
           </Link>
 
-          <nav className="hidden items-center gap-1 lg:flex">
+          <nav className="hidden items-center gap-1 lg:flex" dir="rtl">
             {NAV_ITEMS.map((item) => (
               <NavLink
                 key={item.name}
