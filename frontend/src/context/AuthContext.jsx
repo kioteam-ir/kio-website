@@ -6,8 +6,16 @@ import {
   useReducer,
 } from "react";
 import { authApi } from "../api/authApi";
-import { tokenStorage } from "../client/httpClient";
+import { tokenStorage } from "../lib/httpClient";
 
+/**
+ * Auth state machine.
+ * status: "checking" | "authenticated" | "guest"
+ * `user` holds whatever /auth/verify/ returns: { sub, email, is_admin }.
+ * We never expose raw tokens to components — only the derived status,
+ * the user's role, and the actions (login / signup / logout) needed to
+ * change it.
+ */
 const initialState = { status: "checking", user: null };
 
 function authReducer(state, action) {
@@ -37,8 +45,8 @@ export function AuthProvider({ children }) {
 
     if (access) {
       try {
-        await authApi.verifyToken(access);
-        dispatch({ type: "AUTHENTICATED" });
+        const user = await authApi.verifyToken(access);
+        dispatch({ type: "AUTHENTICATED", user });
         return;
       } catch {
         // access token invalid/expired — fall through to refresh
@@ -50,7 +58,8 @@ export function AuthProvider({ children }) {
         await authApi.verifyToken(refresh);
         const tokens = await authApi.refreshToken(refresh);
         tokenStorage.set(tokens.access_token, tokens.refresh_token);
-        dispatch({ type: "AUTHENTICATED" });
+        const user = await authApi.verifyToken(tokens.access_token);
+        dispatch({ type: "AUTHENTICATED", user });
         return;
       } catch {
         tokenStorage.clear();
@@ -69,7 +78,8 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     const data = await authApi.login(email, password);
     tokenStorage.set(data.access_token, data.refresh_token);
-    dispatch({ type: "AUTHENTICATED" });
+    const user = await authApi.verifyToken(data.access_token);
+    dispatch({ type: "AUTHENTICATED", user });
     return data;
   }, []);
 
@@ -87,6 +97,8 @@ export function AuthProvider({ children }) {
       status: state.status,
       user: state.user,
       isAuthenticated: state.status === "authenticated",
+      isAdmin:
+        state.status === "authenticated" && Boolean(state.user?.is_admin),
       isChecking: state.status === "checking",
       login,
       signup,
