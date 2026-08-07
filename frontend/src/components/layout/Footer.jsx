@@ -99,7 +99,7 @@ export function Footer() {
   return (
     <footer
       dir="rtl"
-      className="relative border-t border-slate-800 bg-slate-950"
+      className="relative bg-gradient-to-l rounded-t-4xl -mt-6 from-brand-navy-900/50 via-neutral-950 to-brand-crimson-900/50"
     >
       <Container className="py-16 -mb-13">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">

@@ -54,7 +54,6 @@ export function Navbar() {
             className="flex items-center gap-2.5 text-lg font-bold text-white"
           >
             <img src="/logo.png" alt="Kio" className="h-9 scale-250 w-9" />
-            {/* Kio */}
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex" dir="rtl">
