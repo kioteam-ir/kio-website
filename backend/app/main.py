@@ -4,7 +4,7 @@ from typing import cast
 
 import redis.asyncio as aioredis
 from crudadmin import CRUDAdmin
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import DeclarativeBase

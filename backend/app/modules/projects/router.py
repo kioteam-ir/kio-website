@@ -9,7 +9,6 @@ front_router = APIRouter(prefix="/api/front/projects", tags=["projects-front"])
 admin_router = APIRouter(prefix="/api/admin/projects", tags=["projects-admin"])
 
 
-@front_router.post("", response_model=ProjectRead, status_code=status.HTTP_201_CREATED)
 @front_router.post("/", response_model=ProjectRead, status_code=status.HTTP_201_CREATED)
 async def submit_project(
     payload: ProjectCreate,
