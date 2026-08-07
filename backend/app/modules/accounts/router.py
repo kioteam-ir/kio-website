@@ -34,8 +34,9 @@ async def login(
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@auth_router.post("/verify", response_model=TokenVerifyResponse, status_code=status.HTTP_200_OK)
-@auth_router.post("/verify/", response_model=TokenVerifyResponse, status_code=status.HTTP_200_OK)
+@auth_router.post(
+    "/verify/", response_model=TokenVerifyResponse, status_code=status.HTTP_200_OK
+)
 async def verify_token(
     user: User = Depends(get_current_user),
 ) -> TokenVerifyResponse:
@@ -43,10 +44,11 @@ async def verify_token(
         from app.core.exceptions import UnauthorizedError
 
         raise UnauthorizedError("Invalid user state")
-    return TokenVerifyResponse(sub=str(user.id), email=user.email, is_admin=user.is_admin)
+    return TokenVerifyResponse(
+        sub=str(user.id), email=user.email, is_admin=user.is_admin
+    )
 
 
-@auth_router.post("/refresh", response_model=TokenPair, status_code=status.HTTP_200_OK)
 @auth_router.post("/refresh/", response_model=TokenPair, status_code=status.HTTP_200_OK)
 async def refresh_token(
     body: RefreshTokenRequest,
@@ -55,8 +57,9 @@ async def refresh_token(
     return await auth_service.refresh(body.refresh_token)
 
 
-@auth_router.post("/admin", response_model=AdminCheckResponse, status_code=status.HTTP_200_OK)
-@auth_router.post("/admin/", response_model=AdminCheckResponse, status_code=status.HTTP_200_OK)
+@auth_router.post(
+    "/admin/", response_model=AdminCheckResponse, status_code=status.HTTP_200_OK
+)
 async def check_admin(
     body: AccessTokenRequest,
     auth_service: AuthService = Depends(get_auth_service),
@@ -106,7 +109,9 @@ async def get_account_admin(
     return await user_service.get_by_id(user_id)
 
 
-@admin_router.post("/create-account/", response_model=UserRead, status_code=status.HTTP_201_CREATED)
+@admin_router.post(
+    "/create-account/", response_model=UserRead, status_code=status.HTTP_201_CREATED
+)
 async def create_account_admin(
     payload: AdminCreateAccount,
     user_service: UserService = Depends(get_user_service),
