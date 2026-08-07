@@ -1,4 +1,5 @@
 from sqlmodel import Field, SQLModel
+from sqlmodel import SQLModel, Field
 
 
 class Project(SQLModel, table=True):
@@ -9,3 +10,4 @@ class Project(SQLModel, table=True):
     phone_number: str = Field(max_length=11)
     description: str = Field(max_length=256)
     project_type: str = Field(max_length=64)
+    is_done: bool = Field(default=False)

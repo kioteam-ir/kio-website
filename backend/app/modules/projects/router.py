@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from app.core.auth.dependencies import require_admin
 from app.modules.accounts.models import User
 from app.modules.projects.schemas import ProjectCreate, ProjectListResponse, ProjectRead
 from app.modules.projects.service import ProjectService, get_project_service
+from app.core.pagination import ProjectPage
+
 
 front_router = APIRouter(prefix="/api/front/projects", tags=["projects-front"])
 admin_router = APIRouter(prefix="/api/admin/projects", tags=["projects-admin"])
@@ -39,5 +41,15 @@ async def create_project_admin(
     payload: ProjectCreate,
     project_service: ProjectService = Depends(get_project_service),
     _admin: User = Depends(require_admin),
-) -> ProjectRead:
+):
     return await project_service.create(payload)
+
+
+@admin_router.patch("/{project_id}/status", response_model=ProjectRead)
+async def change_project_status(
+    project_id: int, 
+    is_done: bool = Query(..., description="وضعیت جدید پروژه"),
+    _admin: User = Depends(require_admin),
+    project_service: ProjectService = Depends(get_project_service)
+) -> ProjectRead:
+    return await project_service.update_status(project_id, is_done)

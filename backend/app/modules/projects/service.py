@@ -18,14 +18,21 @@ class ProjectService:
         return ProjectRead.model_validate(created)
 
     async def list_projects(self) -> ProjectListResponse:
-        projects = await self._projects.list_all()
-        return ProjectListResponse(result=[ProjectRead.model_validate(p) for p in projects])
+        return await self._projects.list_all()
 
     async def get_by_id(self, project_id: int) -> ProjectRead:
         project = await self._projects.get_by_id(project_id)
         if project is None:
             raise NotFoundError("Project not found")
         return ProjectRead.model_validate(project)
+
+    async def update_status(self, project_id: int, is_done: bool) -> ProjectRead:
+        project = await self._projects.get_by_id(project_id)
+        if project is None:
+            raise NotFoundError("Project not found")
+        project.is_done = is_done
+        updated_project = await self._projects.update(project)
+        return ProjectRead.model_validate(updated_project)
 
 
 async def get_project_service(session: AsyncSession = Depends(get_session)) -> ProjectService:

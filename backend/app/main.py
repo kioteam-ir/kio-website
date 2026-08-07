@@ -2,6 +2,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import cast
 
+from fastapi_pagination import add_pagination
 import redis.asyncio as aioredis
 from crudadmin import CRUDAdmin
 from fastapi import FastAPI
@@ -81,6 +82,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         version="0.1.0",
         lifespan=lifespan,
     )
+
+    add_pagination(app)
 
     register_exception_handlers(app)
 

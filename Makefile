@@ -48,6 +48,9 @@ help:
 # -----------------------
 
 up:
+	$(COMPOSE) $(DEV) up
+	
+up -b:
 	$(COMPOSE) $(DEV) up --build
 
 down:
