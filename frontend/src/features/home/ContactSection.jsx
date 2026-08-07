@@ -125,9 +125,9 @@ export function ContactSection() {
           <div className="space-y-5">
             <CornerFrame className="overflow-hidden rounded-lg border border-slate-800">
               <img
-                src="/person-playing-3d-video-games-device.png"
+                src="/v1.png"
                 alt="مشاوره و توسعه پروژه"
-                className="h-56 w-full object-cover"
+                className="h-56 w-full object-contain object-center sm:h-72 lg:h-full"
               />
             </CornerFrame>
 
