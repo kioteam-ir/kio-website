@@ -12,8 +12,12 @@ export function useSubmissions() {
     try {
       const data = await projectApi.listProjects();
       setSubmissions(data.result ?? []);
-    } catch {
-      setError("خطا در دریافت اطلاعات از سرور");
+    } catch (err) {
+      if (err.status === 403) {
+        console.log();
+      } else {
+        setError("خطا در دریافت اطلاعات از سرور");
+      }
     } finally {
       setLoading(false);
     }

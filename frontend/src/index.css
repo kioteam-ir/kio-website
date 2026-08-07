@@ -156,8 +156,8 @@ body::before {
   top: 0;
   left: 0;
 
-  width: 68px;
-  height: 68px;
+  width: 35px;
+  height: 35px;
 
   border-radius: 58% 77% 63% 41% / 42% 31% 69% 56%;
   transform: rotate(-18deg);

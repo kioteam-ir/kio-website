@@ -99,7 +99,7 @@ export function Footer() {
   return (
     <footer
       dir="rtl"
-      className="relative border-t border-slate-800 bg-slate-950"
+      className="relative bg-gradient-to-l rounded-t-4xl -mt-6 from-brand-navy-900/50 via-neutral-950 to-brand-crimson-900/50"
     >
       <Container className="py-16 -mb-13">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
@@ -107,10 +107,13 @@ export function Footer() {
           <div className="flex flex-col items-center space-y-5 lg:items-start text-center lg:text-start">
             <Link
               to="/"
-              className="flex items-center justify-center gap-2.5 text-2xl font-bold text-white lg:justify-start"
+              className="flex items-center justify-center gap-2.5 text-2xl w-full font-bold text-white lg:justify-center"
             >
-              <img src="/logo.png" alt="Kio" className="h-11 w-11" />
-              Kio
+              <img
+                src="/logo.png"
+                alt="Kio"
+                className="h-11 w-11 scale-250 -mt-5 mb-5"
+              />
             </Link>
             <p className="max-w-sm text-sm leading-7 text-slate-400">
               تیم کایو ارائه‌دهنده خدمات توسعه نرم‌افزار تحت وب، طراحی رابط
@@ -166,7 +169,7 @@ export function Footer() {
             <ul className="flex flex-col items-center lg:items-start space-y-4 text-sm text-slate-400">
               <li className="flex items-center justify-center lg:justify-start gap-2.5">
                 <IconMapPin className="h-4 w-4 shrink-0 text-brand-blue-400" />
-                <span>ایران — کرمانشاه</span>
+                <span>ایران — تهران</span>
               </li>
               <li className="flex items-center justify-center lg:justify-start gap-2.5">
                 <IconPhone className="h-4 w-4 shrink-0 text-brand-crimson-400" />
@@ -174,7 +177,7 @@ export function Footer() {
               </li>
               <li className="flex items-center justify-center lg:justify-start gap-2.5">
                 <IconEmail className="h-4 w-4 shrink-0 text-brand-blue-400" />
-                <span dir="ltr">hello@kio.team</span>
+                <span dir="ltr">info@kioteam.ir</span>
               </li>
             </ul>
 
