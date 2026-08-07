@@ -169,7 +169,7 @@ export function Footer() {
             <ul className="flex flex-col items-center lg:items-start space-y-4 text-sm text-slate-400">
               <li className="flex items-center justify-center lg:justify-start gap-2.5">
                 <IconMapPin className="h-4 w-4 shrink-0 text-brand-blue-400" />
-                <span>ایران — کرمانشاه</span>
+                <span>ایران — تهران</span>
               </li>
               <li className="flex items-center justify-center lg:justify-start gap-2.5">
                 <IconPhone className="h-4 w-4 shrink-0 text-brand-crimson-400" />
@@ -177,7 +177,7 @@ export function Footer() {
               </li>
               <li className="flex items-center justify-center lg:justify-start gap-2.5">
                 <IconEmail className="h-4 w-4 shrink-0 text-brand-blue-400" />
-                <span dir="ltr">hello@kio.team</span>
+                <span dir="ltr">info@kioteam.ir</span>
               </li>
             </ul>
 
