@@ -18,6 +18,11 @@ Create your environment file:
 ```bash
 cp .env.local.example .env
 ```
+> note! : be careful with CORS_ORIGINS, DO NOT SET AS LIST, SET AS COMMA SEPERATED.
+> e.g. :
+```bash
+CORS_ORIGINS=http://localhost:1010,http://localhost:2020
+```
 
 Start the development stack:
 
