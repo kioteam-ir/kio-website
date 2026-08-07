@@ -123,7 +123,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     if crud_admin is not None:
         app.mount("/api/admin/", crud_admin.app)
 
-    @app.get("/health", response_model=HealthResponse, tags=["system"])
+    @app.get("/health/", response_model=HealthResponse, tags=["system"])
     async def health() -> HealthResponse:
         return HealthResponse()
 
