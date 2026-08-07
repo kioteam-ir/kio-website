@@ -18,7 +18,6 @@ async def submit_project(
 
 
 @admin_router.get("/list/", response_model=ProjectListResponse)
-@admin_router.get("/list", response_model=ProjectListResponse)
 async def list_projects(
     project_service: ProjectService = Depends(get_project_service),
     _admin: User = Depends(require_admin),
