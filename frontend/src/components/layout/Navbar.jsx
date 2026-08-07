@@ -44,8 +44,10 @@ export function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 z-50 w-full" dir="ltr">
-      <div className="border-b transition-all opacity-98 backdrop-blur-[20px] duration-300 border-slate-800 bg-slate-950/85">
+    <header className="fixed top-3 px-3 z-50 w-full" dir="ltr">
+      <div className="border-b transition-all rounded-2xl opacity-98 backdrop-blur-[200px] duration-300 border-slate-800 bg-gradient-to-l from-brand-navy-900/60 via-neutral-950 to-brand-crimson-900/60">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand-blue-400/50 to-transparent" />
+
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <Link
             to="/"
@@ -84,7 +86,7 @@ export function Navbar() {
 
       <div
         className={`
-    overflow-hidden border-b border-slate-800 bg-slate-950/95 backdrop-blur-md
+    overflow-hidden border-b border-slate-800 bg-gradient-to-l from-brand-navy-900/60 via-neutral-950 to-brand-crimson-900/60 backdrop-blur-md
     transition-all duration-300 ease-out lg:hidden
     ${isMobileOpen ? "max-h-96 opacity-100 py-5" : "max-h-0 opacity-0 py-0"}
   `}
