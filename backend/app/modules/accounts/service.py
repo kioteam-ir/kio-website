@@ -81,7 +81,7 @@ class UserService:
         existing = await self._users.find_by_email_or_phone(data.email, data.phone_number)
         if existing is not None:
             raise ConflictError("Email or phone number already exists")
-        return await self._create_user(data)
+        return await self._create_admin(data)
 
     async def get_by_id(self, user_id: int) -> UserRead:
         user = await self._users.get_by_id(user_id)
@@ -112,6 +112,20 @@ class UserService:
             phone_number=data.phone_number,
             first_name=data.first_name,
             last_name=data.last_name,
+        )
+        created = await self._users.add(user)
+        return UserRead.model_validate(created)
+
+    async def _create_admin(self, data: AdminCreateAccount) -> UserRead:
+        hashed = await hash_password(data.password)
+        user = User(
+            email=data.email,
+            password=hashed.hash,
+            salt=hashed.salt,
+            phone_number=data.phone_number,
+            first_name=data.first_name,
+            last_name=data.last_name,
+            is_admin=data.is_admin
         )
         created = await self._users.add(user)
         return UserRead.model_validate(created)

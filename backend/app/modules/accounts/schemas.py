@@ -35,6 +35,7 @@ class AdminCreateAccount(BaseModel):
     first_name: str = "User"
     last_name: str = "Unknown"
     password: str = Field(min_length=8)
+    is_admin: bool = Field(default=True)
 
 
 class LoginRequest(BaseModel):

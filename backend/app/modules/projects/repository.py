@@ -27,3 +27,7 @@ class ProjectRepository:
         await self._session.commit()
         await self._session.refresh(project)
         return project
+
+    async def delete(self, project: Project) -> None:
+        await self._session.delete(project)
+        await self._session.commit()

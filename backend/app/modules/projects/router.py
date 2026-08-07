@@ -53,3 +53,12 @@ async def change_project_status(
     project_service: ProjectService = Depends(get_project_service)
 ) -> ProjectRead:
     return await project_service.update_status(project_id, is_done)
+
+
+@admin_router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
+async def delete_project(
+    project_id: int, 
+    project_service: ProjectService = Depends(get_project_service),
+    _admin: User = Depends(require_admin)
+    ):
+    await project_service.delete(project_id)
