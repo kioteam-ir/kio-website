@@ -1,4 +1,4 @@
-import { httpClient, tokenStorage } from "../lib/httpClient";
+import { httpClient, tokenStorage } from "../client/httpClient";
 
 export const authApi = {
   login: (email, password) =>

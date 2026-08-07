@@ -6,7 +6,7 @@ import {
   useReducer,
 } from "react";
 import { authApi } from "../api/authApi";
-import { tokenStorage } from "../lib/httpClient";
+import { tokenStorage } from "../client/httpClient";
 
 const initialState = { status: "checking", user: null };
 
