@@ -21,11 +21,13 @@ async def get_current_user(
     session: AsyncSession = Depends(get_session),
 ) -> User:
     repository = UserRepository(session)
+
     if settings.DEBUG:
-        admin = await repository.get_by_id(6)
+        admin = await repository.get_by_email(settings.ADMIN_DEV_EMAIL)
         if admin is None:
             raise UnauthorizedError("User not found")
         return admin
+    
     if credentials is None:
         raise UnauthorizedError("Authorization header missing")
 
