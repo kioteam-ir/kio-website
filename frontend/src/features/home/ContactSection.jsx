@@ -10,8 +10,12 @@ import { IconEmail, IconMapPin, IconPhone } from "../../components/icons";
 import { useContactForm } from "./hooks/useContactForm";
 
 const CONTACT_DETAILS = [
-  { icon: IconMapPin, label: "آدرس", value: "ایران — تهران" },
-  { icon: IconPhone, label: "تلفن", value: "+98 912 000 0000", ltr: true },
+  {
+    icon: IconMapPin,
+    label: "آدرس",
+    value: "بندرعباس - خیابان شهید حقانی",
+  },
+  { icon: IconPhone, label: "تلفن", value: "+989967087175", ltr: true },
   { icon: IconEmail, label: "ایمیل", value: "info@kioteam.ir", ltr: true },
 ];
 
