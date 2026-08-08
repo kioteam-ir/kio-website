@@ -5,16 +5,16 @@ export const PROJECTS = [
     title: "مدیریت وام و صندوق",
     description: "اپلیکیشن مدیریت وام، صندوق و انجام تراکنشات و معاملات.",
     image: "/projects/loan.png",
-    url: "https://loan.kio.team",
+    url: "https://loan.kioteam.ir",
   },
   {
-    id: "delivery",
+    id: "shop",
     tag: "فروشگاهی",
-    title: "ارسال با لبخند",
+    title: "فروشگاه موبایل احمدزاده",
     description:
-      "به جمع پیک‌های حرفه‌ای ما بپیوندید و در کنار کسب درآمد، تجربه‌ای متفاوت برای مشتریان خلق کنید.",
-    image: "/projects/loan.png",
-    url: "https://loan.kio.team",
+      "پلتفرم فروشگاهی کامل با پنل مدیریت، سیستم پرداخت، و ردیابی سفارشات در لحظه.",
+    image: "/projects/electro.png",
+    url: "https://mobileahmadzadeh.com",
   },
   {
     id: "kiogamebot",
@@ -22,6 +22,6 @@ export const PROJECTS = [
     title: "ربات بازی کایوگیم",
     description: "بازی های آنلاین و دونفره (Xo, 3 Connect, 4Connect, Mineroob)",
     image: "/projects/gamebot.png",
-    url: "https://loan.kio.team",
+    url: "https://t.me/kiogamesbot",
   },
 ];
