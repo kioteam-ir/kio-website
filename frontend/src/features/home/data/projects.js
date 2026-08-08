@@ -17,6 +17,15 @@ export const PROJECTS = [
     url: "https://mobileahmadzadeh.com",
   },
   {
+    id: "presenting",
+    tag: "رزومه",
+    title: "طراحی وب‌سایت شخصی و خدماتی",
+    description:
+      "طراحی وب‌سایت شخصی و خدماتی برای متخصص مراقبت‌های پوست، مو و زیبایی با هدف برندسازی. معرفی جامع خدمات تخصصی (فیشال، احیای مو و دوره‌های آموزشی) و ایجاد مسیر سریع برای رزرو نوبت.",
+    image: "/projects/present.png",
+    url: "؟",
+  },
+  {
     id: "kiogamebot",
     tag: "ربات",
     title: "ربات بازی کایوگیم",
