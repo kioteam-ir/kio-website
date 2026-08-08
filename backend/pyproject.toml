@@ -5,6 +5,7 @@ description = "KIO website modular monolith API"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "alembic>=1.19.0",
     "asyncpg>=0.31.0",
     "crudadmin>=0.4.3",
     "fastapi-pagination>=0.15.16",

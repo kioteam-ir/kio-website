@@ -117,3 +117,12 @@ shell:
 
 clean:
 	docker system prune -f
+
+makemigrations:
+	${COMPOSE} ${BASE} ${INFRA} ${DEV} run --rm api alembic revision --autogenerate -m "$(m)"
+
+migrate:
+	${COMPOSE} ${BASE} ${INFRA} ${DEV} run --rm api alembic upgrade head
+
+downgrade:
+	${COMPOSE} ${BASE} ${INFRA} ${DEV} run --rm api alembic downgrade -1

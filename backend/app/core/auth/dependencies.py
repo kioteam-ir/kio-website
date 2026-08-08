@@ -21,7 +21,7 @@ async def get_current_user(
     session: AsyncSession = Depends(get_session),
 ) -> User:
     repository = UserRepository(session)
-
+    print(settings.DEBUG)
     if settings.DEBUG:
         admin = await repository.get_by_email(settings.ADMIN_DEV_EMAIL)
         if admin is None:
