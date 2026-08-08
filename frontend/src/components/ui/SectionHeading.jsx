@@ -20,7 +20,7 @@ export function SectionHeading({
       <div className="w-full flex justify-center">
         <h2
           className={cn(
-            "text-3xl w-fit font-bold text-transparent bg-clip-text bg-gradient-to-l from-brand-navy-500 to-brand-crimson-500 sm:text-4xl md:text-5xl",
+            "text-3xl w-fit font-[200] text-[#65DCD5] sm:text-4xl md:text-5xl",
             className,
           )}
         >
