@@ -1,7 +1,7 @@
 from sqlmodel import col, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.modules.blog.models import Post
+from app.modules.blog.models import Post, Subscription
 
 
 class PostRepository:
@@ -18,3 +18,19 @@ class PostRepository:
         await self._session.commit()
         await self._session.refresh(post)
         return post
+
+
+class SubscriptionRepository:
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def get_email(self, email: str) -> Subscription | None:
+        statement = select(Subscription).where(col(Subscription.email) == email)
+        result = await self._session.exec(statement)
+        return result.first()
+
+    async def add(self, subscription: Subscription) -> Subscription:
+        self._session.add(subscription)
+        await self._session.commit()
+        await self._session.refresh(subscription)
+        return subscription

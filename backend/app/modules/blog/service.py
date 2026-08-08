@@ -4,9 +4,9 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.core.database import get_session
 from app.core.exceptions import ConflictError
 from app.modules.accounts.models import User
-from app.modules.blog.models import Post
-from app.modules.blog.repository import PostRepository
-from app.modules.blog.schemas import PostCreate, PostRead
+from app.modules.blog.models import Post, Subscription
+from app.modules.blog.repository import PostRepository, SubscriptionRepository
+from app.modules.blog.schemas import EmailSubscriptions, PostCreate, PostRead
 
 
 class BlogService:
@@ -37,3 +37,22 @@ class BlogService:
 
 async def get_blog_service(session: AsyncSession = Depends(get_session)) -> BlogService:
     return BlogService(session)
+
+
+class SubscriptionService:
+    def __init__(self, session: AsyncSession) -> None:
+        self._subscriptions = SubscriptionRepository(session)
+    
+    async def add_subscriptions(self, data: EmailSubscriptions) -> EmailSubscriptions:
+        existing = await self._subscriptions.get_email(data.email)
+        if existing is not None:
+            raise ConflictError("Email already exists")
+
+        subscription = Subscription(
+            email=data.email
+        )
+        created = await self._subscriptions.add(subscription)
+        return EmailSubscriptions.model_validate(created, from_attributes=True)
+
+async def get_sub_service(session: AsyncSession = Depends(get_session)) -> SubscriptionService:
+    return SubscriptionService(session)

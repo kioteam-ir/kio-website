@@ -11,7 +11,7 @@ class PostStatus(StrEnum):
 
 
 class Post(SQLModel, table=True):
-    __tablename__ = "blog_post"
+    __tablename__ = "blog_post" #type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
     author_id: int | None = Field(default=None, nullable=True)
@@ -22,3 +22,10 @@ class Post(SQLModel, table=True):
     content: str
     status: PostStatus = Field(default=PostStatus.WAITING)
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+
+class Subscription(SQLModel, table=True):
+    __tablename__ = "subscription" #type: ignore
+
+    id: int | None = Field(default=None, primary_key=True)
+    email: str = Field(unique=True, index=True)

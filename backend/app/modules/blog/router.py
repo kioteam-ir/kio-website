@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, status
 
 from app.core.auth.dependencies import get_current_user, require_admin
 from app.modules.accounts.models import User
-from app.modules.blog.schemas import PostCreate, PostRead
-from app.modules.blog.service import BlogService, get_blog_service
+from app.modules.blog.schemas import EmailSubscriptions, PostCreate, PostRead
+from app.modules.blog.service import BlogService, SubscriptionService, get_blog_service, get_sub_service
 
 front_router = APIRouter(prefix="/api/front/blog", tags=["blog-front"])
 admin_router = APIRouter(prefix="/api/admin/blog", tags=["blog-admin"])
@@ -16,6 +16,15 @@ async def create_post(
     author: User = Depends(get_current_user),
 ) -> PostRead:
     return await blog_service.create_post(payload, author)
+
+
+@front_router.post("/subscriptions/", response_model=EmailSubscriptions, status_code=status.HTTP_201_CREATED)
+async def add_subscription(
+    payload: EmailSubscriptions,
+    sub_service: SubscriptionService = Depends(get_sub_service),
+):
+    print(payload)
+    return await sub_service.add_subscriptions(payload)
 
 
 @admin_router.post("/", response_model=PostRead, status_code=status.HTTP_201_CREATED)

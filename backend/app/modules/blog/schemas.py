@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 
 from app.modules.blog.models import PostStatus
 
@@ -22,3 +22,7 @@ class PostRead(BaseModel):
     status: PostStatus
 
     model_config = {"from_attributes": True}
+
+
+class EmailSubscriptions(BaseModel):
+    email: EmailStr
