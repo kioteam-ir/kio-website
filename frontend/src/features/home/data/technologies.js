@@ -1,5 +1,5 @@
 export const TECHNOLOGIES = [
-  { title: "HTML5", icon: "/Icon/html-5.svg" },
+  { title: "HTML5", icon: "/Icon/html-5.webp" },
   { title: "CSS3", icon: "/Icon/css.svg" },
   { title: "Docker", icon: "/Icon/docker-icon.svg" },
   { title: "Javascript", icon: "/Icon/javascript.svg" },
