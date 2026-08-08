@@ -16,6 +16,5 @@ export const TECHNOLOGIES = [
   { title: "Prometheus", icon: "/Icon/prometheus.svg" },
   { title: "FastAPI", icon: "/Icon/fastapi.svg" },
   { title: "Grafana", icon: "/Icon/grafana.svg" },
-  { title: "Next.js", icon: "/Icon/nextjs.svg" },
   { title: "TypeScript", icon: "/Icon/typescript.svg" },
 ];
