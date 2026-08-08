@@ -17,14 +17,16 @@ export function SectionHeading({
       )}
     >
       {index && <SectionTag index={index} label={eyebrow ?? ""} />}
-      <h2
-        className={cn(
-          "text-3xl font-bold text-white sm:text-4xl md:text-5xl",
-          className,
-        )}
-      >
-        {title}
-      </h2>
+      <div className="w-full flex justify-center">
+        <h2
+          className={cn(
+            "text-3xl w-fit font-bold text-transparent bg-clip-text bg-gradient-to-l from-brand-navy-500 to-brand-crimson-500 sm:text-4xl md:text-5xl",
+            className,
+          )}
+        >
+          {title}
+        </h2>
+      </div>
       {description && (
         <p className="mt-5 text-base leading-8 text-slate-400 md:text-lg">
           {description}
