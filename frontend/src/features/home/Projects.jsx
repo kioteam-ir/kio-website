@@ -22,7 +22,7 @@ export function Projects() {
               <img
                 src={project.image}
                 alt={project.title}
-                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                className="h-full w-full object-contain transition-transform duration-500 hover:scale-105"
               />
             </div>
             <div className="flex flex-1 flex-col p-6">

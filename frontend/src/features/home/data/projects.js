@@ -1,7 +1,7 @@
 export const PROJECTS = [
   {
     id: "loan",
-    tag: "فین‌تک",
+    tag: "مدیریت",
     title: "مدیریت وام و صندوق",
     description: "اپلیکیشن مدیریت وام، صندوق و انجام تراکنشات و معاملات.",
     image: "/projects/loan.png",
@@ -9,18 +9,19 @@ export const PROJECTS = [
   },
   {
     id: "delivery",
-    tag: "لجستیک",
+    tag: "فروشگاهی",
     title: "ارسال با لبخند",
-    description: "به جمع پیک‌های حرفه‌ای ما بپیوندید و در کنار کسب درآمد، تجربه‌ای متفاوت برای مشتریان خلق کنید.",
+    description:
+      "به جمع پیک‌های حرفه‌ای ما بپیوندید و در کنار کسب درآمد، تجربه‌ای متفاوت برای مشتریان خلق کنید.",
     image: "/projects/loan.png",
     url: "https://loan.kio.team",
   },
   {
-    id: "careers",
-    tag: "استخدام",
-    title: "پشت صحنه",
-    description: "اگر به همکاری در تیمی پویا علاقه دارید و می‌خواهید در رشد یک محصول تأثیرگذار باشید، به ما ملحق شوید.",
-    image: "/projects/loan.png",
+    id: "kiogamebot",
+    tag: "ربات",
+    title: "ربات بازی کایوگیم",
+    description: "بازی های آنلاین و دونفره (Xo, 3 Connect, 4Connect, Mineroob)",
+    image: "/projects/gamebot.png",
     url: "https://loan.kio.team",
   },
 ];
