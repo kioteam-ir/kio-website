@@ -3,7 +3,7 @@ from sqlmodel import SQLModel, Field
 
 
 class Project(SQLModel, table=True):
-    __tablename__ = "projects_project"
+    __tablename__ = "projects_project" #type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
     title: str = Field(max_length=128)

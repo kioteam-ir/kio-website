@@ -19,7 +19,7 @@ async def submit_project(
     return await project_service.create(payload)
 
 
-@admin_router.get("/list/", response_model=ProjectListResponse)
+@admin_router.get("/list/", response_model=ProjectPage[ProjectRead])
 async def list_projects(
     project_service: ProjectService = Depends(get_project_service),
     _admin: User = Depends(require_admin),

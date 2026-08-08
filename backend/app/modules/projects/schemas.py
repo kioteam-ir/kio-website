@@ -21,6 +21,7 @@ class ProjectRead(BaseModel):
     description: str
     phone_number: str
     project_type: str
+    is_done: bool
 
     model_config = {"from_attributes": True}
 

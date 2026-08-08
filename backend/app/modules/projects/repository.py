@@ -1,4 +1,4 @@
-from fastapi_pagination import paginate
+from fastapi_pagination.ext.sqlmodel import paginate
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
