@@ -169,11 +169,11 @@ export function Footer() {
             <ul className="flex flex-col items-center lg:items-start space-y-4 text-sm text-slate-400">
               <li className="flex items-center justify-center lg:justify-start gap-2.5">
                 <IconMapPin className="h-4 w-4 shrink-0 text-brand-blue-400" />
-                <span>ایران — تهران</span>
+                <span>بندرعباس - خیابان شهید حقانی</span>
               </li>
               <li className="flex items-center justify-center lg:justify-start gap-2.5">
                 <IconPhone className="h-4 w-4 shrink-0 text-brand-crimson-400" />
-                <span dir="ltr">+98 912 000 0000</span>
+                <span dir="ltr">+989967087175</span>
               </li>
               <li className="flex items-center justify-center lg:justify-start gap-2.5">
                 <IconEmail className="h-4 w-4 shrink-0 text-brand-blue-400" />
