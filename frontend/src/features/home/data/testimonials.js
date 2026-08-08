@@ -5,7 +5,7 @@ export const TEAM_TESTIMONIALS = [
     name: "یاسین افاضل",
     designation: "توسعه‌دهنده بک‌اند",
     src: "/dev/yasin.jpg",
-    website: "https://yasinafazel.ir",
+    website: "https://yasin.kioteam.ir/",
   },
   {
     quote:
@@ -13,7 +13,7 @@ export const TEAM_TESTIMONIALS = [
     name: "محمد حسین کوهکن",
     designation: "مهندس DevOps",
     src: "/dev/hoos.webp",
-    website: "https://yasinafazel.ir",
+    website: "https://mamahoos.kioteam.ir/",
   },
 
   {
@@ -22,7 +22,7 @@ export const TEAM_TESTIMONIALS = [
     name: "پوریا شریفی",
     designation: "توسعه دهنده فول‌استک / دیتاساینتیست",
     src: "/dev/pourya.png",
-    website: "https://yasinafazel.ir",
+    website: "https://pourya.kioteam.ir/",
   },
   {
     quote:
@@ -30,6 +30,6 @@ export const TEAM_TESTIMONIALS = [
     name: "محمد اشرفی",
     designation: "توسعه‌دهنده فرانت‌اند",
     src: "/dev/mamad.jfif",
-    website: "https://yasinafazel.ir",
+    website: "https://mohammad.kioteam.ir/",
   },
 ];
