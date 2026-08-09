@@ -61,6 +61,11 @@ function NewsletterForm() {
       setStatus("error");
       return;
     }
+    try {
+      projectApi
+    } catch (error) {
+      
+    }
     // TODO: connect to a real newsletter endpoint once it exists on the backend.
     setStatus("success");
   };
