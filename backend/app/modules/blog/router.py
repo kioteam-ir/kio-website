@@ -30,7 +30,6 @@ async def add_subscription(
     payload: EmailSubscriptions,
     sub_service: SubscriptionService = Depends(get_sub_service),
 ):
-    print(payload)
     return await sub_service.add_subscriptions(payload)
 
 

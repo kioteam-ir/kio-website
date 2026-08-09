@@ -75,7 +75,10 @@ async def check_admin(
 front_router = APIRouter(prefix="/api/front/accounts", tags=["accounts-front"])
 
 
-@front_router.post("/", response_model=UserRead, status_code=status.HTTP_201_CREATED)
+@front_router.post("/", response_model=UserRead, status_code=status.HTTP_201_CREATED, dependencies=[
+        Depends(rate_limit("1/second", scope="front_create_account:burst")),
+        Depends(rate_limit("5/minute", scope="front_create_account:sustained")),
+    ])
 async def create_account(
     payload: UserCreate,
     user_service: UserService = Depends(get_user_service),
