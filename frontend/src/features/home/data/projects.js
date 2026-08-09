@@ -5,7 +5,7 @@ export const PROJECTS = [
     title: "مدیریت وام و صندوق",
     description: "اپلیکیشن مدیریت وام، صندوق و انجام تراکنشات و معاملات.",
     image: "/projects/loan.png",
-    url: "https://loan.kioteam.ir",
+    url: "https://sandoghbisod.ir",
   },
   {
     id: "shop",
@@ -23,7 +23,7 @@ export const PROJECTS = [
     description:
       "طراحی وب‌سایت شخصی و خدماتی برای متخصص مراقبت‌های پوست، مو و زیبایی با هدف برندسازی. معرفی جامع خدمات تخصصی (فیشال، احیای مو و دوره‌های آموزشی) و ایجاد مسیر سریع برای رزرو نوبت.",
     image: "/projects/present.png",
-    url: "؟",
+    url: "https://faribarazaghi.ir",
   },
   {
     id: "kiogamebot",
