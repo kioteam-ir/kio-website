@@ -13,6 +13,7 @@ import {
   IconPhone,
   IconCheck,
 } from "../icons";
+import { blogApi } from "../../api/blogApi";
 
 const SOCIAL_LINKS = [
   {
@@ -62,12 +63,11 @@ function NewsletterForm() {
       return;
     }
     try {
-      projectApi
+      blogApi.emailSubscription(email);
+      setStatus("success");
     } catch (error) {
-      
+      setStatus(`error : ${error}`);
     }
-    // TODO: connect to a real newsletter endpoint once it exists on the backend.
-    setStatus("success");
   };
 
   return (
