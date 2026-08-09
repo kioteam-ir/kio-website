@@ -15,12 +15,15 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY backend/pyproject.toml backend/uv.lock backend/README.md ./
-COPY backend/app ./app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-install-project --no-dev
 
+COPY backend/app ./app
 COPY backend/alembic ./alembic
 COPY backend/alembic.ini ./
 
-RUN uv sync --frozen --no-dev
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
 
 FROM python:3.13-slim AS runtime
 
@@ -54,7 +57,7 @@ USER kio
 
 EXPOSE 8000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+HEALTHCHECK --interval=3s --timeout=3s --start-period=10s --retries=5 \
     CMD curl -fsS http://127.0.0.1:8000/health || exit 1
 
 CMD ["./start.sh"]
