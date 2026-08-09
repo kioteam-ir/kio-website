@@ -21,7 +21,7 @@ export function Hero() {
       className="relative overflow-hidden pt-10 md:pt-24"
     >
       <div
-        id="#top"
+        id="top"
         className="relative flex flex-col items-center gap-14 md:flex-row md:items-start md:justify-between"
       >
         <div className="w-full max-w-xl space-y-7">
