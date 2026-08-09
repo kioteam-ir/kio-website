@@ -16,12 +16,7 @@ const PAGE_SIZE = 10;
  */
 export function useProjects() {
   const [projects, setProjects] = useState([]);
-  const [meta, setMeta] = useState({
-    total: 0,
-    page: 1,
-    size: PAGE_SIZE,
-    pages: 1,
-  });
+  const [meta, setMeta] = useState({ total: 0, page: 1, size: PAGE_SIZE, pages: 1 });
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("all"); // "all" | "done" | "undone"
   const [loading, setLoading] = useState(true);
@@ -32,17 +27,9 @@ export function useProjects() {
     setLoading(true);
     setError("");
     try {
-      const data = await projectApi.listProjects({
-        page: targetPage,
-        size: PAGE_SIZE,
-      });
+      const data = await projectApi.listProjects({ page: targetPage, size: PAGE_SIZE });
       setProjects(data.items ?? []);
-      setMeta({
-        total: data.total,
-        page: data.page,
-        size: data.size,
-        pages: data.pages,
-      });
+      setMeta({ total: data.total, page: data.page, size: data.size, pages: data.pages });
     } catch {
       setError("خطا در دریافت اطلاعات از سرور");
     } finally {
@@ -55,13 +42,10 @@ export function useProjects() {
     fetchData(page);
   }, [page, fetchData]);
 
-  const goToPage = useCallback(
-    (next) => {
-      setPage(Math.min(Math.max(1, next), Math.max(1, meta.pages)));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    [meta.pages],
-  );
+  const goToPage = useCallback((next) => {
+    setPage(Math.min(Math.max(1, next), Math.max(1, meta.pages)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [meta.pages]);
 
   const removeProject = useCallback(async (id) => {
     setMutatingId(id);
@@ -80,9 +64,7 @@ export function useProjects() {
     setMutatingId(id);
     try {
       const updated = await projectApi.setProjectStatus(id, nextIsDone);
-      setProjects((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, is_done: updated.is_done } : p)),
-      );
+      setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, is_done: updated.is_done } : p)));
     } catch {
       setError("تغییر وضعیت پروژه با خطا مواجه شد.");
     } finally {

@@ -14,11 +14,7 @@ export function ProjectsPagination({ page, pages, onChange, disabled }) {
       </button>
 
       <span className="tracking-widest">
-        صفحه{" "}
-        <span className="text-neutral-200">
-          {String(page).padStart(2, "0")}
-        </span>{" "}
-        / {String(pages).padStart(2, "0")}
+        صفحه <span className="text-neutral-200">{String(page).padStart(2, "0")}</span> / {String(pages).padStart(2, "0")}
       </span>
 
       <button

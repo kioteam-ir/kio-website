@@ -15,18 +15,11 @@ export function ProjectsFilterTabs({ active, onChange, counts }) {
           onClick={() => onChange(tab.key)}
           className={cn(
             "flex items-center gap-2 rounded-md px-3.5 py-1.5 font-mono text-xs transition-colors duration-150",
-            active === tab.key
-              ? "grad-brand text-white"
-              : "text-neutral-400 hover:text-neutral-200",
+            active === tab.key ? "grad-brand text-white" : "text-neutral-400 hover:text-neutral-200",
           )}
         >
           {tab.label}
-          <span
-            className={cn(
-              "rounded-full px-1.5 py-0.5 text-[10px]",
-              active === tab.key ? "bg-black/20" : "bg-white/5",
-            )}
-          >
+          <span className={cn("rounded-full px-1.5 py-0.5 text-[10px]", active === tab.key ? "bg-black/20" : "bg-white/5")}>
             {counts[tab.key]}
           </span>
         </button>
