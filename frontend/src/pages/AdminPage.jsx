@@ -30,43 +30,68 @@ export default function AdminPage() {
   const [selected, setSelected] = useState(null);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("این پروژه برای همیشه حذف می‌شود. ادامه می‌دهید؟")) return;
+    if (!window.confirm("این پروژه برای همیشه حذف می‌شود. ادامه می‌دهید؟"))
+      return;
     await removeProject(id);
     if (selected?.id === id) setSelected(null);
   };
 
   const handleToggleDone = async (id, next) => {
     await toggleDone(id, next);
-    setSelected((prev) => (prev?.id === id ? { ...prev, is_done: next } : prev));
+    setSelected((prev) =>
+      prev?.id === id ? { ...prev, is_done: next } : prev,
+    );
   };
 
   return (
     <AdminLayout>
-      <Container dir="rtl" className="py-6 sm:py-8">
+      <div dir="rtl" className=" px-4 py-6 sm:py-8">
         <div className="mb-5 flex items-start justify-between gap-3 sm:mb-6 sm:items-center">
           <div className="min-w-0">
-            <h1 className="truncate text-lg font-medium text-neutral-100 sm:text-xl">پروژه‌های ثبت‌شده</h1>
+            <h1 className="truncate text-lg font-medium text-neutral-100 sm:text-xl">
+              پروژه‌های ثبت‌شده
+            </h1>
             {!loading && !error && (
-              <p className="mt-0.5 text-xs text-neutral-500 sm:text-sm">{meta.total} پروژه — صفحه {meta.page} از {meta.pages}</p>
+              <p className="mt-0.5 text-xs text-neutral-500 sm:text-sm">
+                {meta.total} پروژه — صفحه {meta.page} از {meta.pages}
+              </p>
             )}
           </div>
-          <Button variant="outline" size="sm" onClick={refetch} aria-label="بروزرسانی" className="shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={refetch}
+            aria-label="بروزرسانی"
+            className="shrink-0"
+          >
             <IconRefresh className="h-4 w-4" />
             <span className="hidden sm:inline">بروزرسانی</span>
           </Button>
         </div>
 
         <div className="-mx-4 mb-5 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-          <ProjectsFilterTabs active={statusFilter} onChange={setStatusFilter} counts={counts} />
+          <ProjectsFilterTabs
+            active={statusFilter}
+            onChange={setStatusFilter}
+            counts={counts}
+          />
         </div>
 
-        {error && <Alert tone="error" className="mb-4 text-start">{error}</Alert>}
+        {error && (
+          <Alert tone="error" className="mb-4 text-start">
+            {error}
+          </Alert>
+        )}
 
         {loading ? (
-          <div className="flex justify-center py-20"><Spinner /></div>
+          <div className="flex justify-center py-20">
+            <Spinner />
+          </div>
         ) : projects.length === 0 ? (
           <p className="py-20 text-center text-sm text-neutral-500">
-            {statusFilter === "all" ? "هیچ پروژه‌ای ثبت نشده است." : "پروژه‌ای با این وضعیت در این صفحه یافت نشد."}
+            {statusFilter === "all"
+              ? "هیچ پروژه‌ای ثبت نشده است."
+              : "پروژه‌ای با این وضعیت در این صفحه یافت نشد."}
           </p>
         ) : (
           <ProjectsTable
@@ -78,8 +103,13 @@ export default function AdminPage() {
           />
         )}
 
-        <ProjectsPagination page={page} pages={meta.pages} onChange={goToPage} disabled={loading} />
-      </Container>
+        <ProjectsPagination
+          page={page}
+          pages={meta.pages}
+          onChange={goToPage}
+          disabled={loading}
+        />
+      </div>
 
       <ProjectModal
         project={selected}

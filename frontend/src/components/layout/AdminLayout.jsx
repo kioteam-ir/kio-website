@@ -17,7 +17,9 @@ function NavItem({ item, className }) {
       className={({ isActive }) =>
         cn(
           "flex items-center gap-3 rounded-md px-3.5 py-2.5 text-sm transition-colors",
-          isActive ? "grad-brand text-white" : "text-neutral-400 hover:bg-white/5 hover:text-neutral-200",
+          isActive
+            ? "grad-brand text-white"
+            : "text-neutral-400 hover:bg-white/5 hover:text-neutral-200",
           className,
         )
       }
@@ -59,7 +61,12 @@ export function AdminLayout({ children }) {
         </nav>
 
         <div className="border-t border-neutral-800 p-3">
-          <Button variant="danger" size="sm" onClick={logout} className="w-full">
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={logout}
+            className="w-full"
+          >
             <IconLogout className="h-4 w-4" />
             خروج از حساب
           </Button>
@@ -74,17 +81,25 @@ export function AdminLayout({ children }) {
             <img src="/logo.png" alt="Kio" className="h-7 w-7" />
             <span className="text-sm font-bold text-white">Kio Admin</span>
           </div>
-          <button onClick={logout} aria-label="خروج" className="flex h-8 w-8 items-center justify-center rounded-md text-brand-crimson-300 hover:bg-brand-crimson-900/20">
+          <button
+            onClick={logout}
+            aria-label="خروج"
+            className="flex h-8 w-8 items-center justify-center rounded-md text-brand-crimson-300 hover:bg-brand-crimson-900/20"
+          >
             <IconLogout className="h-4 w-4" />
           </button>
         </header>
 
-        <main className="pb-20 lg:pb-0">{children}</main>
+        <main className="pb-20 lg:pb-0 sticky">{children}</main>
 
         {/* Bottom tab bar — small screens only */}
         <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-neutral-800 bg-neutral-950/95 backdrop-blur lg:hidden">
           {NAV_ITEMS.map((item) => (
-            <NavItem key={item.to} item={item} className="flex-1 flex-col gap-1 rounded-none py-2.5 text-[11px]" />
+            <NavItem
+              key={item.to}
+              item={item}
+              className="flex-1 flex-col gap-1 rounded-none py-2.5 text-[11px]"
+            />
           ))}
         </nav>
       </div>
