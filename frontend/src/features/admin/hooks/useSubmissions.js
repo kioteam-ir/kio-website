@@ -11,7 +11,7 @@ export function useSubmissions() {
     setError("");
     try {
       const data = await projectApi.listProjects();
-      setSubmissions(data.result ?? []);
+      setSubmissions(data.items ?? []);
     } catch (err) {
       if (err.status === 403) {
         console.log();
