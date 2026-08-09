@@ -8,7 +8,7 @@ const TABS = [
 
 export function ProjectsFilterTabs({ active, onChange, counts }) {
   return (
-    <div className="inline-flex items-center gap-1 rounded-lg border border-neutral-800 bg-neutral-900/40 p-1">
+    <div className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-neutral-800 bg-neutral-900/40 p-1">
       {TABS.map((tab) => (
         <button
           key={tab.key}
