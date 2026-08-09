@@ -15,12 +15,15 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY backend/pyproject.toml backend/uv.lock backend/README.md ./
-COPY backend/app ./app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-install-project --no-dev
 
+COPY backend/app ./app
 COPY backend/alembic ./alembic
 COPY backend/alembic.ini ./
 
-RUN uv sync --frozen --no-dev
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
 
 FROM python:3.13-slim AS runtime
 
