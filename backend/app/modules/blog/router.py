@@ -11,8 +11,8 @@ admin_router = APIRouter(prefix="/api/admin/blog", tags=["blog-admin"])
 
 
 @front_router.post("/", response_model=PostRead, status_code=status.HTTP_201_CREATED, dependencies=[
-        Depends(rate_limit("10/second", scope="search:burst")),
-        Depends(rate_limit("100/minute", scope="search:sustained")),
+        Depends(rate_limit("1/second", scope="create_blog:burst")),
+        Depends(rate_limit("10/minute", scope="create_blog:sustained")),
     ])
 async def create_post(
     payload: PostCreate,
@@ -23,8 +23,8 @@ async def create_post(
 
 
 @front_router.post("/subscriptions/", response_model=EmailSubscriptions, status_code=status.HTTP_201_CREATED, dependencies=[
-        Depends(rate_limit("1/second", scope="search:burst")),
-        Depends(rate_limit("5/minute", scope="search:sustained")),
+        Depends(rate_limit("1/second", scope="subs:burst")),
+        Depends(rate_limit("5/minute", scope="subs:sustained")),
     ])
 async def add_subscription(
     payload: EmailSubscriptions,

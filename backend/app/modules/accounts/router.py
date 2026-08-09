@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status
+from redis_fastapi import rate_limit
 
 from app.core.auth.dependencies import get_current_user, require_admin
 from app.core.auth.jwt import TokenPair
@@ -23,7 +24,10 @@ from app.modules.accounts.service import (
 router = APIRouter(tags=["accounts"])
 
 
-@router.post("/api/login/", response_model=TokenPair, status_code=status.HTTP_200_OK)
+@router.post("/api/login/", response_model=TokenPair, status_code=status.HTTP_200_OK, dependencies=[
+        Depends(rate_limit("1/second", scope="login:burst")),
+        Depends(rate_limit("5/minute", scope="login:sustained")),
+    ])
 async def login(
     credentials: LoginRequest,
     auth_service: AuthService = Depends(get_auth_service),
