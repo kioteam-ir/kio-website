@@ -22,7 +22,7 @@ export default function HomePage() {
       <Projects />
       <Pricing />
       <Team />
-      <GrowthTogether />
+      {/* <GrowthTogether /> */}
       <Faq />
       <ContactSection />
     </MainLayout>
