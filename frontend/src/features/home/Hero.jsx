@@ -20,7 +20,10 @@ export function Hero() {
       dir="rtl"
       className="relative overflow-hidden pt-10 md:pt-24"
     >
-      <div className="relative flex flex-col items-center gap-14 md:flex-row md:items-start md:justify-between">
+      <div
+        id="#top"
+        className="relative flex flex-col items-center gap-14 md:flex-row md:items-start md:justify-between"
+      >
         <div className="w-full max-w-xl space-y-7">
           <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3.5 py-1.5 font-mono text-xs text-slate-400">
             <span className="h-3 w-3 rounded-full grad-brand" />

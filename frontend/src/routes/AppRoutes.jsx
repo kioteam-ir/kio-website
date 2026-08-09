@@ -5,6 +5,7 @@ import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
 import DashboardPage from "../pages/DashboardPage";
 import AdminPage from "../pages/AdminPage";
+import AdminEmailsPage from "../pages/AdminEmailsPage";
 import NotFoundPage from "../pages/NotFoundPage";
 
 export function AppRoutes() {
@@ -26,6 +27,14 @@ export function AppRoutes() {
         element={
           <ProtectedRoute requireAdmin>
             <AdminPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/emails"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminEmailsPage />
           </ProtectedRoute>
         }
       />
