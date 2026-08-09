@@ -1,16 +1,15 @@
 import { useState } from "react";
-import { MainLayout } from "../components/layout/MainLayout";
+import { AdminLayout } from "../components/layout/AdminLayout";
 import { Container } from "../components/ui/Container";
 import { Button } from "../components/ui/Button";
 import { Spinner } from "../components/ui/Spinner";
 import { Alert } from "../components/ui/Alert";
-import { IconLogout, IconRefresh } from "../components/icons";
+import { IconRefresh } from "../components/icons";
 import { ProjectsTable } from "../features/admin/ProjectsTable";
 import { ProjectModal } from "../features/admin/ProjectModal";
 import { ProjectsFilterTabs } from "../features/admin/ProjectsFilterTabs";
 import { ProjectsPagination } from "../features/admin/ProjectsPagination";
 import { useProjects } from "../features/admin/hooks/useProjects";
-import { useAuth } from "../hooks/useAuth";
 
 export default function AdminPage() {
   const {
@@ -28,7 +27,6 @@ export default function AdminPage() {
     removeProject,
     toggleDone,
   } = useProjects();
-  const { logout } = useAuth();
   const [selected, setSelected] = useState(null);
 
   const handleDelete = async (id) => {
@@ -46,14 +44,11 @@ export default function AdminPage() {
   };
 
   return (
-    <MainLayout showChrome={false}>
+    <AdminLayout>
       <Container dir="rtl" className="min-h-screen py-6 sm:py-8">
         <div className="mb-5 flex items-start justify-between gap-3 sm:mb-6 sm:items-center">
           <div className="min-w-0">
-            <span className="font-mono text-xs tracking-widest text-neutral-500">
-              KIO / ADMIN
-            </span>
-            <h1 className="mt-1 truncate text-lg font-medium text-neutral-100 sm:text-xl">
+            <h1 className="truncate text-lg font-medium text-neutral-100 sm:text-xl">
               پروژه‌های ثبت‌شده
             </h1>
             {!loading && !error && (
@@ -62,26 +57,16 @@ export default function AdminPage() {
               </p>
             )}
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={refetch}
-              aria-label="بروزرسانی"
-            >
-              <IconRefresh className="h-4 w-4" />
-              <span className="hidden sm:inline">بروزرسانی</span>
-            </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={logout}
-              aria-label="خروج"
-            >
-              <IconLogout className="h-4 w-4" />
-              <span className="hidden sm:inline">خروج</span>
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={refetch}
+            aria-label="بروزرسانی"
+            className="shrink-0"
+          >
+            <IconRefresh className="h-4 w-4" />
+            <span className="hidden sm:inline">بروزرسانی</span>
+          </Button>
         </div>
 
         <div className="-mx-4 mb-5 overflow-x-auto px-4 sm:mx-0 sm:px-0">
@@ -133,6 +118,6 @@ export default function AdminPage() {
         onToggleDone={handleToggleDone}
         mutatingId={mutatingId}
       />
-    </MainLayout>
+    </AdminLayout>
   );
 }
