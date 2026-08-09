@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status
+from redis_fastapi import rate_limit
 
 from app.core.auth.dependencies import get_current_user, require_admin
 from app.modules.accounts.models import User
@@ -9,7 +10,10 @@ front_router = APIRouter(prefix="/api/front/blog", tags=["blog-front"])
 admin_router = APIRouter(prefix="/api/admin/blog", tags=["blog-admin"])
 
 
-@front_router.post("/", response_model=PostRead, status_code=status.HTTP_201_CREATED)
+@front_router.post("/", response_model=PostRead, status_code=status.HTTP_201_CREATED, dependencies=[
+        Depends(rate_limit("10/second", scope="search:burst")),
+        Depends(rate_limit("100/minute", scope="search:sustained")),
+    ])
 async def create_post(
     payload: PostCreate,
     blog_service: BlogService = Depends(get_blog_service),
@@ -18,7 +22,10 @@ async def create_post(
     return await blog_service.create_post(payload, author)
 
 
-@front_router.post("/subscriptions/", response_model=EmailSubscriptions, status_code=status.HTTP_201_CREATED)
+@front_router.post("/subscriptions/", response_model=EmailSubscriptions, status_code=status.HTTP_201_CREATED, dependencies=[
+        Depends(rate_limit("1/second", scope="search:burst")),
+        Depends(rate_limit("5/minute", scope="search:sustained")),
+    ])
 async def add_subscription(
     payload: EmailSubscriptions,
     sub_service: SubscriptionService = Depends(get_sub_service),

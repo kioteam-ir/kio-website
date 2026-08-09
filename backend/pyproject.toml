@@ -9,6 +9,7 @@ dependencies = [
     "asyncpg>=0.31.0",
     "crudadmin>=0.4.3",
     "fastapi-pagination>=0.15.16",
+    "fastapi-redis-sdk>=0.8.0",
     "fastapi[standard]>=0.115.0",
     "pydantic-settings>=2.12.0",
     "pydantic[email]>=2.12.0",

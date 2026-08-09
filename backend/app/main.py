@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from typing import cast
 
 from fastapi_pagination import add_pagination
+from redis_fastapi import FastAPIRedis
 import redis.asyncio as aioredis
 from crudadmin import CRUDAdmin
 from fastapi import FastAPI
@@ -68,6 +69,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+
         settings = get_settings()
         if settings.DEBUG:
             data = AdminCreateAccount(email=settings.ADMIN_DEV_EMAIL, password=settings.ADMIN_DEV_PASSWORD)
@@ -94,6 +96,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     add_pagination(app)
 
+    redis = FastAPIRedis(app)
+    redis.lifespan().rate_limiting()
+    
     register_exception_handlers(app)
 
     app.add_middleware(

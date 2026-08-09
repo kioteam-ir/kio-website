@@ -501,6 +501,22 @@ wheels = [
 ]
 
 [[package]]
+name = "fastapi-redis-sdk"
+version = "0.8.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "anyio" },
+    { name = "fastapi" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "redis" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b8/48/1a8824d80385c1cf3f35dac11ede8d54470777267ebf04ba43bb7b906a50/fastapi_redis_sdk-0.8.0.tar.gz", hash = "sha256:a414e25ca1f41c277b06de6a640ddb1e8389e7d654280342746ce4d087dc04ed", size = 39086, upload-time = "2026-07-31T10:57:44.568Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a2/6b/433d99fe935ab3bab540a18fec67b110b04013c4a8216c4ec323989967ef/fastapi_redis_sdk-0.8.0-py3-none-any.whl", hash = "sha256:1f8d56e0279cc4941bfd6b4440d5e1bdf836ba35c10524f647aac823141ac8bd", size = 44507, upload-time = "2026-07-31T10:57:43.262Z" },
+]
+
+[[package]]
 name = "fastar"
 version = "0.11.0"
 source = { registry = "https://pypi.org/simple" }
@@ -784,6 +800,7 @@ dependencies = [
     { name = "crudadmin" },
     { name = "fastapi", extra = ["standard"] },
     { name = "fastapi-pagination" },
+    { name = "fastapi-redis-sdk" },
     { name = "pydantic", extra = ["email"] },
     { name = "pydantic-settings" },
     { name = "python-jose", extra = ["cryptography"] },
@@ -810,6 +827,7 @@ requires-dist = [
     { name = "crudadmin", specifier = ">=0.4.3" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.0" },
     { name = "fastapi-pagination", specifier = ">=0.15.16" },
+    { name = "fastapi-redis-sdk", specifier = ">=0.8.0" },
     { name = "pydantic", extras = ["email"], specifier = ">=2.12.0" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "python-jose", extras = ["cryptography"], specifier = ">=3.5.0" },
