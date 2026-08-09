@@ -35,7 +35,10 @@ export const tokenStorage = {
  * This is a drop-in replacement for the previous axios-based fetcher,
  * so the rest of the app never has to know it changed.
  */
-async function request(path, { method = "GET", body, headers = {}, auth = true, signal } = {}) {
+async function request(
+  path,
+  { method = "GET", body, headers = {}, auth = true, signal } = {},
+) {
   const url = `${env.apiBaseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 
   const finalHeaders = { "Content-Type": "application/json", ...headers };
@@ -53,10 +56,15 @@ async function request(path, { method = "GET", body, headers = {}, auth = true, 
       signal,
     });
   } catch (networkError) {
-    throw new ApiError("امکان برقراری ارتباط با سرور وجود ندارد.", { status: null, data: networkError });
+    throw new ApiError("امکان برقراری ارتباط با سرور وجود ندارد.", {
+      status: null,
+      data: networkError,
+    });
   }
 
-  const isJson = response.headers.get("content-type")?.includes("application/json");
+  const isJson = response.headers
+    .get("content-type")
+    ?.includes("application/json");
   const payload = isJson ? await response.json().catch(() => null) : null;
 
   if (!response.ok) {
@@ -76,5 +84,8 @@ export const httpClient = {
   get: (path, opts) => request(path, { ...opts, method: "GET" }),
   post: (path, body, opts) => request(path, { ...opts, method: "POST", body }),
   put: (path, body, opts) => request(path, { ...opts, method: "PUT", body }),
+  patch: (path, body, opts) =>
+    request(path, { ...opts, method: "PATCH", body }),
+
   delete: (path, opts) => request(path, { ...opts, method: "DELETE" }),
 };
