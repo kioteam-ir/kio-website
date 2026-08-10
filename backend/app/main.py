@@ -16,7 +16,7 @@ from app.core.database import close_database, get_session, init_database
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware.rate_limit import RateLimitMiddleware, RedisTokenBucket
-from app.models import Post, Project, User
+from app.models import Post, Project, User, MainContent
 from app.modules.accounts.router import admin_router as accounts_admin_router
 from app.modules.accounts.router import auth_router
 from app.modules.accounts.router import front_router as accounts_front_router
@@ -26,11 +26,12 @@ from app.modules.blog.router import admin_router as blog_admin_router
 from app.modules.blog.router import front_router as blog_front_router
 from app.modules.projects.router import admin_router as projects_admin_router
 from app.modules.projects.router import front_router as projects_front_router
+from app.modules.seo.router import admin_router as seo_admin_router
 from app.core.database import get_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.modules.accounts.service import create_Dev_admin
 
-_registered_models = (User, Project, Post)
+_registered_models = (User, Project, Post, MainContent)
 ModelType = type[DeclarativeBase]
 
 
@@ -136,6 +137,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(projects_admin_router)
     app.include_router(blog_front_router)
     app.include_router(blog_admin_router)
+    app.include_router(seo_admin_router)
+
     if crud_admin is not None:
         app.mount("/api/admin/", crud_admin.app)
 

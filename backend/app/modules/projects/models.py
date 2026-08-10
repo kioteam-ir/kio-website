@@ -1,5 +1,4 @@
 from sqlmodel import Field, SQLModel
-from sqlmodel import SQLModel, Field
 
 
 class Project(SQLModel, table=True):
