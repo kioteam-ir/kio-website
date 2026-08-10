@@ -7,6 +7,7 @@ import DashboardPage from "../pages/DashboardPage";
 import AdminPage from "../pages/AdminPage";
 import AdminEmailsPage from "../pages/AdminEmailsPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import AdminSeoPage from "../pages/AdminSeoPage";
 
 export function AppRoutes() {
   return (
@@ -35,6 +36,14 @@ export function AppRoutes() {
         element={
           <ProtectedRoute requireAdmin>
             <AdminEmailsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/seo"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminSeoPage />
           </ProtectedRoute>
         }
       />
