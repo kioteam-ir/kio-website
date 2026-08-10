@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Query, status
+from redis_fastapi import rate_limit
 
 from app.core.auth.dependencies import require_admin
 from app.modules.accounts.models import User
@@ -11,7 +12,10 @@ front_router = APIRouter(prefix="/api/front/projects", tags=["projects-front"])
 admin_router = APIRouter(prefix="/api/admin/projects", tags=["projects-admin"])
 
 
-@front_router.post("/", response_model=ProjectRead, status_code=status.HTTP_201_CREATED)
+@front_router.post("/", response_model=ProjectRead, status_code=status.HTTP_201_CREATED, dependencies=[
+        Depends(rate_limit("1/second", scope="front_create_account:burst")),
+        Depends(rate_limit("5/minute", scope="front_create_account:sustained")),
+    ])
 async def submit_project(
     payload: ProjectCreate,
     project_service: ProjectService = Depends(get_project_service),

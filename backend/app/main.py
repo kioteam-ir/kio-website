@@ -28,7 +28,7 @@ from app.modules.projects.router import admin_router as projects_admin_router
 from app.modules.projects.router import front_router as projects_front_router
 from app.core.database import get_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
-from app.modules.accounts.service import UserService, create_Dev_admin
+from app.modules.accounts.service import create_Dev_admin
 
 _registered_models = (User, Project, Post)
 ModelType = type[DeclarativeBase]
@@ -81,16 +81,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if crud_admin is not None:
             await crud_admin.initialize()
         logger.info("application_started")
+
         yield
+
         await close_database()
-        redis_client = _app.state.redis_client
-        if redis_client is not None:
-            await redis_client.aclose()
         logger.info("application_stopped")
 
     app = FastAPI(
         title="KIO API",
-        version="0.1.0",
+        version="1.0.0",
         lifespan=lifespan,
     )
 
@@ -98,7 +97,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     redis = FastAPIRedis(app)
     redis.lifespan().rate_limiting()
-    
+
     register_exception_handlers(app)
 
     app.add_middleware(

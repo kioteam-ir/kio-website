@@ -86,7 +86,10 @@ async def create_account(
     return await user_service.register(payload)
 
 
-@front_router.get("/{account_id}/", response_model=UserRead)
+@front_router.get("/{account_id}/", response_model=UserRead, dependencies=[
+        Depends(rate_limit("2/second", scope="front_create_account:burst")),
+        Depends(rate_limit("20/minute", scope="front_create_account:sustained")),
+    ])
 async def get_account(
     account_id: int,
     user_service: UserService = Depends(get_user_service),
