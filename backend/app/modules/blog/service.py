@@ -54,5 +54,9 @@ class SubscriptionService:
         created = await self._subscriptions.add(subscription)
         return EmailSubscriptions.model_validate(created, from_attributes=True)
 
+    async def subscriptions_list(self) -> EmailSubscriptions:
+        return await self._subscriptions.list_all() #type: ignore
+
+
 async def get_sub_service(session: AsyncSession = Depends(get_session)) -> SubscriptionService:
     return SubscriptionService(session)

@@ -1,6 +1,8 @@
 from sqlmodel import col, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from fastapi_pagination.ext.sqlmodel import paginate
+
 from app.modules.blog.models import Post, Subscription
 
 
@@ -34,3 +36,7 @@ class SubscriptionRepository:
         await self._session.commit()
         await self._session.refresh(subscription)
         return subscription
+
+    async def list_all(self) -> list[Subscription]:
+        query = select(Subscription)
+        return await paginate(self._session, query) #type: ignore

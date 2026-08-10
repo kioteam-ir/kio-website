@@ -5,6 +5,7 @@ from app.core.auth.dependencies import get_current_user, require_admin
 from app.modules.accounts.models import User
 from app.modules.blog.schemas import EmailSubscriptions, PostCreate, PostRead
 from app.modules.blog.service import BlogService, SubscriptionService, get_blog_service, get_sub_service
+from app.core.pagination import SubscriptionsPage
 
 front_router = APIRouter(prefix="/api/front/blog", tags=["blog-front"])
 admin_router = APIRouter(prefix="/api/admin/blog", tags=["blog-admin"])
@@ -31,6 +32,14 @@ async def add_subscription(
     sub_service: SubscriptionService = Depends(get_sub_service),
 ):
     return await sub_service.add_subscriptions(payload)
+
+
+@admin_router.post("/subscriptions/", response_model=SubscriptionsPage[EmailSubscriptions])
+async def subscriptions_list(
+    _admin: User = Depends(require_admin),
+    sub_service: SubscriptionService = Depends(get_sub_service),
+) -> EmailSubscriptions:
+    return await sub_service.subscriptions_list()
 
 
 @admin_router.post("/", response_model=PostRead, status_code=status.HTTP_201_CREATED)

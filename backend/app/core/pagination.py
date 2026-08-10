@@ -8,3 +8,8 @@ ProjectPage = CustomizedPage[
     Page[T],
     UseParamsFields(size=10)
 ]
+
+SubscriptionsPage = CustomizedPage[
+    Page[T],
+    UseParamsFields(size=10)
+]
