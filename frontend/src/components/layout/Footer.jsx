@@ -18,13 +18,13 @@ import { blogApi } from "../../api/blogApi";
 const SOCIAL_LINKS = [
   {
     label: "گیت‌هاب",
-    href: "https://github.com/ashrafi-frontDeveloper",
+    href: "https://github.com/kioteam-ir",
     icon: IconGithub,
   },
-  { label: "تلگرام", href: "https://t.me/YourTelegramID", icon: IconTelegram },
+  { label: "تلگرام", href: "https://t.me/kioteam", icon: IconTelegram },
   {
     label: "اینستاگرام",
-    href: "https://instagram.com/YourInstagramID",
+    href: "https://instagram.com/kioteam_ir",
     icon: IconInstagram,
   },
   { label: "ایمیل", href: "mailto:info@kioteam.ir", icon: IconEmail },
