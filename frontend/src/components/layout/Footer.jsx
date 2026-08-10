@@ -141,12 +141,12 @@ export function Footer() {
             <ul className="flex flex-col items-center lg:items-start space-y-3 text-sm">
               {SITEMAP_LINKS.map((link) => (
                 <li key={link.label}>
-                  <Link
-                    to={link.to}
+                  <a
+                    href={link.to}
                     className="text-slate-400 transition-colors hover:text-brand-blue-300"
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
