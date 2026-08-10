@@ -32,4 +32,12 @@ export const TEAM_TESTIMONIALS = [
     src: "/dev/mamad.jfif",
     website: "https://mohammad.kioteam.ir/",
   },
+  {
+    quote:
+      "من یک طراح گرافیک و ادیتور هستم که به خلق ایده‌های خلاقانه علاقه دارم.در زمینه طراحی گرافیک، ادیت ویدئو، طراحی هویت بصری فعالیت می‌کنم و با ابزارهایی مثل Photoshop و Premiere و After Effects کار می‌کنم.هدف من اینه که با ترکیب خلاقیت، دقت و تکنولوژی، طراحی‌هایی متناسب با نیاز هر پروژه خلق کنم.",
+    name: "امیرحسین اسکندری",
+    designation: "گرافیست و ادیتور",
+    src: "/dev/amir.jpg",
+    website: "https://amir.kioteam.ir/",
+  },
 ];
