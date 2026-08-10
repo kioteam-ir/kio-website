@@ -26,3 +26,13 @@ class PostRead(BaseModel):
 
 class EmailSubscriptions(BaseModel):
     email: EmailStr
+
+
+class ListSubscriptions(BaseModel):
+    id: int
+    email: EmailStr
+
+
+class DeleteSubscription(BaseModel):
+    id: int
+    email: EmailStr

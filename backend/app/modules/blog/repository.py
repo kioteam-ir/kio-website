@@ -31,6 +31,11 @@ class SubscriptionRepository:
         result = await self._session.exec(statement)
         return result.first()
 
+    async def get_by_id(self, id: int) -> Subscription | None:
+        statement = select(Subscription).where(col(Subscription.id) == id)
+        result = await self._session.exec(statement)
+        return result.first()
+
     async def add(self, subscription: Subscription) -> Subscription:
         self._session.add(subscription)
         await self._session.commit()
@@ -40,3 +45,7 @@ class SubscriptionRepository:
     async def list_all(self) -> list[Subscription]:
         query = select(Subscription)
         return await paginate(self._session, query) #type: ignore
+
+    async def delete(self, data: Subscription) -> None:
+        await self._session.delete(data)
+        await self._session.commit()

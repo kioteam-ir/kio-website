@@ -6,7 +6,7 @@ from app.core.exceptions import ConflictError
 from app.modules.accounts.models import User
 from app.modules.blog.models import Post, Subscription
 from app.modules.blog.repository import PostRepository, SubscriptionRepository
-from app.modules.blog.schemas import EmailSubscriptions, PostCreate, PostRead
+from app.modules.blog.schemas import EmailSubscriptions, ListSubscriptions, PostCreate, PostRead
 
 
 class BlogService:
@@ -54,8 +54,14 @@ class SubscriptionService:
         created = await self._subscriptions.add(subscription)
         return EmailSubscriptions.model_validate(created, from_attributes=True)
 
-    async def subscriptions_list(self) -> EmailSubscriptions:
+    async def subscriptions_list(self) -> ListSubscriptions:
         return await self._subscriptions.list_all() #type: ignore
+
+    async def delete_subscription(self, sub_id: int) -> None:
+        result = await self._subscriptions.get_by_id(sub_id)
+        if result is None:
+            raise
+        return await self._subscriptions.delete(result)
 
 
 async def get_sub_service(session: AsyncSession = Depends(get_session)) -> SubscriptionService:
