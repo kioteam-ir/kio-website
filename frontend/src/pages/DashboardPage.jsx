@@ -43,6 +43,9 @@ export default function DashboardPage() {
               <Link className="w-full text-center px-10" to="/admin">
                 رفتن به پنل ادمین
               </Link>
+              <p className="text-[12px] mt-4 leading-7 text-red-400">
+                این دکمه برای ادمین قابل مشاهده است.
+              </p>
             </div>
           </CornerFrame>
         )}
