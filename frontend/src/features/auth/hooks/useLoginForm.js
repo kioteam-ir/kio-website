@@ -14,7 +14,7 @@ export function useLoginForm() {
     validate: validateLoginForm,
     onSubmit: async (values) => {
       await login(values.email, values.password);
-      navigate("/");
+      navigate("/dashboard");
     },
   });
 }
