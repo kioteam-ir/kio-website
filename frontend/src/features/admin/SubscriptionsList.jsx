@@ -1,5 +1,4 @@
 import { CornerFrame } from "../../components/ui/CornerFrame";
-import { Dropdown } from "../../components/ui/Dropdown";
 import { IconEmail, IconTrash } from "../../components/icons";
 
 export function SubscriptionsList({ subscriptions, onDelete, mutatingId }) {
@@ -19,17 +18,15 @@ export function SubscriptionsList({ subscriptions, onDelete, mutatingId }) {
             </span>
           </div>
 
-          <Dropdown
-            items={[
-              {
-                label: "حذف اشتراک",
-                icon: IconTrash,
-                destructive: true,
-                disabled: mutatingId === sub.id,
-                onClick: () => onDelete(sub.id),
-              },
-            ]}
-          />
+          <button
+            type="button"
+            onClick={() => onDelete(sub.id)}
+            disabled={mutatingId === sub.id}
+            aria-label="حذف اشتراک"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md cursor-pointer text-neutral-400 transition-colors hover:bg-brand-crimson-900/20 hover:text-brand-crimson-300 disabled:pointer-events-none disabled:opacity-40"
+          >
+            <IconTrash className="h-4 w-4" />
+          </button>
         </CornerFrame>
       ))}
     </div>
