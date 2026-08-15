@@ -1,1 +1,1 @@
-export const BASE_URL = "http://94.183.180.36/";
+export const BASE_URL = "https://kioteam.ir/";
