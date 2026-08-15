@@ -1,0 +1,24 @@
+services:
+  api:
+    restart: always
+    environment:
+      DEBUG: "false"
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1G
+
+  web:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 256M
+
+  db:
+    restart: always
+
+  redis:
+    restart: always

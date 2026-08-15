@@ -1,0 +1,18 @@
+services:
+  api:
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      DEBUG: "false"
+
+  web:
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+
+  db:
+    restart: unless-stopped
+
+  redis:
+    restart: unless-stopped
