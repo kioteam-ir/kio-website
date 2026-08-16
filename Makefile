@@ -89,8 +89,10 @@ staging-down:
 # Production
 # -----------------------
 
-prod:
+prod-d:
 	$(COMPOSE) $(PROD) up -d --build
+prod:
+	$(COMPOSE) $(PROD) up --build
 
 prod-down:
 	$(COMPOSE) $(PROD) down

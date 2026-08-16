@@ -30,6 +30,12 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+    networks:
+      - kio
 
 volumes:
   pgdata:
+
+networks:
+  kio:
+    name: kio
