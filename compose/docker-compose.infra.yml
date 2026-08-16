@@ -16,13 +16,13 @@ services:
       retries: 10
       start_period: 10s
     networks:
-      - kio
+      - kioteam_network
 
   redis:
     image: redis:8-alpine
     command: redis-server --save "" --appendonly no
     networks:
-      - kio
+      - kioteam_network
 
   api:
     depends_on:
@@ -31,11 +31,11 @@ services:
       redis:
         condition: service_started
     networks:
-      - kio
+      - kioteam_network
 
 volumes:
   pgdata:
 
 networks:
-  kio:
-    name: kio
+  kioteam_network:
+    external: true

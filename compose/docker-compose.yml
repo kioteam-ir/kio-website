@@ -1,8 +1,5 @@
 name: kio
 
-# Application services only. Database and Redis are optional — use compose.infra.yml
-# for local infrastructure, or point env vars at external hosts.
-
 services:
   api:
     build:
@@ -11,7 +8,7 @@ services:
     env_file:
       - ../.env
     networks:
-      - kio
+      - kioteam_network
 
   web:
     build:
@@ -24,8 +21,9 @@ services:
       api:
         condition: service_healthy
     networks:
-      - kio
+      - kioteam_network
+
 
 networks:
-  kio:
-    driver: bridge
+  kioteam_network:
+    external: true
