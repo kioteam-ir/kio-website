@@ -17,5 +17,5 @@ jobs:
     uses: kioteam-ir/kio-github-actions/.github/workflows/fullstack-ci.yml@feat/organization-ci-workflows
     with:
       backend-install-command: python -m pip install uv && uv sync --frozen
-      backend-lint-command: bash ./scripts/lint.sh
-      backend-test-command: bash ./scripts/test.sh
+      backend-lint-command: uv run ruff check app tests scripts && uv run ruff format --check app tests scripts
+      backend-test-command: uv run pytest -q
