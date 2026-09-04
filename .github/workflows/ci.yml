@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fullstack:
+    uses: kioteam-ir/kio-github-actions/.github/workflows/fullstack-ci.yml@feat/organization-ci-workflows
+    with:
+      backend-install-command: python -m pip install uv && uv sync --frozen
+      backend-lint-command: ./scripts/lint.sh
+      backend-test-command: ./scripts/test.sh
