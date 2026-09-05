@@ -61,11 +61,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     configure_logging()
     runtime_settings = settings or get_settings()
     logger = get_logger(__name__)
-    crud_admin = (
-        _build_crud_admin(runtime_settings)
-        if runtime_settings.CRUDADMIN_ENABLED
-        else None
-    )
+    crud_admin = _build_crud_admin(runtime_settings) if runtime_settings.CRUDADMIN_ENABLED else None
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI) -> AsyncIterator[None]:

@@ -43,7 +43,7 @@ class SubscriptionRepository:
 
     async def list_all(self) -> list[Subscription]:
         query = select(Subscription)
-        return await paginate(self._session, query) #type: ignore
+        return await paginate(self._session, query)  # type: ignore
 
     async def delete(self, data: Subscription) -> None:
         await self._session.delete(data)

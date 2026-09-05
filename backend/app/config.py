@@ -75,4 +75,4 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     settings = Settings()
     print(settings.database_url)
-    return Settings() #type: ignore
+    return Settings()  # type: ignore

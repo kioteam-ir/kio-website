@@ -26,12 +26,12 @@ async def get_current_user(
         if admin is None:
             raise UnauthorizedError("User not found")
         return admin
-    
+
     if credentials is None:
         raise UnauthorizedError("Authorization header missing")
 
     payload = decode_access_token(credentials.credentials)
-    
+
     user = await repository.get_by_id(int(payload.sub))
     if user is None:
         raise UnauthorizedError("User not found")

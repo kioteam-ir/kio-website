@@ -10,7 +10,6 @@ from .repository import SeoReporitory
 
 
 class SeoService:
-
     def __init__(self, session: AsyncSession) -> None:
         self._seo = SeoReporitory(session)
 
@@ -28,8 +27,9 @@ class SeoService:
         data = await self._seo.get_content(content_id)
         if data is None:
             raise NotFoundError("Project not found")
-        
+
         await self._seo.delete(data)
+
 
 async def get_seo_service(session: AsyncSession = Depends(get_session)):
     return SeoService(session)
