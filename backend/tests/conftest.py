@@ -1,6 +1,7 @@
 from collections.abc import AsyncGenerator
 
 import pytest
+import tests.env  # noqa: F401
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
 from sqlmodel import SQLModel
@@ -33,6 +34,8 @@ def _test_settings() -> Settings:
         CRUDADMIN_USERNAME="admin",
         CRUDADMIN_PASSWORD="admin-pass",
         CRUDADMIN_ENABLED=False,
+        ADMIN_DEV_EMAIL="dev@example.com",
+        ADMIN_DEV_PASSWORD="dev-pass",
         CORS_ORIGINS=["http://localhost:5173"],
         RATE_LIMIT_ENABLED=False,
     )
@@ -45,6 +48,8 @@ def _test_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("DB_PASSWORD", "test")
     monkeypatch.setenv("CRUDADMIN_USERNAME", "admin")
     monkeypatch.setenv("CRUDADMIN_PASSWORD", "admin-pass")
+    monkeypatch.setenv("ADMIN_DEV_EMAIL", "dev@example.com")
+    monkeypatch.setenv("ADMIN_DEV_PASSWORD", "dev-pass")
     monkeypatch.setenv("RATE_LIMIT_ENABLED", "false")
     get_settings.cache_clear()
 
@@ -89,7 +94,11 @@ async def client(
     application.dependency_overrides[get_session] = override_session
 
     transport = ASGITransport(app=application)
-    async with AsyncClient(transport=transport, base_url="http://test") as http_client:
+    async with AsyncClient(
+        transport=transport,
+        base_url="http://test",
+        follow_redirects=True,
+    ) as http_client:
         yield http_client
 
     application.dependency_overrides.clear()
