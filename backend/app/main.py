@@ -92,10 +92,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         lifespan=lifespan,
     )
 
-    add_pagination(app)
-
-    redis = FastAPIRedis(app)
-    redis.lifespan().rate_limiting()
+    if runtime_settings.RATE_LIMIT_ENABLED:
+        redis = FastAPIRedis(app)
+        redis.lifespan().rate_limiting()
 
     register_exception_handlers(app)
 
@@ -139,6 +138,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     if crud_admin is not None:
         app.mount("/api/admin/", crud_admin.app)
+
+    add_pagination(app)
 
     @app.get("/health/", response_model=HealthResponse, tags=["system"])
     async def health() -> HealthResponse:
