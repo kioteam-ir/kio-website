@@ -5,13 +5,11 @@ from app.modules.seo.models import MainContent
 
 
 class SeoReporitory:
-
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
-    
-    async def get_content(self, id: int) -> MainContent | None:
-        statement = select(MainContent).where(col(MainContent.id) == id)
+    async def get_content(self, content_id: int) -> MainContent | None:
+        statement = select(MainContent).where(col(MainContent.id) == content_id)
         result = await self._session.exec(statement)
         return result.first()
 
@@ -20,7 +18,7 @@ class SeoReporitory:
         await self._session.commit()
         await self._session.refresh(data)
         return data
-    
+
     async def update(self, data: MainContent) -> MainContent:
         self._session.add(data)
         await self._session.commit()

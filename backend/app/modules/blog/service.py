@@ -42,20 +42,18 @@ async def get_blog_service(session: AsyncSession = Depends(get_session)) -> Blog
 class SubscriptionService:
     def __init__(self, session: AsyncSession) -> None:
         self._subscriptions = SubscriptionRepository(session)
-    
+
     async def add_subscriptions(self, data: EmailSubscriptions) -> EmailSubscriptions:
         existing = await self._subscriptions.get_email(data.email)
         if existing is not None:
             raise ConflictError("Email already exists")
 
-        subscription = Subscription(
-            email=data.email
-        )
+        subscription = Subscription(email=data.email)
         created = await self._subscriptions.add(subscription)
         return EmailSubscriptions.model_validate(created, from_attributes=True)
 
     async def subscriptions_list(self) -> ListSubscriptions:
-        return await self._subscriptions.list_all() #type: ignore
+        return await self._subscriptions.list_all()  # type: ignore
 
     async def delete_subscription(self, sub_id: int) -> None:
         result = await self._subscriptions.get_by_id(sub_id)

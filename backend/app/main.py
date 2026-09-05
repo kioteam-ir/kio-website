@@ -2,34 +2,33 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import cast
 
-from fastapi_pagination import add_pagination
-from redis_fastapi import FastAPIRedis
 import redis.asyncio as aioredis
 from crudadmin import CRUDAdmin
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_pagination import add_pagination
 from pydantic import BaseModel
+from redis_fastapi import FastAPIRedis
 from sqlalchemy.orm import DeclarativeBase
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.config import Settings, get_settings
-from app.core.database import close_database, get_session, init_database
+from app.core.database import close_database, get_engine, get_session, init_database
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware.rate_limit import RateLimitMiddleware, RedisTokenBucket
-from app.models import Post, Project, User, MainContent
+from app.models import MainContent, Post, Project, User
 from app.modules.accounts.router import admin_router as accounts_admin_router
 from app.modules.accounts.router import auth_router
 from app.modules.accounts.router import front_router as accounts_front_router
 from app.modules.accounts.router import router as accounts_router
 from app.modules.accounts.schemas import AdminCreateAccount, UserCreate
+from app.modules.accounts.service import create_dev_admin
 from app.modules.blog.router import admin_router as blog_admin_router
 from app.modules.blog.router import front_router as blog_front_router
 from app.modules.projects.router import admin_router as projects_admin_router
 from app.modules.projects.router import front_router as projects_front_router
 from app.modules.seo.router import admin_router as seo_admin_router
-from app.core.database import get_engine
-from sqlmodel.ext.asyncio.session import AsyncSession
-from app.modules.accounts.service import create_Dev_admin
 
 _registered_models = (User, Project, Post, MainContent)
 ModelType = type[DeclarativeBase]
@@ -62,20 +61,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     configure_logging()
     runtime_settings = settings or get_settings()
     logger = get_logger(__name__)
-    crud_admin = (
-        _build_crud_admin(runtime_settings)
-        if runtime_settings.CRUDADMIN_ENABLED
-        else None
-    )
+    crud_admin = _build_crud_admin(runtime_settings) if runtime_settings.CRUDADMIN_ENABLED else None
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
         settings = get_settings()
         if settings.DEBUG:
-            data = AdminCreateAccount(email=settings.ADMIN_DEV_EMAIL, password=settings.ADMIN_DEV_PASSWORD)
+            data = AdminCreateAccount(
+                email=settings.ADMIN_DEV_EMAIL,
+                password=settings.ADMIN_DEV_PASSWORD,
+            )
             async with AsyncSession(get_engine()) as session:
-                await create_Dev_admin(data, session)
+                await create_dev_admin(data, session)
 
         _ = _registered_models
         await init_database()
@@ -94,10 +92,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         lifespan=lifespan,
     )
 
-    add_pagination(app)
-
-    redis = FastAPIRedis(app)
-    redis.lifespan().rate_limiting()
+    if runtime_settings.RATE_LIMIT_ENABLED:
+        redis = FastAPIRedis(app)
+        redis.lifespan().rate_limiting()
 
     register_exception_handlers(app)
 
@@ -141,6 +138,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     if crud_admin is not None:
         app.mount("/api/admin/", crud_admin.app)
+
+    add_pagination(app)
 
     @app.get("/health/", response_model=HealthResponse, tags=["system"])
     async def health() -> HealthResponse:

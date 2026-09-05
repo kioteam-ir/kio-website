@@ -73,6 +73,6 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    set = Settings()
-    print(set.database_url)
-    return Settings() #type: ignore
+    settings = Settings()
+    print(settings.database_url)
+    return Settings()  # type: ignore

@@ -24,10 +24,15 @@ from app.modules.accounts.service import (
 router = APIRouter(tags=["accounts"])
 
 
-@router.post("/api/login/", response_model=TokenPair, status_code=status.HTTP_200_OK, dependencies=[
+@router.post(
+    "/api/login/",
+    response_model=TokenPair,
+    status_code=status.HTTP_200_OK,
+    dependencies=[
         Depends(rate_limit("1/second", scope="login:burst")),
         Depends(rate_limit("5/minute", scope="login:sustained")),
-    ])
+    ],
+)
 async def login(
     credentials: LoginRequest,
     auth_service: AuthService = Depends(get_auth_service),
@@ -38,9 +43,7 @@ async def login(
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@auth_router.post(
-    "/verify/", response_model=TokenVerifyResponse, status_code=status.HTTP_200_OK
-)
+@auth_router.post("/verify/", response_model=TokenVerifyResponse, status_code=status.HTTP_200_OK)
 async def verify_token(
     user: User = Depends(get_current_user),
 ) -> TokenVerifyResponse:
@@ -48,9 +51,7 @@ async def verify_token(
         from app.core.exceptions import UnauthorizedError
 
         raise UnauthorizedError("Invalid user state")
-    return TokenVerifyResponse(
-        sub=str(user.id), email=user.email, is_admin=user.is_admin
-    )
+    return TokenVerifyResponse(sub=str(user.id), email=user.email, is_admin=user.is_admin)
 
 
 @auth_router.post("/refresh/", response_model=TokenPair, status_code=status.HTTP_200_OK)
@@ -61,9 +62,7 @@ async def refresh_token(
     return await auth_service.refresh(body.refresh_token)
 
 
-@auth_router.post(
-    "/admin/", response_model=AdminCheckResponse, status_code=status.HTTP_200_OK
-)
+@auth_router.post("/admin/", response_model=AdminCheckResponse, status_code=status.HTTP_200_OK)
 async def check_admin(
     body: AccessTokenRequest,
     auth_service: AuthService = Depends(get_auth_service),
@@ -75,10 +74,15 @@ async def check_admin(
 front_router = APIRouter(prefix="/api/front/accounts", tags=["accounts-front"])
 
 
-@front_router.post("/", response_model=UserRead, status_code=status.HTTP_201_CREATED, dependencies=[
+@front_router.post(
+    "/",
+    response_model=UserRead,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[
         Depends(rate_limit("1/second", scope="front_create_account:burst")),
         Depends(rate_limit("5/minute", scope="front_create_account:sustained")),
-    ])
+    ],
+)
 async def create_account(
     payload: UserCreate,
     user_service: UserService = Depends(get_user_service),
@@ -86,10 +90,14 @@ async def create_account(
     return await user_service.register(payload)
 
 
-@front_router.get("/{account_id}/", response_model=UserRead, dependencies=[
+@front_router.get(
+    "/{account_id}/",
+    response_model=UserRead,
+    dependencies=[
         Depends(rate_limit("2/second", scope="front_create_account:burst")),
         Depends(rate_limit("20/minute", scope="front_create_account:sustained")),
-    ])
+    ],
+)
 async def get_account(
     account_id: int,
     user_service: UserService = Depends(get_user_service),
@@ -119,9 +127,7 @@ async def get_account_admin(
     return await user_service.get_by_id(user_id)
 
 
-@admin_router.post(
-    "/create-account/", response_model=UserRead, status_code=status.HTTP_201_CREATED
-)
+@admin_router.post("/create-account/", response_model=UserRead, status_code=status.HTTP_201_CREATED)
 async def create_account_admin(
     payload: AdminCreateAccount,
     user_service: UserService = Depends(get_user_service),

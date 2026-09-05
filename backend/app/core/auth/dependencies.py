@@ -2,13 +2,12 @@ from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app.config import get_settings
 from app.core.auth.jwt import decode_access_token
 from app.core.database import get_session
 from app.core.exceptions import ForbiddenError, UnauthorizedError
 from app.modules.accounts.models import User
 from app.modules.accounts.repository import UserRepository
-from app.config import get_settings
-
 
 settings = get_settings()
 
@@ -27,12 +26,12 @@ async def get_current_user(
         if admin is None:
             raise UnauthorizedError("User not found")
         return admin
-    
+
     if credentials is None:
         raise UnauthorizedError("Authorization header missing")
 
     payload = decode_access_token(credentials.credentials)
-    
+
     user = await repository.get_by_id(int(payload.sub))
     if user is None:
         raise UnauthorizedError("User not found")

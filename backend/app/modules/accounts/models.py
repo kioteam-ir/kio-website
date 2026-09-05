@@ -2,7 +2,7 @@ from sqlmodel import Field, SQLModel
 
 
 class User(SQLModel, table=True):
-    __tablename__ = "accounts_user" #type: ignore
+    __tablename__ = "accounts_user"  # type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
     email: str = Field(unique=True, index=True)

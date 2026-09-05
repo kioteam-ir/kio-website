@@ -74,9 +74,9 @@ class TestProjectAdminEndpoints:
         client: AsyncClient,
         admin_auth_headers: dict[str, str],
     ) -> None:
-        response = await client.get("/api/admin/projects/list", headers=admin_auth_headers)
+        response = await client.get("/api/admin/projects/list/", headers=admin_auth_headers)
         assert response.status_code == 200
-        assert response.json() == {"result": []}
+        assert response.json()["items"] == []
 
     @pytest.mark.asyncio
     async def test_admin_can_list_submitted_projects(
@@ -87,8 +87,8 @@ class TestProjectAdminEndpoints:
         await client.post("/api/front/projects/", json=project_payload(title="Listed Project"))
         response = await client.get("/api/admin/projects/list/", headers=admin_auth_headers)
         assert response.status_code == 200
-        assert len(response.json()["result"]) == 1
-        assert response.json()["result"][0]["title"] == "Listed Project"
+        assert len(response.json()["items"]) == 1
+        assert response.json()["items"][0]["title"] == "Listed Project"
 
     @pytest.mark.asyncio
     async def test_admin_get_project_by_id(

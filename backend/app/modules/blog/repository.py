@@ -1,7 +1,6 @@
+from fastapi_pagination.ext.sqlmodel import paginate
 from sqlmodel import col, select
 from sqlmodel.ext.asyncio.session import AsyncSession
-
-from fastapi_pagination.ext.sqlmodel import paginate
 
 from app.modules.blog.models import Post, Subscription
 
@@ -31,8 +30,8 @@ class SubscriptionRepository:
         result = await self._session.exec(statement)
         return result.first()
 
-    async def get_by_id(self, id: int) -> Subscription | None:
-        statement = select(Subscription).where(col(Subscription.id) == id)
+    async def get_by_id(self, subscription_id: int) -> Subscription | None:
+        statement = select(Subscription).where(col(Subscription.id) == subscription_id)
         result = await self._session.exec(statement)
         return result.first()
 
@@ -44,7 +43,7 @@ class SubscriptionRepository:
 
     async def list_all(self) -> list[Subscription]:
         query = select(Subscription)
-        return await paginate(self._session, query) #type: ignore
+        return await paginate(self._session, query)  # type: ignore
 
     async def delete(self, data: Subscription) -> None:
         await self._session.delete(data)

@@ -2,20 +2,24 @@ from fastapi import APIRouter, Depends, Query, status
 from redis_fastapi import rate_limit
 
 from app.core.auth.dependencies import require_admin
+from app.core.pagination import ProjectPage
 from app.modules.accounts.models import User
 from app.modules.projects.schemas import ProjectCreate, ProjectListResponse, ProjectRead
 from app.modules.projects.service import ProjectService, get_project_service
-from app.core.pagination import ProjectPage
-
 
 front_router = APIRouter(prefix="/api/front/projects", tags=["projects-front"])
 admin_router = APIRouter(prefix="/api/admin/projects", tags=["projects-admin"])
 
 
-@front_router.post("/", response_model=ProjectRead, status_code=status.HTTP_201_CREATED, dependencies=[
+@front_router.post(
+    "/",
+    response_model=ProjectRead,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[
         Depends(rate_limit("1/second", scope="front_create_account:burst")),
         Depends(rate_limit("5/minute", scope="front_create_account:sustained")),
-    ])
+    ],
+)
 async def submit_project(
     payload: ProjectCreate,
     project_service: ProjectService = Depends(get_project_service),
@@ -51,18 +55,18 @@ async def create_project_admin(
 
 @admin_router.patch("/{project_id}/status", response_model=ProjectRead)
 async def change_project_status(
-    project_id: int, 
+    project_id: int,
     is_done: bool = Query(..., description="وضعیت جدید پروژه"),
     _admin: User = Depends(require_admin),
-    project_service: ProjectService = Depends(get_project_service)
+    project_service: ProjectService = Depends(get_project_service),
 ) -> ProjectRead:
     return await project_service.update_status(project_id, is_done)
 
 
 @admin_router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 async def delete_project(
-    project_id: int, 
+    project_id: int,
     project_service: ProjectService = Depends(get_project_service),
-    _admin: User = Depends(require_admin)
-    ):
+    _admin: User = Depends(require_admin),
+):
     await project_service.delete(project_id)

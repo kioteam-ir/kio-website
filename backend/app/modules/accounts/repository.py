@@ -2,9 +2,6 @@ from sqlmodel import col, or_, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.modules.accounts.models import User
-from app.config import get_settings
-
-settings = get_settings()
 
 
 class UserRepository:

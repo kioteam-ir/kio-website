@@ -39,12 +39,12 @@ export function useProjects() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- load the current page
     fetchData(page);
   }, [page, fetchData]);
 
   const goToPage = useCallback((next) => {
     setPage(Math.min(Math.max(1, next), Math.max(1, meta.pages)));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meta.pages]);
 
   const removeProject = useCallback(async (id) => {
