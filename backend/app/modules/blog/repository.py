@@ -30,8 +30,8 @@ class SubscriptionRepository:
         result = await self._session.exec(statement)
         return result.first()
 
-    async def get_by_id(self, id: int) -> Subscription | None:
-        statement = select(Subscription).where(col(Subscription.id) == id)
+    async def get_by_id(self, subscription_id: int) -> Subscription | None:
+        statement = select(Subscription).where(col(Subscription.id) == subscription_id)
         result = await self._session.exec(statement)
         return result.first()
 

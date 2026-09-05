@@ -28,10 +28,15 @@ async def create_post(
     return await blog_service.create_post(payload, author)
 
 
-@front_router.post("/subscriptions/", response_model=EmailSubscriptions, status_code=status.HTTP_201_CREATED, dependencies=[
+@front_router.post(
+    "/subscriptions/",
+    response_model=EmailSubscriptions,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[
         Depends(rate_limit("1/second", scope="subs:burst")),
         Depends(rate_limit("5/minute", scope="subs:sustained")),
-    ])
+    ],
+)
 async def add_subscription(
     payload: EmailSubscriptions,
     sub_service: SubscriptionService = Depends(get_sub_service),

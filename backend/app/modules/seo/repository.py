@@ -10,8 +10,8 @@ class SeoReporitory:
         self._session = session
 
     
-    async def get_content(self, id: int) -> MainContent | None:
-        statement = select(MainContent).where(col(MainContent.id) == id)
+    async def get_content(self, content_id: int) -> MainContent | None:
+        statement = select(MainContent).where(col(MainContent.id) == content_id)
         result = await self._session.exec(statement)
         return result.first()
 

@@ -16,7 +16,7 @@ class SeoService:
 
     async def main_content(self, data: WriteMainContent) -> WriteMainContent:
         content = MainContent(title=data.title, description=data.description)
-        check = await self._seo.get_content(id=1)
+        check = await self._seo.get_content(content_id=1)
         if check is None:
             created = await self._seo.add(content)
         else:
@@ -24,8 +24,8 @@ class SeoService:
         print(created)
         return WriteMainContent.model_validate(created)
 
-    async def delete_content(self, id: int) -> None:
-        data = await self._seo.get_content(id)
+    async def delete_content(self, content_id: int) -> None:
+        data = await self._seo.get_content(content_id)
         if data is None:
             raise NotFoundError("Project not found")
         

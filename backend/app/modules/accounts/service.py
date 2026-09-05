@@ -130,7 +130,7 @@ class UserService:
         created = await self._users.add(user)
         return UserRead.model_validate(created)
 
-async def create_Dev_admin(data: AdminCreateAccount, session: AsyncSession):
+async def create_dev_admin(data: AdminCreateAccount, session: AsyncSession):
     hashed = await hash_password(data.password)
     user = User(
         email=data.email,

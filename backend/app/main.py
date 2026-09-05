@@ -23,7 +23,7 @@ from app.modules.accounts.router import auth_router
 from app.modules.accounts.router import front_router as accounts_front_router
 from app.modules.accounts.router import router as accounts_router
 from app.modules.accounts.schemas import AdminCreateAccount, UserCreate
-from app.modules.accounts.service import create_Dev_admin
+from app.modules.accounts.service import create_dev_admin
 from app.modules.blog.router import admin_router as blog_admin_router
 from app.modules.blog.router import front_router as blog_front_router
 from app.modules.projects.router import admin_router as projects_admin_router
@@ -72,9 +72,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
         settings = get_settings()
         if settings.DEBUG:
-            data = AdminCreateAccount(email=settings.ADMIN_DEV_EMAIL, password=settings.ADMIN_DEV_PASSWORD)
+            data = AdminCreateAccount(
+                email=settings.ADMIN_DEV_EMAIL,
+                password=settings.ADMIN_DEV_PASSWORD,
+            )
             async with AsyncSession(get_engine()) as session:
-                await create_Dev_admin(data, session)
+                await create_dev_admin(data, session)
 
         _ = _registered_models
         await init_database()
