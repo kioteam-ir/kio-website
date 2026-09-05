@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { useScrollPosition } from "../../hooks/useScrollPosition";
 import { Button } from "../ui/Button";
 import { IconClose, IconMenu, IconUser } from "../icons";
-import { cn } from "../../utils/cn";
 
 const NAV_ITEMS = [
   { name: "خانه", to: "/#top" },
