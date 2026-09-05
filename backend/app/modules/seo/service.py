@@ -1,11 +1,12 @@
+from fastapi import Depends
+from sqlmodel.ext.asyncio.session import AsyncSession
+
 from app.core.database import get_session
 from app.core.exceptions import NotFoundError
 from app.modules.seo.schemas import WriteMainContent
-from .repository import SeoReporitory
-from .models import MainContent
 
-from sqlmodel.ext.asyncio.session import AsyncSession
-from fastapi import Depends
+from .models import MainContent
+from .repository import SeoReporitory
 
 
 class SeoService:

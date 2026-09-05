@@ -2,10 +2,15 @@ from fastapi import APIRouter, Depends, status
 from redis_fastapi import rate_limit
 
 from app.core.auth.dependencies import get_current_user, require_admin
+from app.core.pagination import SubscriptionsPage
 from app.modules.accounts.models import User
 from app.modules.blog.schemas import EmailSubscriptions, ListSubscriptions, PostCreate, PostRead
-from app.modules.blog.service import BlogService, SubscriptionService, get_blog_service, get_sub_service
-from app.core.pagination import SubscriptionsPage
+from app.modules.blog.service import (
+    BlogService,
+    SubscriptionService,
+    get_blog_service,
+    get_sub_service,
+)
 
 front_router = APIRouter(prefix="/api/front/blog", tags=["blog-front"])
 admin_router = APIRouter(prefix="/api/admin/blog", tags=["blog-admin"])

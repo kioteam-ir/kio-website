@@ -2,34 +2,33 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import cast
 
-from fastapi_pagination import add_pagination
-from redis_fastapi import FastAPIRedis
 import redis.asyncio as aioredis
 from crudadmin import CRUDAdmin
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_pagination import add_pagination
 from pydantic import BaseModel
+from redis_fastapi import FastAPIRedis
 from sqlalchemy.orm import DeclarativeBase
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.config import Settings, get_settings
-from app.core.database import close_database, get_session, init_database
+from app.core.database import close_database, get_engine, get_session, init_database
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import configure_logging, get_logger
 from app.core.middleware.rate_limit import RateLimitMiddleware, RedisTokenBucket
-from app.models import Post, Project, User, MainContent
+from app.models import MainContent, Post, Project, User
 from app.modules.accounts.router import admin_router as accounts_admin_router
 from app.modules.accounts.router import auth_router
 from app.modules.accounts.router import front_router as accounts_front_router
 from app.modules.accounts.router import router as accounts_router
 from app.modules.accounts.schemas import AdminCreateAccount, UserCreate
+from app.modules.accounts.service import create_Dev_admin
 from app.modules.blog.router import admin_router as blog_admin_router
 from app.modules.blog.router import front_router as blog_front_router
 from app.modules.projects.router import admin_router as projects_admin_router
 from app.modules.projects.router import front_router as projects_front_router
 from app.modules.seo.router import admin_router as seo_admin_router
-from app.core.database import get_engine
-from sqlmodel.ext.asyncio.session import AsyncSession
-from app.modules.accounts.service import create_Dev_admin
 
 _registered_models = (User, Project, Post, MainContent)
 ModelType = type[DeclarativeBase]

@@ -2,11 +2,10 @@ from fastapi import APIRouter, Depends, Query, status
 from redis_fastapi import rate_limit
 
 from app.core.auth.dependencies import require_admin
+from app.core.pagination import ProjectPage
 from app.modules.accounts.models import User
 from app.modules.projects.schemas import ProjectCreate, ProjectListResponse, ProjectRead
 from app.modules.projects.service import ProjectService, get_project_service
-from app.core.pagination import ProjectPage
-
 
 front_router = APIRouter(prefix="/api/front/projects", tags=["projects-front"])
 admin_router = APIRouter(prefix="/api/admin/projects", tags=["projects-admin"])

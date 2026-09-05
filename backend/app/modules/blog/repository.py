@@ -1,7 +1,6 @@
+from fastapi_pagination.ext.sqlmodel import paginate
 from sqlmodel import col, select
 from sqlmodel.ext.asyncio.session import AsyncSession
-
-from fastapi_pagination.ext.sqlmodel import paginate
 
 from app.modules.blog.models import Post, Subscription
 

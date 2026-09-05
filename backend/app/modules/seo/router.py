@@ -1,10 +1,9 @@
-from app.core.auth.dependencies import require_admin
 from fastapi import APIRouter, Depends, status
 
+from app.core.auth.dependencies import require_admin
 from app.modules.accounts.models import User
 from app.modules.seo.schemas import ReadMainContent, WriteMainContent
 from app.modules.seo.service import SeoService, get_seo_service
-
 
 admin_router = APIRouter(prefix="/api/admin/seo", tags=["seo-admin"])
 
