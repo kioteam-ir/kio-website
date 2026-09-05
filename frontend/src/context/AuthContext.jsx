@@ -1,5 +1,4 @@
 import {
-  createContext,
   useCallback,
   useEffect,
   useMemo,
@@ -7,6 +6,7 @@ import {
 } from "react";
 import { authApi } from "../api/authApi";
 import { tokenStorage } from "../client/httpClient";
+import { AuthContext } from "./auth-context";
 
 const initialState = { status: "checking", user: null };
 
@@ -20,8 +20,6 @@ function authReducer(state, action) {
       return state;
   }
 }
-
-export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
