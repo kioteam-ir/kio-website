@@ -1,9 +1,12 @@
+from datetime import UTC, datetime, timedelta
+
 import pytest
 from httpx import AsyncClient
 from pydantic import ValidationError
-from tests.helpers import bearer_headers, blog_post_payload, project_payload
+from sqlmodel import col, select
+from tests.helpers import bearer_headers, blog_post_payload, project_payload, seed_post
 
-from app.modules.blog.models import PostStatus
+from app.modules.blog.models import Post, PostStatus
 from app.modules.blog.schemas import PostCreate
 
 
@@ -212,3 +215,93 @@ class TestBlogEndpoints:
             headers=bearer_headers(inactive_user),
         )
         assert response.status_code == 401
+
+
+class TestBlogPublicEndpoints:
+    @pytest.mark.asyncio
+    async def test_public_list_returns_only_published_posts_newest_first(
+        self, client: AsyncClient, session
+    ) -> None:
+        published_old = await seed_post(
+            session, slug="published-old", created_at=datetime(2026, 1, 1, tzinfo=UTC)
+        )
+        published_new = await seed_post(
+            session, slug="published-new", created_at=datetime(2026, 3, 1, tzinfo=UTC)
+        )
+        await seed_post(session, slug="waiting-one", status=PostStatus.WAITING)
+        await seed_post(session, slug="rejected-one", status=PostStatus.REJECTED)
+
+        response = await client.get("/api/front/blog/list/")
+        assert response.status_code == 200
+
+        body = response.json()
+        assert body["total"] == 2
+        returned_slugs = [item["slug"] for item in body["items"]]
+        assert returned_slugs == ["published-new", "published-old"]
+        assert set(returned_slugs) == {published_new.slug, published_old.slug}
+
+    @pytest.mark.asyncio
+    async def test_public_list_paginates(self, client: AsyncClient, session) -> None:
+        for index in range(12):
+            await seed_post(
+                session,
+                slug=f"page-post-{index:02d}",
+                created_at=datetime(2026, 1, 1, tzinfo=UTC) + timedelta(minutes=index),
+            )
+
+        first_page = await client.get("/api/front/blog/list/")
+        assert first_page.status_code == 200
+        assert len(first_page.json()["items"]) == 10
+        assert first_page.json()["total"] == 12
+        assert first_page.json()["pages"] == 2
+
+        second_page = await client.get("/api/front/blog/list/?page=2&size=10")
+        assert second_page.status_code == 200
+        assert len(second_page.json()["items"]) == 2
+
+    @pytest.mark.asyncio
+    async def test_public_list_items_carry_created_at(self, client: AsyncClient, session) -> None:
+        await seed_post(session, slug="with-date")
+        response = await client.get("/api/front/blog/list/")
+        assert response.status_code == 200
+        assert response.json()["items"][0]["created_at"] is not None
+
+    @pytest.mark.asyncio
+    async def test_public_detail_returns_published_post(self, client: AsyncClient, session) -> None:
+        await seed_post(session, slug="read-me", title="Read Me")
+        response = await client.get("/api/front/blog/read-me/")
+        assert response.status_code == 200
+        body = response.json()
+        assert body["slug"] == "read-me"
+        assert body["title"] == "Read Me"
+        assert body["status"] == PostStatus.PUBLISHED
+        assert body["created_at"] is not None
+
+    @pytest.mark.asyncio
+    async def test_public_detail_returns_404_for_missing_slug(
+        self, client: AsyncClient, session
+    ) -> None:
+        response = await client.get("/api/front/blog/does-not-exist/")
+        assert response.status_code == 404
+        assert response.json()["detail"] == "Post not found"
+
+    @pytest.mark.asyncio
+    async def test_public_detail_hides_unpublished_posts(
+        self, client: AsyncClient, session
+    ) -> None:
+        await seed_post(session, slug="still-waiting", status=PostStatus.WAITING)
+        await seed_post(session, slug="was-rejected", status=PostStatus.REJECTED)
+
+        for slug in ("still-waiting", "was-rejected"):
+            response = await client.get(f"/api/front/blog/{slug}/")
+            assert response.status_code == 404
+
+    @pytest.mark.asyncio
+    async def test_public_list_matches_persisted_rows(self, client: AsyncClient, session) -> None:
+        await seed_post(session, slug="db-check")
+        result = await session.exec(select(Post).where(col(Post.slug) == "db-check"))
+        stored = result.first()
+        assert stored is not None
+        response = await client.get("/api/front/blog/list/")
+        assert response.status_code == 200
+        assert response.json()["items"][0]["title"] == stored.title

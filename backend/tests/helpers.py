@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from typing import Any
 
 from httpx import AsyncClient
@@ -6,6 +7,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.core.auth.jwt import create_access_token, create_refresh_token
 from app.core.auth.password import hash_password
 from app.modules.accounts.models import User
+from app.modules.blog.models import Post, PostStatus
 
 VALID_PASSWORD = "SecurePass1"
 
@@ -98,6 +100,29 @@ def bearer_headers(user: User) -> dict[str, str]:
         is_admin=user.is_admin,
     )
     return {"Authorization": f"Bearer {token}"}
+
+
+async def seed_post(
+    session: AsyncSession,
+    *,
+    slug: str,
+    title: str = "Seed Post",
+    status: PostStatus = PostStatus.PUBLISHED,
+    created_at: datetime | None = None,
+) -> Post:
+    post = Post(
+        title=title,
+        meta_title=f"{slug}-meta",
+        slug=slug,
+        summary=f"Summary for {slug}",
+        content=f"Content for {slug}",
+        status=status,
+        created_at=created_at or datetime.now(UTC),
+    )
+    session.add(post)
+    await session.commit()
+    await session.refresh(post)
+    return post
 
 
 def refresh_body(user: User) -> dict[str, str]:
