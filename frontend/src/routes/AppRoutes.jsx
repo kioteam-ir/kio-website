@@ -6,6 +6,8 @@ import SignupPage from "../pages/SignupPage";
 import DashboardPage from "../pages/DashboardPage";
 import AdminPage from "../pages/AdminPage";
 import AdminEmailsPage from "../pages/AdminEmailsPage";
+import BlogListPage from "../pages/BlogListPage";
+import BlogPostPage from "../pages/BlogPostPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import AdminSeoPage from "../pages/AdminSeoPage";
 
@@ -15,6 +17,8 @@ export function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/blog" element={<BlogListPage />} />
+      <Route path="/blog/:slug" element={<BlogPostPage />} />
       <Route
         path="/dashboard"
         element={
