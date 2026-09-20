@@ -6,6 +6,7 @@ import SignupPage from "../pages/SignupPage";
 import DashboardPage from "../pages/DashboardPage";
 import AdminPage from "../pages/AdminPage";
 import AdminEmailsPage from "../pages/AdminEmailsPage";
+import AdminBlogPage from "../pages/AdminBlogPage";
 import BlogListPage from "../pages/BlogListPage";
 import BlogPostPage from "../pages/BlogPostPage";
 import NotFoundPage from "../pages/NotFoundPage";
@@ -40,6 +41,14 @@ export function AppRoutes() {
         element={
           <ProtectedRoute requireAdmin>
             <AdminEmailsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/blog"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminBlogPage />
           </ProtectedRoute>
         }
       />
