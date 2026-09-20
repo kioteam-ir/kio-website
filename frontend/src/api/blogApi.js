@@ -1,6 +1,11 @@
 import { httpClient } from "../client/httpClient";
 
 export const blogApi = {
+  listPosts: ({ page = 1, size = 10 } = {}) =>
+    httpClient.get(`/api/front/blog/list/?page=${page}&size=${size}`),
+
+  getPost: (slug) => httpClient.get(`/api/front/blog/${encodeURIComponent(slug)}/`),
+
   subscribeEmail: (email) =>
     httpClient.post(
       "/api/front/blog/subscriptions/",
