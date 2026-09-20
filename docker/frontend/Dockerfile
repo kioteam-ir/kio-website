@@ -7,7 +7,7 @@ WORKDIR /app
 FROM base AS deps
 
 COPY frontend/package.json frontend/package-lock.json ./
-RUN npm ci
+RUN npm ci && chmod +x node_modules/.bin/vite
 
 FROM base AS dev
 
