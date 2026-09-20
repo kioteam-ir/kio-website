@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, EmailStr, Field
 
 from app.modules.blog.models import PostStatus
@@ -20,6 +22,7 @@ class PostRead(BaseModel):
     summary: str
     content: str
     status: PostStatus
+    created_at: datetime
 
     model_config = {"from_attributes": True}
 

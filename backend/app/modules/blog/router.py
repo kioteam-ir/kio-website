@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from redis_fastapi import rate_limit
 
 from app.core.auth.dependencies import get_current_user, require_admin
-from app.core.pagination import SubscriptionsPage
+from app.core.pagination import BlogPage, SubscriptionsPage
 from app.modules.accounts.models import User
+from app.modules.blog.models import Post
 from app.modules.blog.schemas import EmailSubscriptions, ListSubscriptions, PostCreate, PostRead
 from app.modules.blog.service import (
     BlogService,
@@ -47,6 +48,23 @@ async def add_subscription(
     sub_service: SubscriptionService = Depends(get_sub_service),
 ):
     return await sub_service.add_subscriptions(payload)
+
+
+@front_router.get("/list/", response_model=BlogPage[PostRead])
+async def list_posts(
+    _page: int = Query(default=1, ge=1),
+    _size: int = Query(default=10, ge=1, le=100),
+    blog_service: BlogService = Depends(get_blog_service),
+) -> list[Post]:
+    return await blog_service.list_published_posts()
+
+
+@front_router.get("/{slug}/", response_model=PostRead)
+async def get_post(
+    slug: str,
+    blog_service: BlogService = Depends(get_blog_service),
+) -> PostRead:
+    return await blog_service.get_published_post(slug)
 
 
 @admin_router.post("/subscriptions/", response_model=SubscriptionsPage[ListSubscriptions])
