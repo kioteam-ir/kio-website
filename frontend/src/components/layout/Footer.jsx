@@ -36,6 +36,7 @@ const SITEMAP_LINKS = [
   { label: "فرآیند کار", to: "/#process" },
   { label: "نمونه‌کار", to: "/#projects" },
   { label: "تعرفه‌ها", to: "/#pricing" },
+  { label: "وبلاگ", to: "/blog" },
   { label: "سوالات متداول", to: "/#faq" },
 ];
 
@@ -56,24 +57,30 @@ function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!isValidEmail(email)) {
       setStatus("error");
       return;
     }
+    setStatus("pending");
     try {
-      blogApi.emailSubscription(email);
+      await blogApi.subscribeEmail(email);
+      setEmail("");
       setStatus("success");
-    } catch (error) {
-      setStatus(`error : ${error}`);
+    } catch (err) {
+      setStatus(
+        err?.status === 409 || /exist|موجود/i.test(err?.message ?? "")
+          ? "duplicate"
+          : "error",
+      );
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center gap-2 sm:flex-row lg:justify-start"
+      className="flex flex-col items-center justify-center gap-2 sm:flex-row sm:flex-wrap lg:justify-start"
     >
       <Input
         type="email"
@@ -92,10 +99,27 @@ function NewsletterForm() {
       >
         {status === "success" ? (
           <IconCheck className="h-4 w-4 mx-auto" />
+        ) : status === "pending" ? (
+          "..."
         ) : (
           "عضویت"
         )}
       </Button>
+      {status === "success" && (
+        <Alert tone="success" className="w-full sm:basis-full">
+          عضویت شما با موفقیت ثبت شد
+        </Alert>
+      )}
+      {status === "duplicate" && (
+        <Alert tone="info" className="w-full sm:basis-full">
+          این ایمیل قبلاً عضو شده است
+        </Alert>
+      )}
+      {status === "error" && (
+        <Alert tone="error" className="w-full sm:basis-full">
+          خطا در ثبت ایمیل، لطفاً دوباره تلاش کنید
+        </Alert>
+      )}
     </form>
   );
 }
