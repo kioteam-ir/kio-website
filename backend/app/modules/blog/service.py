@@ -2,7 +2,7 @@ from fastapi import Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core.database import get_session
-from app.core.exceptions import ConflictError
+from app.core.exceptions import ConflictError, NotFoundError
 from app.modules.accounts.models import User
 from app.modules.blog.models import Post, Subscription
 from app.modules.blog.repository import PostRepository, SubscriptionRepository
@@ -33,6 +33,15 @@ class BlogService:
         )
         created = await self._posts.add(post)
         return PostRead.model_validate(created)
+
+    async def list_published_posts(self) -> list[Post]:
+        return await self._posts.list_published()
+
+    async def get_published_post(self, slug: str) -> PostRead:
+        post = await self._posts.get_published_by_slug(slug)
+        if post is None:
+            raise NotFoundError("Post not found")
+        return PostRead.model_validate(post)
 
 
 async def get_blog_service(session: AsyncSession = Depends(get_session)) -> BlogService:

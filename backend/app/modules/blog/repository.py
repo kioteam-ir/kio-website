@@ -2,7 +2,7 @@ from fastapi_pagination.ext.sqlmodel import paginate
 from sqlmodel import col, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.modules.blog.models import Post, Subscription
+from app.modules.blog.models import Post, PostStatus, Subscription
 
 
 class PostRepository:
@@ -11,6 +11,22 @@ class PostRepository:
 
     async def get_by_slug(self, slug: str) -> Post | None:
         statement = select(Post).where(col(Post.slug) == slug)
+        result = await self._session.exec(statement)
+        return result.first()
+
+    async def list_published(self) -> list[Post]:
+        statement = (
+            select(Post)
+            .where(col(Post.status) == PostStatus.PUBLISHED)
+            .order_by(col(Post.created_at).desc())
+        )
+        return await paginate(self._session, statement)  # type: ignore
+
+    async def get_published_by_slug(self, slug: str) -> Post | None:
+        statement = select(Post).where(
+            col(Post.slug) == slug,
+            col(Post.status) == PostStatus.PUBLISHED,
+        )
         result = await self._session.exec(statement)
         return result.first()
 
