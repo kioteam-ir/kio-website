@@ -1,12 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { Button } from "../ui/Button";
-import { IconBlog, IconEmail, IconLayers, IconLogout, IconTarget } from "../icons";
+import { IconBlog, IconEmail, IconLayers, IconLogout, IconTarget, IconUser } from "../icons";
 import { useAuth } from "../../hooks/useAuth";
 import { cn } from "../../utils/cn";
 
 const NAV_ITEMS = [
   { label: "پروژه‌ها", to: "/admin", icon: IconLayers, end: true },
   { label: "مقالات", to: "/admin/blog", icon: IconBlog, end: true },
+  { label: "کاربران", to: "/admin/users", icon: IconUser, end: true },
   { label: "ایمیل‌ها", to: "/admin/emails", icon: IconEmail, end: true },
   { label: "محتوای سایت/سئو", to: "/admin/seo", icon: IconTarget, end: true },
 ];
