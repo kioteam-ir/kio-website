@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { name: "فرآیند کار", to: "/#process" },
   { name: "نمونه‌کار", to: "/#projects" },
   { name: "تعرفه‌ها", to: "/#pricing" },
+  { name: "وبلاگ", to: "/blog" },
   { name: "تماس با ما", to: "/#contact" },
 ];
 

@@ -94,6 +94,25 @@ export function IconInstagram({ className = base }) {
   );
 }
 
+export function IconBlog({ className = base }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H18a1 1 0 0 1 1 1v13.5" />
+      <path d="M4 5.5V19a2 2 0 0 0 2 2h13" />
+      <path d="M8 7.5h7M8 11h7M8 14.5h4.5" />
+    </svg>
+  );
+}
+
 export function IconEmail({ className = base }) {
   return (
     <svg
