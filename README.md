@@ -43,7 +43,8 @@ make down
 ```
 
 > **Note:** the compose stack attaches to an external Docker network shared with
-> the central nginx/database. Create it once per machine before `make up`:
+> the central nginx/database. `make up` creates it automatically when missing
+> (standalone target: `make network`):
 >
 > ```bash
 > docker network create kioteam_network
@@ -62,6 +63,29 @@ make rebuild
 | Web      | http://localhost:5173      |
 | API      | http://localhost:8000      |
 | API Docs | http://localhost:8000/docs |
+
+### Troubleshooting
+
+**`socket.gaierror: [Errno -3] Temporary failure in name resolution`**
+
+The API container cannot resolve `db`/`redis`, which means it is not on the same
+Docker network as those containers (`kioteam_network`). Docker reuses existing
+containers, so anything created before a compose/network change can silently end
+up outside that network. Recreate the stack so every container joins it again:
+
+```bash
+make down
+make up
+```
+
+Inspect which containers are attached:
+
+```bash
+docker network inspect kioteam_network --format '{{range .Containers}}{{.Name}} {{end}}'
+```
+
+`backend/scripts/start.sh` waits for PostgreSQL/Redis and retries migrations, so a
+transient DNS failure no longer kills the container.
 
 ### Without Docker
 
