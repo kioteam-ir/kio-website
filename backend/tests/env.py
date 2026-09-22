@@ -14,6 +14,15 @@ os.environ.setdefault("ADMIN_DEV_EMAIL", "dev@example.com")
 os.environ.setdefault("ADMIN_DEV_PASSWORD", "dev-pass")
 os.environ.setdefault("RATE_LIMIT_ENABLED", "false")
 
+# Tests assert auth-enforced (prod-like) behaviour: `get_current_user` short-circuits
+# to the ADMIN_DEV_EMAIL user whenever DEBUG is true, so an inherited DEBUG=true
+# (exported in the shell, a local backend/.env, `set -a; source .env`) would silently
+# skip every token check. Override it here instead of setdefault.
+# To exercise the bypass on purpose, opt in per test:
+#     monkeypatch.setenv("DEBUG", "true")
+#     get_settings.cache_clear()
+os.environ["DEBUG"] = "false"
+
 
 async def _noop_rate_limit() -> None:
     return None
