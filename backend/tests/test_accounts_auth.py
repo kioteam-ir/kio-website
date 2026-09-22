@@ -1,7 +1,9 @@
 import pytest
 from httpx import AsyncClient
-from tests.helpers import VALID_PASSWORD, bearer_headers, refresh_body
+from sqlmodel.ext.asyncio.session import AsyncSession
+from tests.helpers import VALID_PASSWORD, bearer_headers, refresh_body, seed_user
 
+from app.config import get_settings
 from app.core.auth.jwt import create_access_token, create_refresh_token
 from app.modules.accounts.models import User
 
@@ -173,3 +175,39 @@ class TestAdminCheck:
         )
         response = await client.post("/auth/admin", json={"access_token": token})
         assert response.status_code == 401
+
+
+class TestDebugModeBypass:
+    """DEBUG=true resolves the ADMIN_DEV_EMAIL user without a token."""
+
+    @pytest.mark.asyncio
+    async def test_debug_mode_returns_dev_admin_without_token(
+        self,
+        client: AsyncClient,
+        session: AsyncSession,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        dev_admin = await seed_user(session, email="dev@example.com", is_admin=True)
+        monkeypatch.setenv("DEBUG", "true")
+        get_settings.cache_clear()
+
+        response = await client.post("/auth/verify")
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["sub"] == str(dev_admin.id)
+        assert body["email"] == dev_admin.email
+        assert body["is_admin"] is True
+
+    @pytest.mark.asyncio
+    async def test_prod_mode_requires_token_for_the_same_dev_admin(
+        self,
+        client: AsyncClient,
+        session: AsyncSession,
+    ) -> None:
+        await seed_user(session, email="dev@example.com", is_admin=True)
+
+        response = await client.post("/auth/verify")
+
+        assert response.status_code == 401
+        assert response.json()["detail"] == "Authorization header missing"

@@ -1,6 +1,14 @@
 SHELL := /bin/bash
 
-COMPOSE=docker compose
+ENV_FILE=.env
+# The root .env feeds compose variable interpolation (VITE_API_URL, host ports, ...).
+# It lives outside compose/, so it must be passed explicitly with --env-file.
+COMPOSE_ENV=$(if $(wildcard $(ENV_FILE)),--env-file $(ENV_FILE),)
+
+COMPOSE=docker compose $(COMPOSE_ENV)
+
+# External network shared with the central nginx/database stack.
+NETWORK=kioteam_network
 
 BASE=-f compose/docker-compose.yml
 INFRA=-f compose/docker-compose.infra.yml
@@ -10,13 +18,16 @@ LOCAL=$(DEV) -f compose/docker-compose.local.yml
 STAGING=$(BASE) $(INFRA) -f compose/docker-compose.staging.yml
 PROD=$(BASE) $(INFRA) -f compose/docker-compose.prod.yml
 
-.PHONY: help
+.PHONY: help env network up up-build down rebuild logs ps \
+        local-up local-down staging staging-down prod prod-d prod-down \
+        lint typecheck test shell clean makemigrations migrate downgrade
 
 help:
 	@echo "Available commands:"
 	@echo ""
 	@echo "Development"
 	@echo "  make up          Start development"
+	@echo "  make up-build    Start development (rebuild images)"
 	@echo "  make down        Stop development"
 	@echo "  make logs        Follow logs"
 	@echo "  make ps          Show containers"
@@ -41,22 +52,29 @@ help:
 	@echo "  make shell"
 	@echo ""
 	@echo "Utilities"
+	@echo "  make network     Create $(NETWORK) if missing"
 	@echo "  make clean"
 
 # -----------------------
 # Development
 # -----------------------
 
-up:
+env:
+	@test -f $(ENV_FILE) || { echo "Missing $(ENV_FILE) - create it first: cp .env.local.example $(ENV_FILE)"; exit 1; }
+
+network:
+	@docker network inspect $(NETWORK) >/dev/null 2>&1 || { echo "Creating external Docker network $(NETWORK)"; docker network create $(NETWORK); }
+
+up: env network
 	$(COMPOSE) $(DEV) up
-	
-up -b:
+
+up-build: env network
 	$(COMPOSE) $(DEV) up --build
 
 down:
 	$(COMPOSE) $(DEV) down
 
-rebuild:
+rebuild: env network
 	$(COMPOSE) $(DEV) up --build --force-recreate
 
 logs:
@@ -69,7 +87,7 @@ ps:
 # Local (alternate ports)
 # -----------------------
 
-local-up:
+local-up: env network
 	$(COMPOSE) $(LOCAL) up --build
 
 local-down:
@@ -79,7 +97,7 @@ local-down:
 # Staging
 # -----------------------
 
-staging:
+staging: env network
 	$(COMPOSE) $(STAGING) up -d --build
 
 staging-down:
@@ -89,9 +107,9 @@ staging-down:
 # Production
 # -----------------------
 
-prod-d:
+prod-d: env network
 	$(COMPOSE) $(PROD) up -d --build
-prod:
+prod: env network
 	$(COMPOSE) $(PROD) up --build
 
 prod-down:

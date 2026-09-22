@@ -2,13 +2,18 @@ services:
   api:
     ports:
       - "${API_PORT:-8000}:8000"
+    environment:
+      # Reload is handled by the entrypoint script below.
+      UVICORN_RELOAD: "true"
     volumes:
       - ../backend/app:/app/app:rw
       - ../backend/alembic:/app/alembic:rw
-      - ../backend/alembic.ini:/app/alembic.ini:rw 
-    command: >
-      bash -c "alembic upgrade head && 
-      uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --reload"
+      - ../backend/alembic.ini:/app/alembic.ini:rw
+      - ../backend/scripts:/app/scripts:ro
+    # Runs the repo entrypoint so startup logic (dependency wait + migration
+    # retries) can change without rebuilding the image. The production image
+    # bakes the same script in through docker/backend/Dockerfile.
+    command: bash /app/scripts/start.sh
 
   web:
     build:

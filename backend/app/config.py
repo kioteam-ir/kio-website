@@ -74,5 +74,4 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     settings = Settings()
-    print(settings.database_url)
-    return Settings()  # type: ignore
+    return settings
