@@ -42,6 +42,13 @@ Stop the stack:
 make down
 ```
 
+> **Note:** the compose stack attaches to an external Docker network shared with
+> the central nginx/database. Create it once per machine before `make up`:
+>
+> ```bash
+> docker network create kioteam_network
+> ```
+
 Useful commands:
 
 ```bash
