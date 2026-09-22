@@ -8,6 +8,7 @@ import { Projects } from "../features/home/Projects";
 import { Pricing } from "../features/home/Pricing";
 import { Team } from "../features/home/Team";
 import { GrowthTogether } from "../features/home/GrowthTogether";
+import { BlogTeaser } from "../features/home/BlogTeaser";
 import { Faq } from "../features/home/Faq";
 import { ContactSection } from "../features/home/ContactSection";
 
@@ -22,6 +23,7 @@ export default function HomePage() {
       <Projects />
       <Pricing />
       <Team />
+      <BlogTeaser />
       {/* <GrowthTogether /> */}
       <Faq />
       <ContactSection />

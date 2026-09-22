@@ -38,7 +38,7 @@ export function ContactSection() {
     >
       <Container>
         <SectionHeading
-          index="07"
+          index="08"
           eyebrow="تماس با ما"
           title="ایده شما را به واقعیت تبدیل می‌کنیم"
           description="جزئیات پروژه خود را با ما در میان بگذارید تا بهترین راهکار را برای توسعه کسب‌وکار و حضور دیجیتال شما ارائه دهیم."
