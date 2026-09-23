@@ -4,10 +4,13 @@ import pytest
 from httpx import AsyncClient
 from pydantic import ValidationError
 from sqlmodel import col, select
-from tests.helpers import bearer_headers, blog_post_payload, project_payload, seed_post
+from tests.helpers import bearer_headers, blog_post_payload, project_payload, seed_post, seed_user
 
+from app.core.exceptions import UnauthorizedError
+from app.modules.accounts.models import User
 from app.modules.blog.models import Post, PostStatus
 from app.modules.blog.schemas import PostCreate
+from app.modules.blog.service import BlogService
 
 
 class TestProjectCreateSchema:
@@ -165,6 +168,41 @@ class TestBlogPostModel:
 
 
 class TestBlogEndpoints:
+    @pytest.mark.asyncio
+    async def test_create_post_rejects_unknown_author(self, session) -> None:
+        service = BlogService(session)
+        ghost = User(
+            id=999999,
+            email="ghost@example.com",
+            password="x",
+            salt="x",
+            first_name="Ghost",
+            last_name="User",
+        )
+
+        with pytest.raises(UnauthorizedError) as exc:
+            await service.create_post(
+                PostCreate(**blog_post_payload(slug="ghost-post")),
+                ghost,
+            )
+        assert exc.value.message == "User not found"
+
+    @pytest.mark.asyncio
+    async def test_create_post_rejects_inactive_author(self, session) -> None:
+        inactive = await seed_user(
+            session,
+            email="inactive-author@example.com",
+            is_active=False,
+        )
+        service = BlogService(session)
+
+        with pytest.raises(UnauthorizedError) as exc:
+            await service.create_post(
+                PostCreate(**blog_post_payload(slug="inactive-author-post")),
+                inactive,
+            )
+        assert exc.value.message == "User is inactive"
+
     @pytest.mark.asyncio
     async def test_create_post_requires_authentication(self, client: AsyncClient) -> None:
         response = await client.post("/api/front/blog/", json=blog_post_payload())
