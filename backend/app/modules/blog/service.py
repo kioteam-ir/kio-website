@@ -73,7 +73,7 @@ class SubscriptionService:
     async def delete_subscription(self, sub_id: int) -> None:
         result = await self._subscriptions.get_by_id(sub_id)
         if result is None:
-            raise
+            raise NotFoundError("Post not found")
         return await self._subscriptions.delete(result)
 
 
