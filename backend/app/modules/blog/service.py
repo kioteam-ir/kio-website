@@ -3,6 +3,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core.database import get_session
 from app.core.exceptions import ConflictError, NotFoundError, UnauthorizedError
+from app.core.pagination import SubscriptionsPage
 from app.modules.accounts.models import User
 from app.modules.accounts.repository import UserRepository
 from app.modules.blog.models import Post, Subscription
@@ -67,13 +68,13 @@ class SubscriptionService:
         created = await self._subscriptions.add(subscription)
         return EmailSubscriptions.model_validate(created, from_attributes=True)
 
-    async def subscriptions_list(self) -> ListSubscriptions:
+    async def subscriptions_list(self) -> SubscriptionsPage[ListSubscriptions]:
         return await self._subscriptions.list_all()  # type: ignore
 
     async def delete_subscription(self, sub_id: int) -> None:
         result = await self._subscriptions.get_by_id(sub_id)
         if result is None:
-            raise NotFoundError("Post not found")
+            raise NotFoundError("Subscription not found")
         return await self._subscriptions.delete(result)
 
 

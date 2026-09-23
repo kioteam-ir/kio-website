@@ -371,3 +371,45 @@ class TestBlogPublicEndpoints:
         response = await client.get("/api/front/blog/list/")
         assert response.status_code == 200
         assert response.json()["items"][0]["title"] == stored.title
+
+
+class TestBlogSubscriptionsAdmin:
+    @pytest.mark.asyncio
+    async def test_subscription_list_requires_auth(self, client: AsyncClient) -> None:
+        response = await client.get("/api/admin/blog/subscriptions/list/")
+        assert response.status_code == 401
+
+    @pytest.mark.asyncio
+    async def test_subscription_list_returns_paginated_shape(
+        self,
+        client: AsyncClient,
+        admin_auth_headers: dict[str, str],
+    ) -> None:
+        subscribed = await client.post(
+            "/api/front/blog/subscriptions/",
+            json={"email": "reader@example.com"},
+        )
+        assert subscribed.status_code == 201
+
+        response = await client.get(
+            "/api/admin/blog/subscriptions/list/",
+            headers=admin_auth_headers,
+        )
+        assert response.status_code == 200
+        body = response.json()
+        for key in ("items", "total", "page", "size"):
+            assert key in body
+        assert body["total"] == 1
+        assert body["items"][0]["email"] == "reader@example.com"
+
+    @pytest.mark.asyncio
+    async def test_delete_missing_subscription_returns_404(
+        self,
+        client: AsyncClient,
+        admin_auth_headers: dict[str, str],
+    ) -> None:
+        response = await client.delete(
+            "/api/admin/blog/subscriptions/999999",
+            headers=admin_auth_headers,
+        )
+        assert response.status_code == 404
