@@ -137,6 +137,33 @@ class TestBlogSchema:
             PostCreate(title="Only title")  # type: ignore[call-arg]
 
 
+class TestBlogPostModel:
+    def test_author_id_references_accounts_user(self) -> None:
+        fks = Post.__table__.c.author_id.foreign_keys
+        assert {fk.target_fullname for fk in fks} == {"accounts_user.id"}
+
+    def test_composite_index_on_status_and_created_at(self) -> None:
+        composite = [
+            ix for ix in Post.__table__.indexes if ix.name == "ix_blog_post_status_created_at"
+        ]
+        assert len(composite) == 1
+        assert [c.name for c in composite[0].columns] == ["status", "created_at"]
+
+    @pytest.mark.asyncio
+    async def test_updated_at_defaults_and_changes_on_update(self, session) -> None:
+        post = await seed_post(session, slug="timestamps-move")
+        assert post.updated_at is not None
+        original = post.updated_at
+
+        post.title = "Renamed Title"
+        session.add(post)
+        await session.commit()
+        await session.refresh(post)
+
+        assert post.updated_at is not None
+        assert post.updated_at > original
+
+
 class TestBlogEndpoints:
     @pytest.mark.asyncio
     async def test_create_post_requires_authentication(self, client: AsyncClient) -> None:
@@ -276,6 +303,7 @@ class TestBlogPublicEndpoints:
         assert body["title"] == "Read Me"
         assert body["status"] == PostStatus.PUBLISHED
         assert body["created_at"] is not None
+        assert body["updated_at"] is not None
 
     @pytest.mark.asyncio
     async def test_public_detail_returns_404_for_missing_slug(
