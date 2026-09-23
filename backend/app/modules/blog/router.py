@@ -67,7 +67,7 @@ async def get_post(
     return await blog_service.get_published_post(slug)
 
 
-@admin_router.post("/subscriptions/", response_model=SubscriptionsPage[ListSubscriptions])
+@admin_router.get("/subscriptions/", response_model=SubscriptionsPage[ListSubscriptions])
 async def subscriptions_list(
     _admin: User = Depends(require_admin),
     sub_service: SubscriptionService = Depends(get_sub_service),
