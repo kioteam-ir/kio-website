@@ -35,8 +35,3 @@ class EmailSubscriptions(BaseModel):
 class ListSubscriptions(BaseModel):
     id: int
     email: EmailStr
-
-
-class DeleteSubscription(BaseModel):
-    id: int
-    email: EmailStr
