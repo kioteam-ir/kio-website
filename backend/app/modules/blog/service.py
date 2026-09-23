@@ -2,8 +2,9 @@ from fastapi import Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core.database import get_session
-from app.core.exceptions import ConflictError, NotFoundError
+from app.core.exceptions import ConflictError, NotFoundError, UnauthorizedError
 from app.modules.accounts.models import User
+from app.modules.accounts.repository import UserRepository
 from app.modules.blog.models import Post, Subscription
 from app.modules.blog.repository import PostRepository, SubscriptionRepository
 from app.modules.blog.schemas import EmailSubscriptions, ListSubscriptions, PostCreate, PostRead
@@ -12,12 +13,17 @@ from app.modules.blog.schemas import EmailSubscriptions, ListSubscriptions, Post
 class BlogService:
     def __init__(self, session: AsyncSession) -> None:
         self._posts = PostRepository(session)
+        self._users = UserRepository(session)
 
     async def create_post(self, data: PostCreate, author: User) -> PostRead:
         if author.id is None:
-            from app.core.exceptions import UnauthorizedError
-
             raise UnauthorizedError("Invalid author state")
+
+        verified = await self._users.get_by_id(author.id)
+        if verified is None:
+            raise UnauthorizedError("User not found")
+        if not verified.is_active:
+            raise UnauthorizedError("User is inactive")
 
         existing = await self._posts.get_by_slug(data.slug)
         if existing is not None:

@@ -23,6 +23,7 @@ class PostRead(BaseModel):
     content: str
     status: PostStatus
     created_at: datetime
+    updated_at: datetime
 
     model_config = {"from_attributes": True}
 
