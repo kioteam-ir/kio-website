@@ -1,11 +1,18 @@
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
 from redis_fastapi import rate_limit
 
 from app.core.auth.dependencies import get_current_user, require_admin
 from app.core.pagination import BlogPage, SubscriptionsPage
 from app.modules.accounts.models import User
-from app.modules.blog.models import Post
-from app.modules.blog.schemas import EmailSubscriptions, ListSubscriptions, PostCreate, PostRead
+from app.modules.blog.models import Post, PostStatus
+from app.modules.blog.schemas import (
+    EmailSubscriptions,
+    ListSubscriptions,
+    PostCreate,
+    PostRead,
+    PostStatusUpdate,
+    PostUpdate,
+)
 from app.modules.blog.service import (
     BlogService,
     SubscriptionService,
@@ -94,3 +101,96 @@ async def create_post_admin(
     _admin: User = Depends(require_admin),
 ) -> PostRead:
     return await blog_service.create_post(payload, _admin)
+
+
+@admin_router.get(
+    "/list/",
+    response_model=BlogPage[PostRead],
+)
+async def list_posts_admin(
+    status: PostStatus | None = Query(default=None),
+    _page: int = Query(default=1, ge=1),
+    _size: int = Query(default=10, ge=1, le=100),
+    _admin: User = Depends(require_admin),
+    blog_service: BlogService = Depends(get_blog_service),
+) -> list[Post]:
+    return await blog_service.list_all_posts(status=status)
+
+
+@admin_router.get(
+    "/{post_id}/",
+    response_model=PostRead,
+)
+@admin_router.get(
+    "/{post_id}",
+    response_model=PostRead,
+    include_in_schema=False,
+)
+async def get_post_admin(
+    post_id: int,
+    _admin: User = Depends(require_admin),
+    blog_service: BlogService = Depends(get_blog_service),
+) -> PostRead:
+    return await blog_service.get_post_by_id(post_id)
+
+
+@admin_router.patch(
+    "/{post_id}/status",
+    response_model=PostRead,
+)
+@admin_router.patch(
+    "/{post_id}/status/",
+    response_model=PostRead,
+    include_in_schema=False,
+)
+async def change_post_status(
+    post_id: int,
+    payload: PostStatusUpdate | None = Body(default=None),
+    status_query: PostStatus | None = Query(default=None, alias="status"),
+    _admin: User = Depends(require_admin),
+    blog_service: BlogService = Depends(get_blog_service),
+) -> PostRead:
+    new_status = payload.status if payload is not None else status_query
+    if new_status is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Status field is required",
+        )
+    return await blog_service.update_post_status(post_id, new_status)
+
+
+@admin_router.patch(
+    "/{post_id}/",
+    response_model=PostRead,
+)
+@admin_router.patch(
+    "/{post_id}",
+    response_model=PostRead,
+    include_in_schema=False,
+)
+async def update_post_admin(
+    post_id: int,
+    payload: PostUpdate,
+    _admin: User = Depends(require_admin),
+    blog_service: BlogService = Depends(get_blog_service),
+) -> PostRead:
+    return await blog_service.update_post(post_id, payload)
+
+
+@admin_router.delete(
+    "/{post_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_model=None,
+)
+@admin_router.delete(
+    "/{post_id}/",
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_model=None,
+    include_in_schema=False,
+)
+async def delete_post_admin(
+    post_id: int,
+    _admin: User = Depends(require_admin),
+    blog_service: BlogService = Depends(get_blog_service),
+) -> None:
+    await blog_service.delete_post(post_id)

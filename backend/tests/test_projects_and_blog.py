@@ -413,3 +413,314 @@ class TestBlogSubscriptionsAdmin:
             headers=admin_auth_headers,
         )
         assert response.status_code == 404
+
+
+class TestBlogAdminEndpoints:
+    @pytest.mark.asyncio
+    async def test_admin_list_requires_auth(self, client: AsyncClient) -> None:
+        response = await client.get("/api/admin/blog/list/")
+        assert response.status_code == 401
+
+    @pytest.mark.asyncio
+    async def test_admin_list_rejects_regular_user(
+        self, client: AsyncClient, user_auth_headers: dict[str, str]
+    ) -> None:
+        response = await client.get("/api/admin/blog/list/", headers=user_auth_headers)
+        assert response.status_code == 403
+
+    @pytest.mark.asyncio
+    async def test_admin_list_returns_all_statuses_newest_first(
+        self, client: AsyncClient, session, admin_auth_headers: dict[str, str]
+    ) -> None:
+        p1 = await seed_post(
+            session,
+            slug="admin-waiting",
+            status=PostStatus.WAITING,
+            created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        p2 = await seed_post(
+            session,
+            slug="admin-published",
+            status=PostStatus.PUBLISHED,
+            created_at=datetime(2026, 1, 2, tzinfo=UTC),
+        )
+        p3 = await seed_post(
+            session,
+            slug="admin-rejected",
+            status=PostStatus.REJECTED,
+            created_at=datetime(2026, 1, 3, tzinfo=UTC),
+        )
+
+        response = await client.get("/api/admin/blog/list/", headers=admin_auth_headers)
+        assert response.status_code == 200
+        body = response.json()
+        assert body["total"] == 3
+        returned_slugs = [item["slug"] for item in body["items"]]
+        assert returned_slugs == [p3.slug, p2.slug, p1.slug]
+
+    @pytest.mark.asyncio
+    async def test_admin_list_filters_by_status(
+        self, client: AsyncClient, session, admin_auth_headers: dict[str, str]
+    ) -> None:
+        await seed_post(session, slug="filter-waiting", status=PostStatus.WAITING)
+        await seed_post(session, slug="filter-published", status=PostStatus.PUBLISHED)
+
+        response = await client.get(
+            "/api/admin/blog/list/?status=waiting", headers=admin_auth_headers
+        )
+        assert response.status_code == 200
+        body = response.json()
+        assert body["total"] == 1
+        assert body["items"][0]["slug"] == "filter-waiting"
+
+    @pytest.mark.asyncio
+    async def test_admin_get_by_id(
+        self, client: AsyncClient, session, admin_auth_headers: dict[str, str]
+    ) -> None:
+        post = await seed_post(session, slug="admin-get-by-id", status=PostStatus.WAITING)
+        response = await client.get(f"/api/admin/blog/{post.id}/", headers=admin_auth_headers)
+        assert response.status_code == 200
+        body = response.json()
+        assert body["id"] == post.id
+        assert body["slug"] == "admin-get-by-id"
+        assert body["status"] == PostStatus.WAITING
+
+        # Test without trailing slash
+        response_no_slash = await client.get(
+            f"/api/admin/blog/{post.id}", headers=admin_auth_headers
+        )
+        assert response_no_slash.status_code == 200
+        assert response_no_slash.json()["id"] == post.id
+
+    @pytest.mark.asyncio
+    async def test_admin_get_by_id_missing_returns_404(
+        self, client: AsyncClient, admin_auth_headers: dict[str, str]
+    ) -> None:
+        response = await client.get("/api/admin/blog/999999/", headers=admin_auth_headers)
+        assert response.status_code == 404
+        assert response.json()["detail"] == "Post not found"
+
+    @pytest.mark.asyncio
+    async def test_admin_get_by_id_requires_auth_and_rejects_regular_user(
+        self,
+        client: AsyncClient,
+        session,
+        user_auth_headers: dict[str, str],
+    ) -> None:
+        post = await seed_post(session, slug="auth-check")
+        unauth = await client.get(f"/api/admin/blog/{post.id}/")
+        assert unauth.status_code == 401
+
+        forbidden = await client.get(f"/api/admin/blog/{post.id}/", headers=user_auth_headers)
+        assert forbidden.status_code == 403
+
+    @pytest.mark.asyncio
+    async def test_moderation_flow_user_creates_admin_publishes_appears_public(
+        self,
+        client: AsyncClient,
+        user_auth_headers: dict[str, str],
+        admin_auth_headers: dict[str, str],
+    ) -> None:
+        # 1. User creates post (waiting status)
+        created = await client.post(
+            "/api/front/blog/",
+            json=blog_post_payload(slug="moderated-post"),
+            headers=user_auth_headers,
+        )
+        assert created.status_code == 201
+        post_id = created.json()["id"]
+        assert created.json()["status"] == PostStatus.WAITING
+
+        # 2. Post does not appear in public endpoints
+        public_list = await client.get("/api/front/blog/list/")
+        assert public_list.status_code == 200
+        assert not any(item["id"] == post_id for item in public_list.json()["items"])
+
+        public_detail = await client.get("/api/front/blog/moderated-post/")
+        assert public_detail.status_code == 404
+
+        # 3. Admin publishes post
+        publish_res = await client.patch(
+            f"/api/admin/blog/{post_id}/status",
+            json={"status": "published"},
+            headers=admin_auth_headers,
+        )
+        assert publish_res.status_code == 200
+        assert publish_res.json()["status"] == PostStatus.PUBLISHED
+
+        # 4. Post now appears in public endpoints
+        public_list_after = await client.get("/api/front/blog/list/")
+        assert public_list_after.status_code == 200
+        assert any(item["id"] == post_id for item in public_list_after.json()["items"])
+
+        public_detail_after = await client.get("/api/front/blog/moderated-post/")
+        assert public_detail_after.status_code == 200
+        assert public_detail_after.json()["slug"] == "moderated-post"
+
+        # 5. Admin rejects post
+        reject_res = await client.patch(
+            f"/api/admin/blog/{post_id}/status",
+            json={"status": "rejected"},
+            headers=admin_auth_headers,
+        )
+        assert reject_res.status_code == 200
+        assert reject_res.json()["status"] == PostStatus.REJECTED
+
+        # 6. Post hidden again
+        hidden_detail = await client.get("/api/front/blog/moderated-post/")
+        assert hidden_detail.status_code == 404
+
+        # 7. Admin transitions back to waiting (using query param as alternative)
+        waiting_res = await client.patch(
+            f"/api/admin/blog/{post_id}/status?status=waiting",
+            headers=admin_auth_headers,
+        )
+        assert waiting_res.status_code == 200
+        assert waiting_res.json()["status"] == PostStatus.WAITING
+
+    @pytest.mark.asyncio
+    async def test_change_post_status_missing_post_returns_404(
+        self, client: AsyncClient, admin_auth_headers: dict[str, str]
+    ) -> None:
+        response = await client.patch(
+            "/api/admin/blog/999999/status",
+            json={"status": "published"},
+            headers=admin_auth_headers,
+        )
+        assert response.status_code == 404
+        assert response.json()["detail"] == "Post not found"
+
+    @pytest.mark.asyncio
+    async def test_change_post_status_requires_auth_and_rejects_regular_user(
+        self, client: AsyncClient, session, user_auth_headers: dict[str, str]
+    ) -> None:
+        post = await seed_post(session, slug="status-auth-test")
+        unauth = await client.patch(
+            f"/api/admin/blog/{post.id}/status",
+            json={"status": "published"},
+        )
+        assert unauth.status_code == 401
+
+        forbidden = await client.patch(
+            f"/api/admin/blog/{post.id}/status",
+            json={"status": "published"},
+            headers=user_auth_headers,
+        )
+        assert forbidden.status_code == 403
+
+    @pytest.mark.asyncio
+    async def test_admin_update_post(
+        self, client: AsyncClient, session, admin_auth_headers: dict[str, str]
+    ) -> None:
+        post = await seed_post(session, slug="before-update-post", title="Old Title")
+        response = await client.patch(
+            f"/api/admin/blog/{post.id}/",
+            json={"title": "Updated Title", "summary": "Updated summary"},
+            headers=admin_auth_headers,
+        )
+        assert response.status_code == 200
+        body = response.json()
+        assert body["title"] == "Updated Title"
+        assert body["summary"] == "Updated summary"
+        assert body["slug"] == "before-update-post"
+
+    @pytest.mark.asyncio
+    async def test_admin_update_duplicate_slug_returns_409(
+        self, client: AsyncClient, session, admin_auth_headers: dict[str, str]
+    ) -> None:
+        await seed_post(session, slug="slug-one")
+        second = await seed_post(session, slug="slug-two")
+
+        response = await client.patch(
+            f"/api/admin/blog/{second.id}/",
+            json={"slug": "slug-one"},
+            headers=admin_auth_headers,
+        )
+        assert response.status_code == 409
+        assert response.json()["detail"] == "Slug already exists"
+
+    @pytest.mark.asyncio
+    async def test_admin_update_own_slug_succeeds(
+        self, client: AsyncClient, session, admin_auth_headers: dict[str, str]
+    ) -> None:
+        post = await seed_post(session, slug="own-slug")
+        response = await client.patch(
+            f"/api/admin/blog/{post.id}/",
+            json={"slug": "own-slug", "title": "New Title"},
+            headers=admin_auth_headers,
+        )
+        assert response.status_code == 200
+        assert response.json()["title"] == "New Title"
+
+    @pytest.mark.asyncio
+    async def test_admin_update_missing_post_returns_404(
+        self, client: AsyncClient, admin_auth_headers: dict[str, str]
+    ) -> None:
+        response = await client.patch(
+            "/api/admin/blog/999999/",
+            json={"title": "New Title"},
+            headers=admin_auth_headers,
+        )
+        assert response.status_code == 404
+        assert response.json()["detail"] == "Post not found"
+
+    @pytest.mark.asyncio
+    async def test_admin_update_requires_auth_and_rejects_regular_user(
+        self, client: AsyncClient, session, user_auth_headers: dict[str, str]
+    ) -> None:
+        post = await seed_post(session, slug="update-auth-test")
+        unauth = await client.patch(
+            f"/api/admin/blog/{post.id}/",
+            json={"title": "New Title"},
+        )
+        assert unauth.status_code == 401
+
+        forbidden = await client.patch(
+            f"/api/admin/blog/{post.id}/",
+            json={"title": "New Title"},
+            headers=user_auth_headers,
+        )
+        assert forbidden.status_code == 403
+
+    @pytest.mark.asyncio
+    async def test_admin_delete_post(
+        self, client: AsyncClient, session, admin_auth_headers: dict[str, str]
+    ) -> None:
+        post = await seed_post(session, slug="post-to-delete", status=PostStatus.PUBLISHED)
+        response = await client.delete(
+            f"/api/admin/blog/{post.id}",
+            headers=admin_auth_headers,
+        )
+        assert response.status_code == 204
+
+        # Post is gone
+        get_res = await client.get(f"/api/admin/blog/{post.id}", headers=admin_auth_headers)
+        assert get_res.status_code == 404
+
+        public_res = await client.get("/api/front/blog/post-to-delete/")
+        assert public_res.status_code == 404
+
+    @pytest.mark.asyncio
+    async def test_admin_delete_missing_post_returns_404(
+        self, client: AsyncClient, admin_auth_headers: dict[str, str]
+    ) -> None:
+        response = await client.delete(
+            "/api/admin/blog/999999",
+            headers=admin_auth_headers,
+        )
+        assert response.status_code == 404
+        assert response.json()["detail"] == "Post not found"
+
+    @pytest.mark.asyncio
+    async def test_admin_delete_requires_auth_and_rejects_regular_user(
+        self, client: AsyncClient, session, user_auth_headers: dict[str, str]
+    ) -> None:
+        post = await seed_post(session, slug="delete-auth-test")
+        unauth = await client.delete(f"/api/admin/blog/{post.id}")
+        assert unauth.status_code == 401
+
+        forbidden = await client.delete(
+            f"/api/admin/blog/{post.id}",
+            headers=user_auth_headers,
+        )
+        assert forbidden.status_code == 403
