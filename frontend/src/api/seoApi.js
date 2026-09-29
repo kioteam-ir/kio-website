@@ -6,7 +6,9 @@ import { httpClient } from "../client/httpClient";
  * will be wired in once the read endpoint lands.
  */
 export const seoApi = {
+  getMainContent: () => httpClient.get("/api/admin/seo/"),
+
   saveMainContent: (payload) => httpClient.post("/api/admin/seo/", payload),
 
-  deleteMainContent: (id) => httpClient.post(`/api/admin/seo/${id}`),
+  deleteMainContent: (id) => httpClient.delete(`/api/admin/seo/${id}`),
 };
