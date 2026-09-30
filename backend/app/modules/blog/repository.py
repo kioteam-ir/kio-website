@@ -30,11 +30,31 @@ class PostRepository:
         result = await self._session.exec(statement)
         return result.first()
 
+    async def get_by_id(self, post_id: int) -> Post | None:
+        return await self._session.get(Post, post_id)
+
+    async def list_all(self, status: PostStatus | None = None) -> list[Post]:
+        statement = select(Post)
+        if status is not None:
+            statement = statement.where(col(Post.status) == status)
+        statement = statement.order_by(col(Post.created_at).desc())
+        return await paginate(self._session, statement)  # type: ignore
+
     async def add(self, post: Post) -> Post:
         self._session.add(post)
         await self._session.commit()
         await self._session.refresh(post)
         return post
+
+    async def update(self, post: Post) -> Post:
+        self._session.add(post)
+        await self._session.commit()
+        await self._session.refresh(post)
+        return post
+
+    async def delete(self, post: Post) -> None:
+        await self._session.delete(post)
+        await self._session.commit()
 
 
 class SubscriptionRepository:

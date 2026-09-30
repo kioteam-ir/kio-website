@@ -9,5 +9,8 @@ class WriteMainContent(BaseModel):
 
 
 class ReadMainContent(BaseModel):
+    id: int | None = None
     title: str
     description: str
+
+    model_config = ConfigDict(from_attributes=True)

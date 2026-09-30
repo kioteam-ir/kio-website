@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 FROM python:3.13-slim AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:0.6.14 /uv /usr/local/bin/uv

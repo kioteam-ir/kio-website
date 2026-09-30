@@ -11,9 +11,9 @@ from tests.helpers import bearer_headers, seed_user
 from app.config import Settings, get_settings
 from app.core.database import get_session
 from app.main import create_app
-from app.models import Post, Project, User
+from app.models import MainContent, Post, Project, User
 
-_registered_models = (User, Project, Post)
+_registered_models = (User, Project, Post, MainContent)
 
 
 def _test_settings() -> Settings:

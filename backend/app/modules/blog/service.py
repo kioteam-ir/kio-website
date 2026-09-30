@@ -6,9 +6,15 @@ from app.core.exceptions import ConflictError, NotFoundError, UnauthorizedError
 from app.core.pagination import SubscriptionsPage
 from app.modules.accounts.models import User
 from app.modules.accounts.repository import UserRepository
-from app.modules.blog.models import Post, Subscription
+from app.modules.blog.models import Post, PostStatus, Subscription
 from app.modules.blog.repository import PostRepository, SubscriptionRepository
-from app.modules.blog.schemas import EmailSubscriptions, ListSubscriptions, PostCreate, PostRead
+from app.modules.blog.schemas import (
+    EmailSubscriptions,
+    ListSubscriptions,
+    PostCreate,
+    PostRead,
+    PostUpdate,
+)
 
 
 class BlogService:
@@ -49,6 +55,46 @@ class BlogService:
         if post is None:
             raise NotFoundError("Post not found")
         return PostRead.model_validate(post)
+
+    async def list_all_posts(self, status: PostStatus | None = None) -> list[Post]:
+        return await self._posts.list_all(status=status)
+
+    async def get_post_by_id(self, post_id: int) -> PostRead:
+        post = await self._posts.get_by_id(post_id)
+        if post is None:
+            raise NotFoundError("Post not found")
+        return PostRead.model_validate(post)
+
+    async def update_post_status(self, post_id: int, status: PostStatus) -> PostRead:
+        post = await self._posts.get_by_id(post_id)
+        if post is None:
+            raise NotFoundError("Post not found")
+        post.status = status
+        updated = await self._posts.update(post)
+        return PostRead.model_validate(updated)
+
+    async def update_post(self, post_id: int, data: PostUpdate) -> PostRead:
+        post = await self._posts.get_by_id(post_id)
+        if post is None:
+            raise NotFoundError("Post not found")
+
+        if data.slug is not None and data.slug != post.slug:
+            existing = await self._posts.get_by_slug(data.slug)
+            if existing is not None and existing.id != post.id:
+                raise ConflictError("Slug already exists")
+
+        update_dict = data.model_dump(exclude_unset=True)
+        for key, value in update_dict.items():
+            setattr(post, key, value)
+
+        updated = await self._posts.update(post)
+        return PostRead.model_validate(updated)
+
+    async def delete_post(self, post_id: int) -> None:
+        post = await self._posts.get_by_id(post_id)
+        if post is None:
+            raise NotFoundError("Post not found")
+        await self._posts.delete(post)
 
 
 async def get_blog_service(session: AsyncSession = Depends(get_session)) -> BlogService:

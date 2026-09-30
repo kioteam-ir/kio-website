@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "../../../hooks/useForm";
 import { seoApi } from "../../../api/seoApi";
 
@@ -34,5 +34,28 @@ export function useSeoForm() {
     setLastSaved(payload);
   }, []);
 
-  return { ...useForm({ initialValues, validate, onSubmit }), lastSaved };
+  const form = useForm({ initialValues, validate, onSubmit });
+  const { setValues } = form;
+
+  useEffect(() => {
+    async function loadMainContent() {
+      try {
+        const data = await seoApi.getMainContent();
+        if (data) {
+          setValues({
+            title: data.title || "",
+            description: data.description || "",
+          });
+          setLastSaved(data);
+        }
+      } catch (err) {
+        if (err?.status !== 404) {
+          // Ignore non-critical initial load errors if row not found
+        }
+      }
+    }
+    loadMainContent();
+  }, [setValues]);
+
+  return { ...form, lastSaved };
 }

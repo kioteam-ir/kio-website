@@ -8,6 +8,11 @@ class SeoReporitory:
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
+    async def get_first(self) -> MainContent | None:
+        statement = select(MainContent).limit(1)
+        result = await self._session.exec(statement)
+        return result.first()
+
     async def get_content(self, content_id: int) -> MainContent | None:
         statement = select(MainContent).where(col(MainContent.id) == content_id)
         result = await self._session.exec(statement)
@@ -28,3 +33,6 @@ class SeoReporitory:
     async def delete(self, data: MainContent) -> None:
         await self._session.delete(data)
         await self._session.commit()
+
+
+SeoRepository = SeoReporitory

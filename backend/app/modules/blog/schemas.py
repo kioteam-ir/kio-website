@@ -13,6 +13,18 @@ class PostCreate(BaseModel):
     content: str
 
 
+class PostUpdate(BaseModel):
+    title: str | None = Field(default=None, max_length=75)
+    meta_title: str | None = Field(default=None, max_length=100)
+    slug: str | None = Field(default=None, max_length=40)
+    summary: str | None = Field(default=None, max_length=255)
+    content: str | None = None
+
+
+class PostStatusUpdate(BaseModel):
+    status: PostStatus
+
+
 class PostRead(BaseModel):
     id: int
     author_id: int | None
